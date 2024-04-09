@@ -172,7 +172,3 @@ Figma: https://www.figma.com/file/2shW2gj4lRB8dpAYwkmW9j/MAO_the_3Days?type=desi
       ただし未ログイン時は下記の制限を加える
 - [x] AI 画像生成はあらかじめ用意してある画像からランダムで選択されたもの（無尽蔵な API 使用を防ぎつつ、アプリの雰囲気は理解してもらえる）
 - [x] 活動のデータベース保存はできない。ただし入力はできるので挙動は確認できる
-
-### ER 図
-
-https://app.diagrams.net/#HMaTTalv001%2FMAO_the_3rd_Day%2FER_diagram%2FMAO_ER.drawio#%7B%22pageId%22%3A%22R2lEEEUBdFMjLlhIrx00%22%7D
