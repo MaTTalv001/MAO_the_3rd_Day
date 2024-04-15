@@ -1,0 +1,27 @@
+current directory: /app/vendor/bundle/ruby/3.2.0/gems/io-console-0.7.2/ext/io/console
+/usr/local/bin/ruby extconf.rb
+checking for rb_io_path()... no
+checking for rb_io_descriptor()... yes
+checking for rb_io_get_write_io()... yes
+checking for rb_io_closed_p()... no
+checking for rb_io_open_descriptor()... no
+checking for termios.h... yes
+checking for cfmakeraw() in termios.h... yes
+checking for sys/ioctl.h... yes
+checking for HAVE_RUBY_FIBER_SCHEDULER_H... yes
+creating Makefile
+
+current directory: /app/vendor/bundle/ruby/3.2.0/gems/io-console-0.7.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20240415-1-uzgeux sitelibdir\=./.gem.20240415-1-uzgeux clean
+
+current directory: /app/vendor/bundle/ruby/3.2.0/gems/io-console-0.7.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20240415-1-uzgeux sitelibdir\=./.gem.20240415-1-uzgeux
+compiling console.c
+linking shared-object io/console.so
+
+current directory: /app/vendor/bundle/ruby/3.2.0/gems/io-console-0.7.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20240415-1-uzgeux sitelibdir\=./.gem.20240415-1-uzgeux install
+/usr/bin/install -c -m 0755 console.so ./.gem.20240415-1-uzgeux/io
+
+current directory: /app/vendor/bundle/ruby/3.2.0/gems/io-console-0.7.2/ext/io/console
+make DESTDIR\= sitearchdir\=./.gem.20240415-1-uzgeux sitelibdir\=./.gem.20240415-1-uzgeux clean
