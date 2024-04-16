@@ -1,4 +1,4 @@
-name: Deploy Runtecker Frontend
+name: Auto Deploy Frontend
 on:
   push:
     branches: main
