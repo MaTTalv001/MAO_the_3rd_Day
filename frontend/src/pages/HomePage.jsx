@@ -42,8 +42,6 @@ export const HomePage = () => {
                 onClick={handleGoogleAuth}
               >
                 <div className="flex items-center justify-center">
-                  {/* GitHubアイコンを追加する場合は次の行のコメントを解除 */}
-                  {/* <FaGithub className="text-xl" /> */}
                   <span>Googleでログインする</span>
                 </div>
               </button>
