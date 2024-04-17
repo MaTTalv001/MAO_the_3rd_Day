@@ -44,7 +44,7 @@ export const HomePage = () => {
                 <div className="flex items-center justify-center">
                   {/* GitHubアイコンを追加する場合は次の行のコメントを解除 */}
                   {/* <FaGithub className="text-xl" /> */}
-                  <span>Googleでログイン</span>
+                  <span>Googleでログインする</span>
                 </div>
               </button>
             </div>
