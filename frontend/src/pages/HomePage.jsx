@@ -31,10 +31,10 @@ export const HomePage = () => {
   return (
     <article className="pt-12 pb-12 max-w-[65%] m-auto">
       <div className="bg-white rounded p-[50px]">
-        <div className="p-5">
+        <div className="p-15">
           <section className="text-center">
-            <div className="block mb-3">
-              <h2 className="text-2xl font-semibold">Google認証</h2>
+            <div className="block mb-15">
+              <h2 className="text-3xl font-semibold">Google認証</h2>
             </div>
             <div className="text-center">
               <button
