@@ -34,15 +34,15 @@ export const HomePage = () => {
         <div className="p-15">
           <section className="text-center">
             <div className="block mb-15">
-              <h2 className="text-3xl font-semibold">Google認証</h2>
+              <h2 className="text-4xl font-semibold">Google認証</h2>
             </div>
             <div className="text-center">
               <button
-                className="bg-black text-white py-2.5 px-5 rounded my-4"
+                className="bg-gray-800 text-white py-2.5 px-5 rounded my-4"
                 onClick={handleGoogleAuth}
               >
                 <div className="flex items-center justify-center">
-                  <span>Googleでログインする</span>
+                  <span className="text-2xl">Googleでログインする</span>
                 </div>
               </button>
             </div>
