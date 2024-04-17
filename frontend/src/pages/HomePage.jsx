@@ -23,7 +23,7 @@ export const HomePage = () => {
     e.preventDefault();
     const form = document.createElement("form");
     form.method = "GET";
-    form.action = `${API_URL}/auth/google_oauth2`; // Google認証のエンドポイント
+    form.action = `${API_URL}/auth/google_oauth2`; // Google認証のエンドポイントURL
     document.body.appendChild(form);
     form.submit();
   };
