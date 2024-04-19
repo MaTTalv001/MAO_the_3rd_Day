@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "localhost:8000", "https://mao-the-3rd-day-front-e8eb3156d3f2.herokuapp.com/"
+    origins "localhost:8000", "https://mao-the-3rd-day-front-e8eb3156d3f2.herokuapp.com"
 
     resource "*",
       headers: :any,
