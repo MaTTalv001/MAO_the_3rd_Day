@@ -29,6 +29,14 @@ export const MyPage = () => {
           ? new Date(currentUser.updated_at).toLocaleDateString()
           : "N/A"}
       </p>
+      <ul>
+        {currentUser.items.map((item) => (
+          <li key={item.id}>
+            {item.name} - Cost: {item.cost}
+          </li>
+        ))}
+      </ul>
+      <p>コイン：{currentUser.coin.amount}</p>
     </div>
   );
 };
