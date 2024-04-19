@@ -37,6 +37,11 @@ export const MyPage = () => {
         ))}
       </ul>
       <p>コイン：{currentUser.coin.amount}</p>
+      <ul>
+        {currentUser.avatars.map((avatar) => (
+          <li key={avatar.id}>{avatar.avatar_url}</li>
+        ))}
+      </ul>
     </div>
   );
 };
