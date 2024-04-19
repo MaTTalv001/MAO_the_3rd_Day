@@ -3,4 +3,8 @@ export const RoutePath = {
     path: "/",
     name: "ホーム",
   },
+  MyPage: {
+    path: "/mypage",
+    name: "マイページ",
+  },
 };
