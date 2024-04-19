@@ -6,18 +6,20 @@ import { API_URL } from "../config/settings";
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+  const { setToken } = useAuth();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
     if (token) {
-      setAuth(token);
+      setToken(token);
       localStorage.setItem("auth", token);
-      navigate(RoutePath.UsersNew.path);
+      /* navigate(RoutePath.Home.path);*/
+      console.log(currentUser);
     }
-  }, [setAuth, navigate]);
+  }, [setToken, navigate]);
 
   const handleGoogleAuth = (e) => {
     e.preventDefault();

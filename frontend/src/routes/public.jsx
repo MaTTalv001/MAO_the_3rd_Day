@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { Loading } from "../components/Loading";
 import { RoutePath } from "../config/route_path";
 import { HomePage } from "../pages/HomePage";
+import { MyPage } from "../pages/MyPage";
 
 const App = () => {
   return (
@@ -17,6 +18,9 @@ export const PUBLIC_ROUTES = [
   {
     path: RoutePath.Home.path,
     element: <App />,
-    children: [{ path: RoutePath.Home.path, element: <HomePage /> }],
+    children: [
+      { path: RoutePath.Home.path, element: <HomePage /> },
+      { path: RoutePath.MyPage.path, element: <MyPage /> },
+    ],
   },
 ];

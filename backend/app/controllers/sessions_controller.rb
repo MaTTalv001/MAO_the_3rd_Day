@@ -12,13 +12,13 @@ class SessionsController < ApplicationController
 
     if user_authentication
       Rails.logger.info("アプリユーザー登録されている")
-      redirect_to "#{frontend_url}/users?token=#{token}", allow_other_host: true
+      redirect_to "#{frontend_url}/MyPage?token=#{token}", allow_other_host: true
     else
       Rails.logger.info("まだアプリユーザー登録されていない")
       # 仮のユーザーを作成
       user = User.create(nickname: "新規ユーザー", achievement: 0)
       UserAuthentication.create(user_id: user.id, uid: google_user_id, provider: provider)
-      redirect_to "#{frontend_url}/users?token=#{token}", allow_other_host: true
+      redirect_to "#{frontend_url}/MyPage?token=#{token}", allow_other_host: true
     end
   end
 
