@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :users_items
   has_many :items, through: :users_items
   has_one :coin, dependent: :destroy
+  has_many :avatars
 
   after_create :create_default_coin
 
@@ -10,7 +11,8 @@ class User < ApplicationRecord
     super(options.merge(
       include: { 
         items:{ only: [:id, :name, :cost, :item_url, :category] },
-        coin: { only: [:amount] } 
+        coin: { only: [:amount] } ,
+        avatars: { only: [:id, :avatar_url] }
         }))
   end
 
