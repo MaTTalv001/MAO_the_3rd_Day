@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  action: MyString
+  category: one
+  minute: 1
+
+two:
+  user: two
+  action: MyString
+  category: two
+  minute: 1

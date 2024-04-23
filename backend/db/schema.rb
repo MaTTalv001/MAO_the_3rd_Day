@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_121106) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_23_144642) do
+  create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "action"
+    t.bigint "category_id", null: false
+    t.integer "minute"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_activities_on_category_id"
+    t.index ["user_id"], name: "index_activities_on_user_id"
+  end
+
+  create_table "activity_likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "activity_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_activity_likes_on_activity_id"
+    t.index ["user_id"], name: "index_activity_likes_on_user_id"
+  end
+
   create_table "avatars", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "avatar_url", null: false
     t.bigint "user_id", null: false
@@ -19,12 +39,38 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_121106) do
     t.index ["user_id"], name: "index_avatars_on_user_id"
   end
 
+  create_table "battle_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "enemy_id", null: false
+    t.boolean "result", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enemy_id"], name: "index_battle_logs_on_enemy_id"
+    t.index ["user_id"], name: "index_battle_logs_on_user_id"
+  end
+
+  create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "coins", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "amount", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_coins_on_user_id"
+  end
+
+  create_table "enemies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "hp", null: false
+    t.integer "attack", null: false
+    t.integer "defence", null: false
+    t.string "enemy_url", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -87,7 +133,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_121106) do
     t.index ["user_id"], name: "index_users_items_on_user_id"
   end
 
+  add_foreign_key "activities", "categories"
+  add_foreign_key "activities", "users"
+  add_foreign_key "activity_likes", "activities"
+  add_foreign_key "activity_likes", "users"
   add_foreign_key "avatars", "users"
+  add_foreign_key "battle_logs", "enemies"
+  add_foreign_key "battle_logs", "users"
   add_foreign_key "coins", "users"
   add_foreign_key "jobs", "items"
   add_foreign_key "user_authentications", "users"
