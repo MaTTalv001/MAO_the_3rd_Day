@@ -56,6 +56,15 @@ export const MyPage = () => {
             <li>Dexterity: {currentUser.latest_status.dexterity}</li>
             <li>Charisma: {currentUser.latest_status.charisma}</li>
           </ul>
+          <ul>
+            {currentUser.activities.map((activity) => (
+              <li key={activity.id}>
+                Action: {activity.action} - Minutes: {activity.minute}
+                {" - "}
+                Category: {activity.category.name}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
