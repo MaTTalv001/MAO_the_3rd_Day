@@ -50,3 +50,5 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'jwt'
 gem 'dotenv-rails'
+
+gem 'active_model_serializers', '~> 0.10.0'
