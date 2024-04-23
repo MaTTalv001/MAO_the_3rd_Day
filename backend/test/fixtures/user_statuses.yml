@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  job_id: 1
+  level: 1
+  hp: 1
+  strength: 1
+  intelligence: 1
+  wisdom: 1
+  dexterity: 1
+  charisma: 1
+
+two:
+  user: two
+  job_id: 1
+  level: 1
+  hp: 1
+  strength: 1
+  intelligence: 1
+  wisdom: 1
+  dexterity: 1
+  charisma: 1

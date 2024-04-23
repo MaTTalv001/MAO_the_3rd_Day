@@ -4,12 +4,10 @@ import { useAuth } from "../providers/auth";
 export const MyPage = () => {
   const { currentUser } = useAuth();
 
-  // currentUserがnullまたはundefinedの場合、ローディングを表示
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
 
-  // 安全にプロパティにアクセスするためのチェックを追加
   return (
     <div>
       <h1>My Profile</h1>
@@ -36,12 +34,30 @@ export const MyPage = () => {
           </li>
         ))}
       </ul>
-      <p>コイン：{currentUser.coin.amount}</p>
+      <p>コイン：{currentUser.coin?.amount ?? "N/A"}</p>
       <ul>
         {currentUser.avatars.map((avatar) => (
           <li key={avatar.id}>{avatar.avatar_url}</li>
         ))}
       </ul>
+      {currentUser.latest_status && (
+        <div>
+          <h2>Latest Status</h2>
+          <ul>
+            <li>Job ID: {currentUser.latest_status.job_id}</li>
+            <li>
+              Job: {currentUser.latest_status.job?.name ?? "No job assigned"}
+            </li>
+            <li>Level: {currentUser.latest_status.level}</li>
+            <li>HP: {currentUser.latest_status.hp}</li>
+            <li>Strength: {currentUser.latest_status.strength}</li>
+            <li>Intelligence: {currentUser.latest_status.intelligence}</li>
+            <li>Wisdom: {currentUser.latest_status.wisdom}</li>
+            <li>Dexterity: {currentUser.latest_status.dexterity}</li>
+            <li>Charisma: {currentUser.latest_status.charisma}</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
