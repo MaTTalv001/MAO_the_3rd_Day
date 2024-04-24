@@ -107,6 +107,9 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.4)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
@@ -243,6 +246,7 @@ DEPENDENCIES
   bootsnap
   debug
   dotenv-rails
+  httparty
   jwt
   mysql2 (~> 0.5)
   omniauth

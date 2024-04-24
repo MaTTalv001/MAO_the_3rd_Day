@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_144642) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_24_145504) do
   create_table "activities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "action"
@@ -32,7 +32,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_144642) do
   end
 
   create_table "avatars", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "avatar_url", null: false
+    t.text "avatar_url", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

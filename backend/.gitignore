@@ -34,3 +34,5 @@
 .env.local
 .env
 .DS_Store
+
+/public/generated_images/*
