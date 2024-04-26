@@ -44,19 +44,25 @@ class ChatgptService
     response.parsed_response['data'][0]['url']
   end
 
-  # 画像をダウンロードするクラスメソッド
+  # 画像をダウンロードしてS3に保存するクラスメソッド
+  # DALL-E 2などのAIを利用して画像を生成し、Active Storageで保存するメソッド
   def self.download_image(prompt)
-    image_url = new(prompt).generate_image_with_dalle2(prompt)
+    image_url = new(prompt).generate_image_with_dalle2(prompt) # 画像生成APIを呼び出す
     timestamp = Time.now.strftime('%Y%m%d_%H%M%S')
-    file_name = "#{timestamp}.png"
-    file_path = Rails.root.join('public', 'generated_images', file_name)
-    FileUtils.mkdir_p(File.dirname(file_path))
+    file_name = "#{timestamp}.png" # ファイル名をタイムスタンプで一意にする
 
-    URI.open(image_url) do |image|
-      File.open(file_path, 'wb') { |file| file.write(image.read) }
-    end
+    # URLから画像ファイルをダウンロード
+    file = URI.open(image_url)
 
-    file_name
+    # Active Storageを使用してS3にファイルをアップロード
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: file,
+      filename: file_name,
+      content_type: 'image/png' # MIMEタイプは画像に合わせて適切に設定
+    )
+
+    file.close # ファイルのダウンロードストリームを閉じる
+    blob.key # Active Storageのblobキーを返す
   rescue StandardError => e
     Rails.logger.error "Image download failed: #{e.message}"
     Rails.logger.error e.backtrace.join("\n")
