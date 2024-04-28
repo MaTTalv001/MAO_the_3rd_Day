@@ -19,8 +19,9 @@ class User < ApplicationRecord
 
   # 最新のアバターのURLを取得
   def latest_avatar_url
-    avatars.order(created_at: :desc).first&.avatar_url
-  end
+  avatar = avatars.last
+  avatar ? avatar.avatar_url : nil
+end
 
   def as_json(options = {})
     super(options.merge(

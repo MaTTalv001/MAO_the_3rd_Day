@@ -8,11 +8,21 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id
   def show
-    @user = User.find(params[:id])
-    render json: @user.as_json
-  rescue ActiveRecord::RecordNotFound
+  @user = User.find(params[:id])
+  if @user
+    begin
+      avatar_url = @user.latest_avatar_url
+      Rails.logger.info("Avatar URL: #{avatar_url}")
+      render json: @user.as_json.merge(avatar_url: avatar_url)
+    rescue StandardError => e
+      Rails.logger.error("Error in UsersController#show: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: { error: "Internal Server Error" }, status: :internal_server_error
+    end
+  else
     render json: { error: "User not found" }, status: :not_found
   end
+end
 
   # PATCH/PUT /api/v1/users/:id
   def update

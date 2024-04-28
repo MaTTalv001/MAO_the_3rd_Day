@@ -23,7 +23,7 @@ export const Users = () => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <h2>アバター：{user.latest_avatar_url.avatar_url}</h2>
+            <img src={user.avatar_url} alt="User Avatar" />
             <h2>冒険者名：{user.nickname}</h2>
             <h2>職業：{user.latest_status.job.name}</h2>
             <h2>レベル：{user.latest_status.level}</h2>
