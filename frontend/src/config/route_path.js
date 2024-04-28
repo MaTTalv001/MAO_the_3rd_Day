@@ -15,4 +15,8 @@ export const RoutePath = {
     path: "/users",
     name: "酒場",
   },
+  UsersShow: {
+    path: (id = ":id") => `/users/${id}`,
+    name: "冒険者ステータス",
+  },
 };

@@ -9,7 +9,9 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users/:id
   def show
     @user = User.find(params[:id])
-    render json: @user, serializer: CustomUserSerializer
+    render json: @user.as_json
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "User not found" }, status: :not_found
   end
 
   # PATCH/PUT /api/v1/users/:id

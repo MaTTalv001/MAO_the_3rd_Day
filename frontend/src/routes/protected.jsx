@@ -6,6 +6,7 @@ import { HomePage } from "../pages/HomePage";
 import { MyPage } from "../pages/MyPage";
 import { Shop } from "../pages/Shop";
 import { Users } from "../pages/Users";
+import { UsersShow } from "../pages/UsersShow";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.MyPage.path, element: <MyPage /> },
       { path: RoutePath.Shop.path, element: <Shop /> },
       { path: RoutePath.Users.path, element: <Users /> },
+      { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
     ],
   },
 ];
