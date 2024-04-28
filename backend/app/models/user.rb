@@ -17,9 +17,14 @@ class User < ApplicationRecord
     user_statuses.includes(:job).order(created_at: :desc).first
   end
 
+  # 最新のアバターのURLを取得
+  def latest_avatar_url
+    avatars.order(created_at: :desc).first&.avatar_url
+  end
+
   def as_json(options = {})
     super(options.merge(
-      methods: [:latest_status, :latest_job],  # latest_status と latest_job の追加
+      methods: [:latest_status, :latest_job, :latest_avatar_url],  # latest_status と latest_job ,latest_avatar_urlの追加
       include: {
         items: { only: [:id, :name, :cost, :item_url, :category] },
         coin: { only: [:amount] },

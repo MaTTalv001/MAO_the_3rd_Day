@@ -1,7 +1,9 @@
 class Api::V1::UsersController < ApplicationController
+  skip_before_action :authenticate_request, only: [:index, :show]
   # GET /api/v1/users
   def index
-    
+    @users = User.all
+    render json: @users    
   end
 
   # GET /api/v1/users/:id
