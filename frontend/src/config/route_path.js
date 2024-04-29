@@ -23,4 +23,8 @@ export const RoutePath = {
     path: "/create_avatar",
     name: "アバター生成",
   },
+  MyItems: {
+    path: "/my_items",
+    name: "所持品",
+  },
 };
