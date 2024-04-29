@@ -13,6 +13,7 @@ export const MyPage = () => {
       <h1>My Profile</h1>
       <p>ID: {currentUser.id ?? "N/A"}</p>
       <p>Nickname: {currentUser.nickname ?? "N/A"}</p>
+      <img src={currentUser.latest_avatar_url} alt="User Avatar" />
       <p>Profile: {currentUser.profile ?? "N/A"}</p>
       <p>Achievement: {currentUser.achievement ?? "N/A"}</p>
       <p>
