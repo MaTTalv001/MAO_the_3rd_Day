@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_26_130351) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_29_075739) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -165,15 +165,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_130351) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activities", "categories"
   add_foreign_key "activities", "users"
-  add_foreign_key "activity_likes", "activities"
+  add_foreign_key "activities", "users", name: "fk_activities_users", on_delete: :cascade
+  add_foreign_key "activity_likes", "activities", on_delete: :cascade
   add_foreign_key "activity_likes", "users"
   add_foreign_key "avatars", "users"
+  add_foreign_key "avatars", "users", name: "fk_user_avatars_users", on_delete: :cascade
   add_foreign_key "battle_logs", "enemies"
   add_foreign_key "battle_logs", "users"
   add_foreign_key "coins", "users"
+  add_foreign_key "coins", "users", name: "fk_user_coins_users", on_delete: :cascade
   add_foreign_key "jobs", "items"
   add_foreign_key "user_authentications", "users"
+  add_foreign_key "user_authentications", "users", name: "fk_user_authentications_users", on_delete: :cascade
   add_foreign_key "user_statuses", "users"
+  add_foreign_key "user_statuses", "users", name: "fk_user_statuses_users", on_delete: :cascade
   add_foreign_key "users_items", "items"
   add_foreign_key "users_items", "users"
+  add_foreign_key "users_items", "users", name: "fk_user_items_users", on_delete: :cascade
 end

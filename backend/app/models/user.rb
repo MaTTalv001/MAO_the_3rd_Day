@@ -1,14 +1,14 @@
 class User < ApplicationRecord
-  has_one :user_authentication
-  has_many :users_items
+  has_one :user_authentication, dependent: :destroy
+  has_many :users_items, dependent: :destroy
   has_many :items, through: :users_items
   has_one :coin, dependent: :destroy
-  has_many :avatars
-  has_many :user_statuses
-  has_many :activities
-  has_many :activity_likes
-  has_many :liked_activities, through: :activity_likes, source: :activity
-  has_many :battle_logs
+  has_many :avatars, dependent: :destroy
+  has_many :user_statuses, dependent: :destroy
+  has_many :activities, dependent: :destroy
+  has_many :activity_likes, dependent: :destroy
+  has_many :liked_activities, through: :activity_likes, source: :activity, dependent: :destroy
+  has_many :battle_logs, dependent: :destroy
   has_many :enemies, through: :battle_logs
 
   after_create :create_default_coin
