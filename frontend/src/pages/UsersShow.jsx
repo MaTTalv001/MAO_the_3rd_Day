@@ -23,7 +23,10 @@ export const UsersShow = () => {
     <>
       <h1>ユーザー詳細</h1>
       <div>
-        <img src={user.avatar_url} alt="User Avatar" />
+        {user.avatars.map((avatar) => (
+          <img src={avatar.avatar_url} alt="User Avatar" key={avatar.id} />
+        ))}
+        <img src={user.latest_avatar_url} alt="User Avatar" />
         <h2>冒険者名：{user.nickname}</h2>
         <h2>レベル：{user.latest_status.level}</h2>
         <h2>HP：{user.latest_status.hp}</h2>

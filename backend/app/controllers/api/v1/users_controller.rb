@@ -3,26 +3,22 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
     @users = User.all
-    render json: @users    
+    render json: @users.map { |user| user.as_json(index_view: true) } #as_json内分岐で情報量を絞る
   end
 
   # GET /api/v1/users/:id
   def show
-  @user = User.find(params[:id])
-  if @user
-    begin
-      avatar_url = @user.latest_avatar_url
-      Rails.logger.info("Avatar URL: #{avatar_url}")
-      render json: @user.as_json.merge(avatar_url: avatar_url)
-    rescue StandardError => e
-      Rails.logger.error("Error in UsersController#show: #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
-      render json: { error: "Internal Server Error" }, status: :internal_server_error
+    @user = User.includes(:avatars, :activities, :user_statuses, :items).find(params[:id])
+    if @user
+      render json: @user
+    else
+      render json: { error: "User not found" }, status: :not_found
     end
-  else
-    render json: { error: "User not found" }, status: :not_found
+  rescue StandardError => e
+    Rails.logger.error("Error in UsersController#show: #{e.message}")
+    render json: { error: "Internal Server Error" }, status: :internal_server_error
   end
-end
+
 
   # PATCH/PUT /api/v1/users/:id
   def update

@@ -12,6 +12,7 @@ export const Users = () => {
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching items:", error));
   }, []);
+  console.log(users);
 
   if (!currentUser) {
     return <p>Loading profile...</p>;
@@ -23,11 +24,11 @@ export const Users = () => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <img src={user.avatar_url} alt="User Avatar" />
+            <img src={user.latest_avatar_url} alt="User Avatar" />
             <h2>冒険者名：{user.nickname}</h2>
-            <h2>職業：{user.latest_status.job.name}</h2>
-            <h2>レベル：{user.latest_status.level}</h2>
-            <h2>HP：{user.latest_status.hp}</h2>
+            <h2>職業：{user.latest_status_as_json.job.name}</h2>
+            <h2>レベル：{user.latest_status_as_json.level}</h2>
+            <h2>HP：{user.latest_status_as_json.hp}</h2>
             <h2>3日達成数：{user.achievement}</h2>
           </li>
         ))}

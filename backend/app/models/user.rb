@@ -13,39 +13,63 @@ class User < ApplicationRecord
 
   after_create :create_default_coin
 
-  def latest_status
-    user_statuses.includes(:job).order(created_at: :desc).first
-  end
-
-  # 最新のアバターのURLを取得
-  def latest_avatar_url
-  avatar = avatars.last
-  avatar ? avatar.avatar_url : nil
-end
-
+  # indexとshowで分岐させて情報量を制御する
   def as_json(options = {})
+  if options[:index_view]
     super(options.merge(
-      methods: [:latest_status, :latest_job, :latest_avatar_url],  # latest_status と latest_job ,latest_avatar_urlの追加
+      methods: [:latest_avatar_url, :latest_status_as_json, :latest_job],
+      include: {
+        items: { only: [:id, :name, :cost, :item_url, :category] },
+        coin: { only: [:amount] },
+        activities: {
+          include: {
+            category: { only: [:id, :name] }
+          },
+          only: [:id, :action, :minute]
+        }
+      }
+    ))
+  else
+    super(options.merge(
+      methods: [:latest_status, :latest_job, :latest_avatar_url],
       include: {
         items: { only: [:id, :name, :cost, :item_url, :category] },
         coin: { only: [:amount] },
         avatars: { only: [:id, :avatar_url] },
         activities: {
           include: {
-            category: { only: [:id, :name] }  # Activity の Category を含める
+            category: { only: [:id, :name] }
           },
           only: [:id, :action, :minute]
         }
       }
     )).tap do |hash|
-      hash[:latest_status] = latest_status.as_json(include: { job: { only: [:name] } })
+      hash[:latest_status] = latest_status_as_json
     end
   end
+end
+
+def latest_status_as_json
+  @latest_status_as_json ||= latest_status&.as_json(include: { job: { only: [:name] } })
+end
+
+
 
 # 最新のJob名を取得するためのメソッドをUserモデルに追加
 def latest_job
   latest_status&.job&.name
 end
+
+def latest_status
+  user_statuses.includes(:job).order(created_at: :desc).first
+end
+
+# 最新のアバターのURLを取得
+  def latest_avatar_url
+  avatar = avatars.order(created_at: :desc).first
+  avatar ? avatar.avatar_url : nil
+end
+
 
   private
 

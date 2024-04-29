@@ -7,6 +7,7 @@ import { MyPage } from "../pages/MyPage";
 import { Shop } from "../pages/Shop";
 import { Users } from "../pages/Users";
 import { UsersShow } from "../pages/UsersShow";
+import { CreateAvatar } from "../pages/CreateAvatar";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.Shop.path, element: <Shop /> },
       { path: RoutePath.Users.path, element: <Users /> },
       { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
+      { path: RoutePath.CreateAvatar.path, element: <CreateAvatar /> },
     ],
   },
 ];

@@ -19,4 +19,8 @@ export const RoutePath = {
     path: (id = ":id") => `/users/${id}`,
     name: "冒険者ステータス",
   },
+  CreateAvatar: {
+    path: "/create_avatar",
+    name: "アバター生成",
+  },
 };
