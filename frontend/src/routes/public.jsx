@@ -8,6 +8,7 @@ import { Shop } from "../pages/Shop";
 import { Users } from "../pages/Users";
 import { UsersShow } from "../pages/UsersShow";
 import { CreateAvatar } from "../pages/CreateAvatar";
+import { MyItems } from "../pages/MyItems";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.Users.path, element: <Users /> },
       { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
       { path: RoutePath.CreateAvatar.path, element: <CreateAvatar /> },
+      { path: RoutePath.MyItems.path, element: <MyItems /> },
     ],
   },
 ];
