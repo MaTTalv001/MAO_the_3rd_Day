@@ -1,14 +1,24 @@
 class Api::V1::UsersController < ApplicationController
+  skip_before_action :authenticate_request, only: [:index, :show]
   # GET /api/v1/users
   def index
-    
+    @users = User.all
+    render json: @users.map { |user| user.as_json(index_view: true) } #as_json内分岐で情報量を絞る
   end
 
   # GET /api/v1/users/:id
   def show
-    @user = User.find(params[:id])
-    render json: @user, serializer: CustomUserSerializer
+    @user = User.includes(:avatars, :activities, :user_statuses, :items).find(params[:id])
+    if @user
+      render json: @user
+    else
+      render json: { error: "User not found" }, status: :not_found
+    end
+  rescue StandardError => e
+    Rails.logger.error("Error in UsersController#show: #{e.message}")
+    render json: { error: "Internal Server Error" }, status: :internal_server_error
   end
+
 
   # PATCH/PUT /api/v1/users/:id
   def update

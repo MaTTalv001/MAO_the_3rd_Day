@@ -12,7 +12,10 @@ Rails.application.routes.draw do
     namespace :v1 do
 	    # カレントユーザーの呼び出し
       get 'users/current', to: 'users#current'
-      resources :users
+      resources :items, only: [:index]
+      resources :users do
+        resources :avatars, only: [:create]
+      end
     end
   end
 

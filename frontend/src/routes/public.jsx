@@ -4,6 +4,10 @@ import { Loading } from "../components/Loading";
 import { RoutePath } from "../config/route_path";
 import { HomePage } from "../pages/HomePage";
 import { MyPage } from "../pages/MyPage";
+import { Shop } from "../pages/Shop";
+import { Users } from "../pages/Users";
+import { UsersShow } from "../pages/UsersShow";
+import { CreateAvatar } from "../pages/CreateAvatar";
 
 const App = () => {
   return (
@@ -21,6 +25,10 @@ export const PUBLIC_ROUTES = [
     children: [
       { path: RoutePath.Home.path, element: <HomePage /> },
       { path: RoutePath.MyPage.path, element: <MyPage /> },
+      { path: RoutePath.Shop.path, element: <Shop /> },
+      { path: RoutePath.Users.path, element: <Users /> },
+      { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
+      { path: RoutePath.CreateAvatar.path, element: <CreateAvatar /> },
     ],
   },
 ];
