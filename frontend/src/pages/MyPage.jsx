@@ -9,65 +9,57 @@ export const MyPage = () => {
   }
 
   return (
-    <div>
-      <h1>My Profile</h1>
-      <p>ID: {currentUser.id ?? "N/A"}</p>
-      <p>Nickname: {currentUser.nickname ?? "N/A"}</p>
-      <img src={currentUser.latest_avatar_url} alt="User Avatar" />
-      <p>Profile: {currentUser.profile ?? "N/A"}</p>
-      <p>Achievement: {currentUser.achievement ?? "N/A"}</p>
-      <p>
-        Account Created:{" "}
-        {currentUser.created_at
-          ? new Date(currentUser.created_at).toLocaleDateString()
-          : "N/A"}
-      </p>
-      <p>
-        Last Updated:{" "}
-        {currentUser.updated_at
-          ? new Date(currentUser.updated_at).toLocaleDateString()
-          : "N/A"}
-      </p>
-      <ul>
-        {currentUser.items.map((item) => (
-          <li key={item.id}>
-            {item.name} - Cost: {item.cost}
-          </li>
-        ))}
-      </ul>
-      <p>コイン：{currentUser.coin?.amount ?? "N/A"}</p>
-      <ul>
-        {currentUser.avatars.map((avatar) => (
-          <li key={avatar.id}>{avatar.avatar_url}</li>
-        ))}
-      </ul>
-      {currentUser.latest_status && (
-        <div>
-          <h2>Latest Status</h2>
-          <ul>
-            <li>Job ID: {currentUser.latest_status.job_id}</li>
-            <li>
-              Job: {currentUser.latest_status.job?.name ?? "No job assigned"}
-            </li>
-            <li>Level: {currentUser.latest_status.level}</li>
-            <li>HP: {currentUser.latest_status.hp}</li>
-            <li>Strength: {currentUser.latest_status.strength}</li>
-            <li>Intelligence: {currentUser.latest_status.intelligence}</li>
-            <li>Wisdom: {currentUser.latest_status.wisdom}</li>
-            <li>Dexterity: {currentUser.latest_status.dexterity}</li>
-            <li>Charisma: {currentUser.latest_status.charisma}</li>
-          </ul>
-          <ul>
-            {currentUser.activities.map((activity) => (
-              <li key={activity.id}>
-                Action: {activity.action} - Minutes: {activity.minute}
-                {" - "}
-                Category: {activity.category.name}
-              </li>
-            ))}
-          </ul>
+    <div className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-4">マイページ</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* プロフィール */}
+        <div className="bg-base-200 p-4 rounded-lg">
+          <h2 className="text-2xl font-bold mb-2">{currentUser.nickname}</h2>
+          <img
+            src={currentUser.latest_avatar_url}
+            alt="User Avatar"
+            className="w-full h-auto mb-4 rounded-lg"
+          />
+          <button className="btn btn-accent w-full">アバター変更</button>
         </div>
-      )}
+
+        {/* ステータス */}
+        {currentUser.latest_status && (
+          <div className="bg-base-200 p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-2">ステータス</h2>
+            <p>Level: {currentUser.latest_status.level}</p>
+            <p>HP: {currentUser.latest_status.hp}</p>
+            <p>体力: {currentUser.latest_status.strength}</p>
+            <p>知力: {currentUser.latest_status.intelligence}</p>
+            <p>精神: {currentUser.latest_status.wisdom}</p>
+            <p>素速さ: {currentUser.latest_status.dexterity}</p>
+            <p>カリスマ: {currentUser.latest_status.charisma}</p>
+            <p className="mt-4">3日達成数: {currentUser.achievement ?? 0}</p>
+            <div className="mt-4 bg-base-300 p-2 rounded-lg">
+              <h3 className="text-lg font-bold mb-2">プロフィール</h3>
+              <p>{currentUser.profile ?? "未設定"}</p>
+            </div>
+          </div>
+        )}
+
+        {/* 所持品 */}
+        <div className="bg-base-200 p-4 rounded-lg">
+          <h2 className="text-xl font-bold mb-2">所持品</h2>
+          {/* 仮のボックスを表示 */}
+          <div className="bg-base-300 h-40 rounded-lg flex items-center justify-center">
+            <p className="text-lg">データがありません</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 活動報告 */}
+      <div className="bg-base-200 mt-4 p-4 rounded-lg">
+        <h2 className="text-xl font-bold mb-2">活動登録</h2>
+        {/* 仮のボックスを表示 */}
+        <div className="bg-base-300 h-40 rounded-lg">
+          TO DO 機能実装（Material UI）
+        </div>
+      </div>
     </div>
   );
 };
