@@ -18,77 +18,66 @@ export const Header = memo(() => {
   };
 
   return (
-    <header className="bg-white h-16 flex justify-between items-center drop-shadow-md z-50">
-      <div className="flex gap-3 m-4 items-center">
-        <h1 className="text-runteq-primary text-xl font-semibold">
-          {/* ログイン済みであればユーザー一覧を表示するようにしています */}
-          <Link to="#">3日目に魔王がいる</Link>
-        </h1>
-        <nav className="m-7">
-          <ul className="flex gap-7">
+    <header className="navbar bg-base-300 ">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <label tabIndex={0} className="btn btn-ghost">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+          >
             <li>
-              <p to="#" className="text-gray-400">
-                ダミー
-              </p>
+              <Link to="/MyPage" className="btn btn-ghost normal-case text-xl">
+                マイページ
+              </Link>
             </li>
             <li>
-              <p to="#" className="text-gray-400">
-                ダミー
-              </p>
+              <Link to="/users" className="btn btn-ghost normal-case text-xl">
+                酒場
+              </Link>
             </li>
             <li>
-              <p to="#" className="text-gray-400">
-                ダミー
-              </p>
+              <Link to="/shop" className="btn btn-ghost normal-case text-xl">
+                ショップ
+              </Link>
             </li>
             <li>
-              <p to="#" className="text-gray-400">
-                ダミー
-              </p>
-            </li>
-            <li>
-              <Link to="#">ダミー</Link>
+              <a
+                onClick={handleClickLogout}
+                className="btn btn-ghost normal-case text-xl"
+              >
+                ログアウト
+              </a>
             </li>
           </ul>
-        </nav>
+        </div>
       </div>
-      <div className="flex items-center h-full mr-4">
-        {currentUser ? (
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="flex flex-col justify-center items-center w-24 gap-2 hover:opacity-80"
-              type="button"
-            >
-              <span className="text-xs">マイページ</span>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content z-[1] shadow bg-white rounded mt-2 p-0 py-2 text-base w-36"
-            >
-              <li>
-                <Link
-                  to="#"
-                  className="rounded-none hover:rounded-none hover:bg-runteq-primary px-6"
-                >
-                  マイページ
-                </Link>
-              </li>
-              <li>
-                <button
-                  onClick={handleClickLogout}
-                  className="rounded-none hover:rounded-none hover:bg-runteq-primary px-6"
-                >
-                  ログアウト
-                </button>
-              </li>
-            </ul>
+      <div className="navbar-center">
+        <Link to="/MyPage" className="btn btn-ghost normal-case text-2xl">
+          3日目に魔王がいる
+        </Link>
+      </div>
+      <div className="navbar-end">
+        {currentUser && (
+          <div className="flex items-center">
+            <span className="text-md mr-2">{currentUser.nickname}</span>
+            {/*<span className="text-md">{currentUser.coins.amount} コイン</span>*/}
           </div>
-        ) : (
-          <Link to="#" className="px-4">
-            ダミー
-          </Link>
         )}
       </div>
     </header>
