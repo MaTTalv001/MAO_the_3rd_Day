@@ -65,7 +65,7 @@ export const UsersShow = () => {
             {user.avatars.map((avatar) => (
               <img
                 key={avatar.id}
-                src={`${process.env.REACT_APP_BASE_URL}/${avatar.avatar_url}`}
+                src={`${API_URL}/${avatar.avatar_url}`}
                 alt="User Avatar"
                 className="w-full h-auto rounded"
               />
