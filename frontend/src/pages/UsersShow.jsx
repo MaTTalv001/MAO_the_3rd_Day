@@ -21,6 +21,7 @@ export const UsersShow = () => {
   }
 
   console.log(process.env.REACT_APP_BASE_URL);
+  console.log(process.env.REACT_APP_FRONT_URL);
 
   return (
     <div className="container mx-auto p-4">
@@ -35,7 +36,7 @@ export const UsersShow = () => {
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-2xl font-bold mb-2">{user.nickname}</h2>
           <img
-            src={`${process.env.REACT_APP_BASE_URL}/${user.latest_avatar_url}`}
+            src={`${process.env.REACT_APP_FRONT_URL}/${user.latest_avatar_url}`}
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
@@ -67,7 +68,7 @@ export const UsersShow = () => {
             {user.avatars.map((avatar) => (
               <img
                 key={avatar.id}
-                src={`${process.env.REACT_APP_BASE_URL}/${avatar.avatar_url}`}
+                src={`${process.env.REACT_APP_FRONT_URL}/${avatar.avatar_url}`}
                 alt="User Avatar"
                 className="w-full h-auto rounded"
               />
