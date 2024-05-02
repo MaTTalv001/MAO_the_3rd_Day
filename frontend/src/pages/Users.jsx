@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
+import { Link } from "react-router-dom";
 
 export const Users = () => {
   const { currentUser } = useAuth();
@@ -12,27 +13,43 @@ export const Users = () => {
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching items:", error));
   }, []);
-  console.log(users);
 
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
 
   return (
-    <>
-      <h1>酒場</h1>
-      <ul>
+    <div className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-4">酒場</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {users.map((user) => (
-          <li key={user.id}>
-            <img src={user.latest_avatar_url} alt="User Avatar" />
-            <h2>冒険者名：{user.nickname}</h2>
-            <h2>職業：{user.latest_status_as_json.job.name}</h2>
-            <h2>レベル：{user.latest_status_as_json.level}</h2>
-            <h2>HP：{user.latest_status_as_json.hp}</h2>
-            <h2>3日達成数：{user.achievement}</h2>
-          </li>
+          <div key={user.id} className="bg-base-200 p-4 rounded-lg">
+            <div className="flex items-center mb-4">
+              <img
+                src={user.latest_avatar_url}
+                alt="User Avatar"
+                className="w-32 h-32 rounded-lg mr-4"
+              />
+              <div>
+                <h2 className="text-xl font-bold">{user.nickname}</h2>
+                <p>職業：{user.latest_status_as_json.job.name}</p>
+                <p>レベル：{user.latest_status_as_json.level}</p>
+                <p>HP：{user.latest_status_as_json.hp}</p>
+              </div>
+            </div>
+            <div className="mb-4"></div>
+            <div className="flex justify-between items-center">
+              <div>
+                <p>3日達成数：{user.achievement}</p>
+                <p>{user.profile}</p>
+              </div>
+              <Link to={`/users/${user.id}`} className="btn btn-primary btn-sm">
+                詳細
+              </Link>
+            </div>
+          </div>
         ))}
-      </ul>
-    </>
+      </div>
+    </div>
   );
 };
