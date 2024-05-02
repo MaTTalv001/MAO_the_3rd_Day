@@ -60,12 +60,12 @@ export const UsersShow = () => {
 
         {/* 歴代アバター */}
         <div className="bg-base-200 p-4 rounded-lg">
-          <h2 className="text-xl font-bold mb-2">歴代アバター</h2>
+          <h2 className="text-xl font-bold mb-2">これまでのアバター</h2>
           <div className="grid grid-cols-3 gap-2">
             {user.avatars.map((avatar) => (
               <img
                 key={avatar.id}
-                src={`${API_URL}/${avatar.avatar_url}`}
+                src={`${process.env.REACT_APP_BASE_URL}/${avatar.avatar_url}`}
                 alt="User Avatar"
                 className="w-full h-auto rounded"
               />
