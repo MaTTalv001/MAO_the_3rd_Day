@@ -34,7 +34,7 @@ export const UsersShow = () => {
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-2xl font-bold mb-2">{user.nickname}</h2>
           <img
-            src={`${FRONT_URL}/${user.latest_avatar_url}`}
+            src={`${user.latest_avatar_url}`}
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
@@ -66,7 +66,7 @@ export const UsersShow = () => {
             {user.avatars.map((avatar) => (
               <img
                 key={avatar.id}
-                src={`${FRONT_URL}/${avatar.avatar_url}`}
+                src={`${avatar.avatar_url}`}
                 alt="User Avatar"
                 className="w-full h-auto rounded"
               />
