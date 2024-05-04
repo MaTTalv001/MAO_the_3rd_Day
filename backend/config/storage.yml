@@ -13,7 +13,6 @@ amazon:
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] %> # 東京リージョンはap-northeast-1
   bucket: <%= ENV['AWS_BUCKET'] %> # バケット名
-
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS

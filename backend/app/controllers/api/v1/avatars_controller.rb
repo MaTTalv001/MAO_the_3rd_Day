@@ -5,7 +5,7 @@ module Api
 
       def create
         prompt = avatar_params[:prompt]
-        image_url = ChatgptService.generate_image_url(prompt)
+        image_url = ChatgptService.download_image(prompt)
         avatar = @user.avatars.create(avatar_url: image_url)
 
         if avatar.persisted?
