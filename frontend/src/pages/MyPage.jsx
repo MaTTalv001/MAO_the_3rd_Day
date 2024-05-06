@@ -1,5 +1,7 @@
 import React from "react";
 import { useAuth } from "../providers/auth";
+import { Link } from "react-router-dom";
+import ActivityEntry from "../components/ActivityEntry";
 
 export const MyPage = () => {
   const { currentUser } = useAuth();
@@ -20,7 +22,10 @@ export const MyPage = () => {
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
-          <button className="btn btn-accent w-full">アバター変更</button>
+
+          <Link to={`/create_avatar`} className="btn btn-accent w-full">
+            アバター変更
+          </Link>
         </div>
 
         {/* ステータス */}
@@ -54,11 +59,7 @@ export const MyPage = () => {
 
       {/* 活動報告 */}
       <div className="bg-base-200 mt-4 p-4 rounded-lg">
-        <h2 className="text-xl font-bold mb-2">活動登録</h2>
-        {/* 仮のボックスを表示 */}
-        <div className="bg-base-300 h-40 rounded-lg">
-          TO DO 機能実装（Material UI）
-        </div>
+        <ActivityEntry />
       </div>
     </div>
   );
