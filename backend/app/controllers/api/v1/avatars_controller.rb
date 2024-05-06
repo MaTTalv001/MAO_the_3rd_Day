@@ -23,7 +23,7 @@ module Api
       end
 
       def avatar_params
-        params.require(:avatar).permit(:prompt)
+        params.permit(:prompt)
       end
     end
   end
