@@ -15,13 +15,13 @@ const categories = [
   },
   {
     id: 3,
-    name: "仕事",
-    description: "アルバイトや業務など。素早さを向上させます",
+    name: "親交",
+    description: "家族や友人、恋人との時間。精神を向上させます",
   },
   {
     id: 4,
-    name: "親交",
-    description: "家族や友人、恋人との時間。精神を向上させます",
+    name: "仕事",
+    description: "アルバイトや業務など。素早さを向上させます",
   },
   {
     id: 5,
@@ -30,84 +30,107 @@ const categories = [
   },
 ];
 
-const ActivityEntry = () => {
-  const { currentUser, token } = useAuth();
-  const [activities, setActivities] = useState([
-    { action: "", minute: 0, category_id: "" },
-  ]);
+const ActivityEntry = ({ currentUser, setCurrentUser }) => {
+  const { token } = useAuth();
+  const today = new Date();
+  const dateString = `${today.getFullYear()}年${
+    today.getMonth() + 1
+  }月${today.getDate()}日`;
+  const [activity, setActivity] = useState({
+    action: "",
+    duration: 0,
+    category_id: "",
+  });
 
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  const handleContentChange = (index, event) => {
-    const newActivities = [...activities];
-    newActivities[index].content = event.target.value;
-    setActivities(newActivities);
+  const handleContentChange = (event) => {
+    setActivity({ ...activity, action: event.target.value });
   };
 
-  const handleDurationChange = (index, event) => {
-    const newActivities = [...activities];
-    newActivities[index].duration = event.target.value;
-    setActivities(newActivities);
+  const handleDurationChange = (event) => {
+    setActivity({ ...activity, duration: event.target.value });
   };
 
-  const handleCategoryChange = (index, category) => {
-    const newActivities = [...activities];
-    newActivities[index].category = category;
-    setActivities(newActivities);
-  };
-
-  const addActivity = () => {
-    setActivities([...activities, { content: "", duration: 0, category: "" }]);
+  const handleCategoryChange = (category) => {
+    setActivity({ ...activity, category_id: category.id });
   };
 
   const handleSubmit = async () => {
     try {
-      for (const activity of activities) {
-        const category = categories.find(
-          (cat) => cat.name === activity.category
-        );
-        const response = await fetch(`${API_URL}/api/v1/activities`, {
-          method: "POST",
+      const response = await fetch(`${API_URL}/api/v1/activities`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          activity: {
+            action: activity.action,
+            minute: activity.duration,
+            category_id: activity.category_id,
+            user_id: currentUser.id,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Activity creation failed");
+      }
+
+      // 成功した場合のフォームのクリア
+      setActivity({ action: "", duration: 0, category_id: "" });
+
+      // ユーザーステータスを更新
+      const userResponse = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}`,
+        {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            activity: {
-              action: activity.content,
-              minute: activity.duration,
-              category_id: category ? category.id : null,
-              user_id: currentUser.id,
-            },
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Activity creation failed");
         }
-      }
-      // 成功した場合のフォームのクリア
-      setActivities([{ action: "", minute: 0, category_id: "" }]);
+      );
+      const updatedUser = await userResponse.json();
+      setCurrentUser(updatedUser);
     } catch (error) {
-      console.error("Error creating activities:", error);
+      console.error("Error creating activity:", error);
     }
   };
 
+  const todayActivities = currentUser.activities.filter(
+    (activity) =>
+      new Date(activity.created_at).toDateString() === today.toDateString()
+  );
+
+  const isActivityLimitReached = todayActivities.length >= 3;
+
+  const availableCategories = categories.filter(
+    (category) =>
+      !todayActivities.some((activity) => activity.category.id === category.id)
+  );
+
   return (
-    <div className="bg-base-200 p-4 rounded-lg">
-      <h2 className="text-xl font-bold mb-2">活動登録</h2>
-      {activities.map((activity, index) => (
-        <div key={index} className="mb-4">
+    <div
+      className={`bg-base-200 p-4 rounded-lg ${
+        isActivityLimitReached ? "bg-black text-white" : ""
+      }`}
+    >
+      <h2 className="text-xl font-bold mb-5">
+        {dateString}の活動登録 (残り：{3 - todayActivities.length})
+      </h2>
+      {isActivityLimitReached ? (
+        <p>本日の活動上限に達成しました。</p>
+      ) : (
+        <div>
           <div className="flex items-center mb-2">
-            <span className="font-bold mr-2">{index + 1}.</span>
             <div
               className="relative tooltip w-full"
               data-tip="活動内容を入力してください（50字以内）"
             >
               <input
                 type="text"
-                value={activity.content}
-                onChange={(event) => handleContentChange(index, event)}
+                value={activity.action}
+                onChange={handleContentChange}
                 placeholder="活動内容（50字以内）"
                 className="input input-bordered w-full"
                 maxLength={50}
@@ -123,13 +146,13 @@ const ActivityEntry = () => {
               min="0"
               max="600"
               value={activity.duration}
-              onChange={(event) => handleDurationChange(index, event)}
+              onChange={handleDurationChange}
               className="range range-primary mr-2"
             />
             <span>{activity.duration}分</span>
           </div>
           <div className="flex justify-around relative mx-20">
-            {categories.map((category) => (
+            {availableCategories.map((category) => (
               <div
                 key={category.name}
                 className="relative tooltip"
@@ -138,9 +161,9 @@ const ActivityEntry = () => {
                 onMouseLeave={() => setHoveredCategory(null)}
               >
                 <button
-                  onClick={() => handleCategoryChange(index, category.name)}
+                  onClick={() => handleCategoryChange(category)}
                   className={`btn ${
-                    activity.category === category.name
+                    activity.category_id === category.id
                       ? "btn-primary"
                       : "btn-outline"
                   }`}
@@ -150,14 +173,14 @@ const ActivityEntry = () => {
               </div>
             ))}
           </div>
+          <button
+            onClick={handleSubmit}
+            className="btn btn-primary w-full mt-4"
+          >
+            送信
+          </button>
         </div>
-      ))}
-      <button onClick={addActivity} className="btn btn-secondary mb-4">
-        + 活動を追加
-      </button>
-      <button onClick={handleSubmit} className="btn btn-primary w-full">
-        送信
-      </button>
+      )}
     </div>
   );
 };
