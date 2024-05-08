@@ -75,7 +75,48 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Activity creation failed");
+        throw new Error("活動の登録に失敗しました");
+      }
+
+      const createdActivity = await response.json();
+
+      // user_statusを更新するリクエストを送信
+      const userStatusResponse = await fetch(
+        `${API_URL}/api/v1/user_statuses`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            user_status: {
+              user_id: currentUser.id,
+              job_id: currentUser.latest_status.job_id,
+              level: currentUser.latest_status.level + 1,
+              hp: currentUser.latest_status.hp + 5,
+              strength:
+                currentUser.latest_status.strength +
+                (createdActivity.category_id === 1 ? 1 : 0),
+              intelligence:
+                currentUser.latest_status.intelligence +
+                (createdActivity.category_id === 2 ? 1 : 0),
+              wisdom:
+                currentUser.latest_status.wisdom +
+                (createdActivity.category_id === 3 ? 1 : 0),
+              dexterity:
+                currentUser.latest_status.dexterity +
+                (createdActivity.category_id === 4 ? 1 : 0),
+              charisma:
+                currentUser.latest_status.charisma +
+                (createdActivity.category_id === 5 ? 1 : 0),
+            },
+          }),
+        }
+      );
+
+      if (!userStatusResponse.ok) {
+        throw new Error("ステータスのアップデートに失敗しました");
       }
 
       // 成功した場合のフォームのクリア
@@ -93,7 +134,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       const updatedUser = await userResponse.json();
       setCurrentUser(updatedUser);
     } catch (error) {
-      console.error("Error creating activity:", error);
+      console.error("ユーザーステータスの更新に失敗しました:", error);
     }
   };
 
