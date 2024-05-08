@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 	    # カレントユーザーの呼び出し
       get 'users/current', to: 'users#current'
       resources :jobs, only: [:index]
+      resources :activities, only: [:create]
+      resources :user_statuses, only: [:create]
       resources :items, only: [:index]
       resources :users do
         resources :avatars, only: [:create]

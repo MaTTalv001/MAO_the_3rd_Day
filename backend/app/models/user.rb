@@ -40,7 +40,7 @@ class User < ApplicationRecord
           include: {
             category: { only: [:id, :name] }
           },
-          only: [:id, :action, :minute]
+          only: [:id, :action, :minute, :created_at]
         }
       }
     )).tap do |hash|

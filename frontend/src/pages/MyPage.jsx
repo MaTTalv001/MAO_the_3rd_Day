@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
+import { Link } from "react-router-dom";
+import ActivityEntry from "../components/ActivityEntry";
 
 export const MyPage = () => {
-  const { currentUser } = useAuth();
+  const { currentUser: authUser } = useAuth();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    setCurrentUser(authUser);
+  }, [authUser]);
 
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
+
+  console.log(currentUser);
 
   return (
     <div className="container mx-auto p-4">
@@ -20,9 +29,10 @@ export const MyPage = () => {
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
-          <button className="btn btn-accent w-full">アバター変更</button>
+          <Link to={`/create_avatar`} className="btn btn-accent w-full">
+            アバター変更
+          </Link>
         </div>
-
         {/* ステータス */}
         {currentUser.latest_status && (
           <div className="bg-base-200 p-4 rounded-lg">
@@ -41,7 +51,6 @@ export const MyPage = () => {
             </div>
           </div>
         )}
-
         {/* 所持品 */}
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-xl font-bold mb-2">所持品</h2>
@@ -51,14 +60,12 @@ export const MyPage = () => {
           </div>
         </div>
       </div>
-
       {/* 活動報告 */}
       <div className="bg-base-200 mt-4 p-4 rounded-lg">
-        <h2 className="text-xl font-bold mb-2">活動登録</h2>
-        {/* 仮のボックスを表示 */}
-        <div className="bg-base-300 h-40 rounded-lg">
-          TO DO 機能実装（Material UI）
-        </div>
+        <ActivityEntry
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
       </div>
     </div>
   );
