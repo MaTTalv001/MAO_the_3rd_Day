@@ -2,20 +2,85 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
 import { Link } from "react-router-dom";
 import ActivityEntry from "../components/ActivityEntry";
+import { API_URL } from "../config/settings";
 
 export const MyPage = () => {
-  const { currentUser: authUser } = useAuth();
+  const { currentUser: authUser, token } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
+  const [isNicknameEditing, setIsNicknameEditing] = useState(false);
+  const [editedNickname, setEditedNickname] = useState("");
+  const [isProfileEditing, setIsProfileEditing] = useState(false);
+  const [editedProfile, setEditedProfile] = useState("");
 
   useEffect(() => {
     setCurrentUser(authUser);
+    setEditedNickname(authUser?.nickname || "");
+    setEditedProfile(authUser?.profile || "");
   }, [authUser]);
+
+  const handleNicknameEditClick = () => {
+    setIsNicknameEditing(true);
+  };
+
+  const handleProfileEditClick = () => {
+    setIsProfileEditing(true);
+  };
+
+  const handleNicknameSaveClick = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ user: { nickname: editedNickname } }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("ニックネームの更新に失敗しました");
+      }
+
+      const updatedUser = await response.json();
+      setCurrentUser(updatedUser);
+      setIsNicknameEditing(false);
+    } catch (error) {
+      console.error("Error updating nickname:", error);
+    }
+  };
+
+  const handleProfileSaveClick = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ user: { profile: editedProfile } }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("プロフィールの更新に失敗しました");
+      }
+
+      const updatedUser = await response.json();
+      setCurrentUser(updatedUser);
+      setIsProfileEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
 
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
-
-  console.log(currentUser);
 
   return (
     <div className="container mx-auto p-4">
@@ -23,7 +88,31 @@ export const MyPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* プロフィール */}
         <div className="bg-base-200 p-4 rounded-lg">
-          <h2 className="text-2xl font-bold mb-2">{currentUser.nickname}</h2>
+          <div className="mb-2">
+            {isNicknameEditing ? (
+              <>
+                <input
+                  type="text"
+                  value={editedNickname}
+                  onChange={(e) => setEditedNickname(e.target.value)}
+                  className="text-2xl font-bold w-full mb-2"
+                />
+                <button
+                  onClick={handleNicknameSaveClick}
+                  className="btn btn-primary btn-sm"
+                >
+                  保存
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center">
+                <h2 className="text-2xl font-bold">{currentUser.nickname}</h2>
+                <button onClick={handleNicknameEditClick} className="ml-2">
+                  <i className="fas fa-pencil-alt"></i>
+                </button>
+              </div>
+            )}
+          </div>
           <img
             src={currentUser.latest_avatar_url}
             alt="User Avatar"
@@ -46,8 +135,31 @@ export const MyPage = () => {
             <p>カリスマ: {currentUser.latest_status.charisma}</p>
             <p className="mt-4">3日達成数: {currentUser.achievement ?? 0}</p>
             <div className="mt-4 bg-base-300 p-2 rounded-lg">
-              <h3 className="text-lg font-bold mb-2">プロフィール</h3>
-              <p>{currentUser.profile ?? "未設定"}</p>
+              <div className="flex items-center mb-2">
+                <h3 className="text-lg font-bold">プロフィール</h3>
+                {!isProfileEditing && (
+                  <button onClick={handleProfileEditClick} className="ml-2">
+                    <i className="fas fa-pencil-alt"></i>
+                  </button>
+                )}
+              </div>
+              {isProfileEditing ? (
+                <>
+                  <textarea
+                    value={editedProfile}
+                    onChange={(e) => setEditedProfile(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                  <button
+                    onClick={handleProfileSaveClick}
+                    className="mt-2 btn btn-sm btn-primary"
+                  >
+                    保存
+                  </button>
+                </>
+              ) : (
+                <p>{currentUser.profile ?? "未設定"}</p>
+              )}
             </div>
           </div>
         )}
