@@ -13,7 +13,7 @@ const ActivityShow = ({ activities }) => {
     const dateKey = moment(activity.created_at).format("YYYY-MM-DD");
     if (!acc[dateKey]) {
       acc[dateKey] = {
-        title: "アクティビティあり",
+        title: "Action",
         start: moment(activity.created_at).startOf("day").toDate(),
         end: moment(activity.created_at).endOf("day").toDate(),
         allDay: true,

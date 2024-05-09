@@ -12,6 +12,7 @@ export const MyPage = () => {
   const [editedNickname, setEditedNickname] = useState("");
   const [isProfileEditing, setIsProfileEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState("");
+  const [activeTab, setActiveTab] = useState("entry");
 
   useEffect(() => {
     setCurrentUser(authUser);
@@ -176,12 +177,31 @@ export const MyPage = () => {
       </div>
       {/* 活動報告 */}
       <div className="bg-base-200 mt-4 p-4 rounded-lg">
-        <ActivityEntry
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-        />
+        <div role="tablist" className="tabs tabs-lifted mb-4">
+          <a
+            role="tab"
+            className={`tab ${activeTab === "entry" ? "tab-active" : ""}`}
+            onClick={() => setActiveTab("entry")}
+          >
+            活動報告
+          </a>
+          <a
+            role="tab"
+            className={`tab ${activeTab === "show" ? "tab-active" : ""}`}
+            onClick={() => setActiveTab("show")}
+          >
+            活動記録
+          </a>
+        </div>
+        {activeTab === "entry" ? (
+          <ActivityEntry
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
+          />
+        ) : (
+          <ActivityShow activities={currentUser.activities} />
+        )}
       </div>
-      <ActivityShow activities={currentUser.activities} />
     </div>
   );
 };
