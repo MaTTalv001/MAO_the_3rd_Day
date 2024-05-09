@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
 import { Link } from "react-router-dom";
 import ActivityEntry from "../components/ActivityEntry";
+import ActivityShow from "../components/ActivityShow";
 import { API_URL } from "../config/settings";
 
 export const MyPage = () => {
@@ -81,6 +82,7 @@ export const MyPage = () => {
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
+  console.log(currentUser);
 
   return (
     <div className="container mx-auto p-4">
@@ -179,6 +181,7 @@ export const MyPage = () => {
           setCurrentUser={setCurrentUser}
         />
       </div>
+      <ActivityShow activities={currentUser.activities} />
     </div>
   );
 };
