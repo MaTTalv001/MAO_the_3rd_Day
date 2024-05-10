@@ -4,6 +4,7 @@ import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
 import { Link } from "react-router-dom";
 import { FRONT_URL } from "../config/settings";
+import { ActivityCard } from "../components/ActivityCard";
 
 export const UsersShow = () => {
   const { currentUser } = useAuth();
@@ -20,6 +21,8 @@ export const UsersShow = () => {
   if (!user) {
     return <p>Loading profile...</p>;
   }
+
+  console.log(user);
 
   return (
     <div className="container mx-auto p-4">
@@ -39,7 +42,6 @@ export const UsersShow = () => {
             className="w-full h-auto mb-4 rounded-lg"
           />
         </div>
-
         {/* ステータス */}
         {user.latest_status && (
           <div className="bg-base-200 p-4 rounded-lg">
@@ -58,29 +60,34 @@ export const UsersShow = () => {
             </div>
           </div>
         )}
-
         {/* 歴代アバター */}
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-xl font-bold mb-2">過去のアバター</h2>
           <div className="grid grid-cols-3 gap-2">
-            {user.avatars.map((avatar) => (
-              <img
-                key={avatar.id}
-                src={`${avatar.avatar_url}`}
-                alt="User Avatar"
-                className="w-full h-auto rounded"
-              />
-            ))}
+            {user.avatars
+              .slice(-9)
+              .reverse()
+              .map((avatar) => (
+                <img
+                  key={avatar.id}
+                  src={`${avatar.avatar_url}`}
+                  alt="User Avatar"
+                  className="w-full h-auto rounded"
+                />
+              ))}
           </div>
         </div>
       </div>
-
       {/* 活動一覧 */}
       <div className="bg-base-200 mt-4 p-4 rounded-lg">
         <h2 className="text-xl font-bold mb-2">活動一覧</h2>
-        {/* 仮のボックスを表示 */}
-        <div className="bg-base-300 h-40 rounded-lg flex items-center justify-center">
-          <p className="text-lg">活動一覧（仮）</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {user.activities
+            .slice(-9)
+            .reverse()
+            .map((activity) => (
+              <ActivityCard key={activity.id} activity={activity} />
+            ))}
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ export const Users = () => {
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
+  console.log(users);
 
   return (
     <div className="container mx-auto p-4">
