@@ -75,11 +75,11 @@ export const Header = memo(() => {
       <div className="navbar-end">
         {currentUser && (
           <div className="flex items-center">
-            <span className="text-md mr-2">
+            <span className="text-md mr-2 stat-value">
               <i className="fas fa-coins mr-1"></i>
               {currentUser.coin.amount}
             </span>
-            <span className="text-md mr-2 px-2 bg-secondary rounded-md">
+            <span className="text-lg mr-2 px-2 bg-secondary rounded-md">
               {currentUser.nickname}
             </span>
           </div>

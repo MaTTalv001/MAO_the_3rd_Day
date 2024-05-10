@@ -38,8 +38,7 @@ export const CreateAvatar = () => {
   }, [token]);
 
   const generateAvatar = async () => {
-    const basePrompt =
-      "ドラゴンクエスト風の32bitレトロゲームのキャラクター　背景は無地";
+    const basePrompt = "ドラゴンクエスト風の32bit RPGのキャラクター";
     const prompt = `${basePrompt} ${selectedJob} ${selectedGender} ${selectedSupplement}`;
     try {
       const response = await fetch(

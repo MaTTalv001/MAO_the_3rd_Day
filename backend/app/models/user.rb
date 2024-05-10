@@ -53,6 +53,18 @@ def latest_status_as_json
   @latest_status_as_json ||= latest_status&.as_json(include: { job: { only: [:name] } })
 end
 
+def like_activity(activity)
+  activity_likes.create(activity: activity)
+end
+
+def unlike_activity(activity)
+  activity_likes.find_by(activity: activity).destroy
+end
+
+def likes?(activity)
+  activity_likes.exists?(activity: activity)
+end
+
 
 
 # 最新のJob名を取得するためのメソッドをUserモデルに追加
