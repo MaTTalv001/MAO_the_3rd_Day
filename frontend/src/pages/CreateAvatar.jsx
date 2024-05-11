@@ -8,13 +8,15 @@ export const CreateAvatar = () => {
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedSupplement, setSelectedSupplement] = useState("");
+  const [selectedAge, setSelectedAge] = useState("");
   const [beforeAvatar, setBeforeAvatar] = useState(
     currentUser?.latest_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
 
   const genders = ["男性", "女性", "性別指定なし"];
-  const supplements = ["元気な", "勇敢な", "優しい"];
+  const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
+  const ages = ["子供", "10代", "20代", "30代", "40代", "50代", "60代以上"];
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -39,7 +41,7 @@ export const CreateAvatar = () => {
 
   const generateAvatar = async () => {
     const basePrompt = "ドラゴンクエスト風の32bit RPGのキャラクター";
-    const prompt = `${basePrompt} ${selectedJob} ${selectedGender} ${selectedSupplement}`;
+    const prompt = `${basePrompt} ${selectedJob} ${selectedGender} ${selectedAge} ${selectedSupplement}`;
     try {
       const response = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
@@ -64,12 +66,12 @@ export const CreateAvatar = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-8">アバター生成</h1>
+    <div className="container mx-auto p-4 max-w-5xl">
+      <h1 className="text-3xl font-bold mb-6">アバター生成</h1>
       {/* プロンプトに用いるための選択肢 */}
-      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
-        <div className="w-full md:w-1/3">
-          <h2 className="text-xl font-bold mb-2">ジョブ</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <h2 className="text-lg font-bold mb-2">ジョブ</h2>
           <select
             className="select select-bordered w-full"
             value={selectedJob}
@@ -83,8 +85,8 @@ export const CreateAvatar = () => {
             ))}
           </select>
         </div>
-        <div className="w-full md:w-1/3">
-          <h2 className="text-xl font-bold mb-2">性別</h2>
+        <div>
+          <h2 className="text-lg font-bold mb-2">性別</h2>
           <select
             className="select select-bordered w-full"
             value={selectedGender}
@@ -98,8 +100,23 @@ export const CreateAvatar = () => {
             ))}
           </select>
         </div>
-        <div className="w-full md:w-1/3">
-          <h2 className="text-xl font-bold mb-2">性格</h2>
+        <div>
+          <h2 className="text-lg font-bold mb-2">年代</h2>
+          <select
+            className="select select-bordered w-full"
+            value={selectedAge}
+            onChange={(e) => setSelectedAge(e.target.value)}
+          >
+            <option value="">選択してください</option>
+            {ages.map((age) => (
+              <option key={age} value={age}>
+                {age}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <h2 className="text-lg font-bold mb-2">性格</h2>
           <select
             className="select select-bordered w-full"
             value={selectedSupplement}
@@ -114,32 +131,30 @@ export const CreateAvatar = () => {
           </select>
         </div>
       </div>
-
-      <button className="btn btn-primary btn-lg mb-8" onClick={generateAvatar}>
+      <button className="btn btn-primary mb-6" onClick={generateAvatar}>
         アバター生成
       </button>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">アバター</h2>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8">
-          <div className="w-full md:w-1/2">
-            <h3 className="text-lg font-bold mb-2">Before</h3>
+      <div className="mt-6">
+        <h2 className="text-lg font-bold mb-4">アバター</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="text-base font-bold mb-2">Before</h3>
             <img
               src={beforeAvatar}
               alt="Before Avatar"
-              className="w-full h-auto object-cover rounded"
+              className="w-full h-96 object-cover object-position-top rounded"
             />
           </div>
-          <div className="w-full md:w-1/2">
-            <h3 className="text-lg font-bold mb-2">After</h3>
+          <div>
+            <h3 className="text-base font-bold mb-2">After</h3>
             {generatedAvatar ? (
               <img
                 src={generatedAvatar}
                 alt="Generated Avatar"
-                className="w-full h-auto object-cover rounded"
+                className="w-full h-96 object-cover object-position-top rounded"
               />
             ) : (
-              <div className="w-full h-64 bg-base-300 rounded"></div>
+              <div className="w-full h-96 bg-base-300 rounded"></div>
             )}
           </div>
         </div>
