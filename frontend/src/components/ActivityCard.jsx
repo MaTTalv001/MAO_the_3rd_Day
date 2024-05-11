@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
+import "../ActivityCard.css";
 
 const getCategoryBadgeColor = (categoryId) => {
   switch (categoryId) {
@@ -24,6 +25,8 @@ export const ActivityCard = ({ activity }) => {
   const [isLiked, setIsLiked] = useState(false);
   const categoryBadgeColor = getCategoryBadgeColor(activity.category.id);
   const [likesCount, setLikesCount] = useState(activity.likes_count);
+  const heartIconRef = useRef(null);
+  const burstRef = useRef(null);
 
   useEffect(() => {
     const fetchLikeStatus = async () => {
@@ -50,6 +53,26 @@ export const ActivityCard = ({ activity }) => {
     fetchLikeStatus();
   }, [activity.id, token]);
 
+  useEffect(() => {
+    const burst = new mojs.Burst({
+      parent: heartIconRef.current,
+      left: 0,
+      top: 0,
+      count: 3,
+      radius: { 0: 250 },
+      children: {
+        shape: "line",
+        stroke: ["#F9DD5E", "#FC2D79", "#11CDC5"],
+        duration: 400,
+        radius: 60,
+        strokeWidth: 8,
+        isForce3d: true,
+      },
+    });
+
+    burstRef.current = burst;
+  }, []);
+
   const handleLikeClick = async () => {
     try {
       const url = isLiked
@@ -69,6 +92,11 @@ export const ActivityCard = ({ activity }) => {
       const data = await response.json();
       setIsLiked(!isLiked);
       setLikesCount(data.likes_count);
+
+      // アニメーションの処理を追加
+      if (!isLiked) {
+        burstRef.current.replay();
+      }
     } catch (error) {
       console.error("Error updating like:", error);
     }
@@ -91,7 +119,11 @@ export const ActivityCard = ({ activity }) => {
           className={`btn glass btn-sm ${isLiked ? "text-error" : ""}`}
           onClick={handleLikeClick}
         >
-          <i className="fas fa-heart mr-2"></i>
+          <i
+            id={`heart-icon-${activity.id}`}
+            className="fas fa-heart mr-2 heart-icon"
+            ref={heartIconRef}
+          ></i>
           <span className="text-sm mr-2">{likesCount}</span>
         </button>
       </div>
