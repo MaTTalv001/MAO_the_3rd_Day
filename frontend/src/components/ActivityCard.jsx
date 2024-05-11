@@ -64,7 +64,7 @@ export const ActivityCard = ({ activity }) => {
         },
       });
       if (!response.ok) {
-        throw new Error("いいねの更新に失敗しました");
+        throw new Error("いいね更新に失敗しました");
       }
       const data = await response.json();
       setIsLiked(!isLiked);
