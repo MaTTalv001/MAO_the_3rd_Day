@@ -131,7 +131,7 @@ export const CreateAvatar = () => {
           </select>
         </div>
       </div>
-      <button className="btn btn-primary mb-6" onClick={generateAvatar}>
+      <button className="btn btn-primary w-full mb-6" onClick={generateAvatar}>
         アバター生成
       </button>
       <div className="mt-6">
