@@ -1,7 +1,11 @@
 class User < ApplicationRecord
   has_one :user_authentication, dependent: :destroy
   has_many :users_items, dependent: :destroy
-  has_many :items, through: :users_items
+  has_many :items, through: :users_items do
+    def with_amount
+      select('items.*, users_items.amount as amount')
+    end
+  end
   has_one :coin, dependent: :destroy
   has_many :avatars, dependent: :destroy
   has_many :user_statuses, dependent: :destroy
@@ -19,7 +23,7 @@ class User < ApplicationRecord
     super(options.merge(
       methods: [:latest_avatar_url, :latest_status_as_json, :latest_job],
       include: {
-        items: { only: [:id, :name, :cost, :item_url, :category] },
+         users_items: { include: { item: { only: [:id, :name, :cost, :item_url, :category] } }, only: [:amount] },
         coin: { only: [:amount] },
         activities: {
           include: {
@@ -33,7 +37,7 @@ class User < ApplicationRecord
     super(options.merge(
       methods: [:latest_status, :latest_job, :latest_avatar_url],
       include: {
-        items: { only: [:id, :name, :cost, :item_url, :category] },
+         users_items: { include: { item: { only: [:id, :name, :cost, :item_url, :category] } }, only: [:amount] },
         coin: { only: [:amount] },
         avatars: { only: [:id, :avatar_url] },
         activities: {

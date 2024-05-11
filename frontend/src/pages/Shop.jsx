@@ -3,7 +3,7 @@ import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
 
 export const Shop = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, token, setCurrentUser } = useAuth();
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -17,14 +17,49 @@ export const Shop = () => {
     return <p>Loading profile...</p>;
   }
 
-  const handlePurchase = (itemId) => {
-    // 購入処理を実装する
-    console.log(`Purchasing item with ID: ${itemId}`);
+  const handlePurchase = async (itemId) => {
+    const item = items.find((item) => item.id === itemId);
+    if (!item) return;
+
+    if (currentUser.coin.amount < item.cost) {
+      alert("コインが足りません");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}/purchase`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ item_id: itemId }),
+        }
+      );
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setCurrentUser(updatedUser);
+        alert("購入が完了しました");
+      } else {
+        alert("購入に失敗しました");
+      }
+    } catch (error) {
+      console.error("Error purchasing item:", error);
+      alert("購入に失敗しました");
+    }
   };
 
   const getItemCount = (itemId) => {
-    const userItem = currentUser.items.find((item) => item.id === itemId);
-    return userItem ? userItem.count : 0;
+    if (currentUser.users_items) {
+      const userItem = currentUser.users_items.find(
+        (usersItem) => usersItem.item.id === itemId
+      );
+      return userItem ? userItem.amount : 0;
+    }
+    return 0;
   };
 
   return (

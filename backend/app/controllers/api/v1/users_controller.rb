@@ -47,6 +47,27 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def purchase
+    item = Item.find(params[:item_id])
+    user = @current_user
+
+    if user.coin.amount >= item.cost
+      ActiveRecord::Base.transaction do
+        user.coin.amount -= item.cost
+        user.coin.save!
+
+        user_item = user.users_items.find_or_initialize_by(item_id: item.id)
+        user_item.amount ||= 0
+        user_item.amount += 1
+        user_item.save!
+      end
+
+      render json: @current_user.as_json(include: [coin: { only: [:amount] }, items: { only: [:id, :name, :cost, :item_url, :category] }]), status: :ok
+    else
+      render json: { error: "Insufficient coins" }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params
