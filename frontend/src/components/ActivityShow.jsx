@@ -57,7 +57,7 @@ const ActivityShow = ({ activities }) => {
 
   return (
     <div className="bg-base-200 mt-4 p-4 rounded-lg">
-      <h2 className="text-xl font-bold mb-2">活動記録</h2>
+      <h2 className="text-xl font-bold mb-2">これまでの活動履歴</h2>
       <Calendar
         localizer={localizer}
         events={Object.values(events)}

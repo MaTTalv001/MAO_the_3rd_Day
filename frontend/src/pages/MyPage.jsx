@@ -183,14 +183,14 @@ export const MyPage = () => {
             className={`tab ${activeTab === "entry" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("entry")}
           >
-            活動報告
+            今日の活動登録
           </a>
           <a
             role="tab"
             className={`tab ${activeTab === "show" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("show")}
           >
-            活動記録
+            これまでの活動履歴
           </a>
         </div>
         {activeTab === "entry" ? (

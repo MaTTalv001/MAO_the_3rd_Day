@@ -218,7 +218,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             onClick={handleSubmit}
             className="btn btn-primary w-full mt-4"
           >
-            送信
+            登録
           </button>
         </div>
       )}
