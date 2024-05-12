@@ -64,3 +64,24 @@ items.each do |item_data|
   )
   item.save!
 end
+
+
+jobs_data = [
+  { name: '冒険者', item_id: 1 },
+  { name: '戦士', item_id: 1 },
+  { name: '魔法使い', item_id: 1 },
+  { name: '僧侶', item_id: 1 },
+  { name: '武闘家', item_id: 1 },
+  { name: '狩人', item_id: 1 },
+  { name: '遊び人', item_id: 1 },
+  { name: 'バトルマスター', item_id: 2 },
+  { name: '賢者', item_id: 3 },
+  { name: 'アークプリースト', item_id: 4 },
+  { name: '忍者', item_id: 5 },
+  { name: 'スーパースター', item_id: 6 },
+  { name: '勇者', item_id: 7 }
+]
+
+jobs_data.each do |job|
+  Job.find_or_create_by(name: job[:name], item_id: job[:item_id])
+end
