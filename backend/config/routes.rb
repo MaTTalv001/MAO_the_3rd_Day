@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     namespace :v1 do
 	    # カレントユーザーの呼び出し
       get 'users/current', to: 'users#current'
+      post '/special_modes/participate', to: 'special_modes#participate'
       resources :jobs, only: [:index]
       resources :activities, only: [:create] do
         resources :activity_likes, only: [:index, :create, :destroy]
