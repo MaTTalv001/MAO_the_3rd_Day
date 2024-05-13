@@ -321,25 +321,6 @@ export const MyPage = () => {
           )}
         </div>
       </dialog>
-
-      <style>
-        {`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: scale(0.8);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-
-          .modal-box {
-            animation: fadeIn 0.3s ease-out;
-          }
-        `}
-      </style>
     </div>
   );
 };

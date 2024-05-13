@@ -10,6 +10,7 @@ export const UsersShow = () => {
   const { currentUser } = useAuth();
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/users/${id}`)
@@ -21,8 +22,6 @@ export const UsersShow = () => {
   if (!user) {
     return <p>Loading profile...</p>;
   }
-
-  console.log(user);
 
   return (
     <div className="container mx-auto p-4">
@@ -72,7 +71,11 @@ export const UsersShow = () => {
                   key={avatar.id}
                   src={`${avatar.avatar_url}`}
                   alt="User Avatar"
-                  className="w-full h-auto rounded"
+                  className="w-full h-auto rounded cursor-pointer"
+                  onClick={() => {
+                    setSelectedAvatar(avatar);
+                    document.getElementById("avatarModal").showModal();
+                  }}
                 />
               ))}
           </div>
@@ -90,6 +93,25 @@ export const UsersShow = () => {
             ))}
         </div>
       </div>
+
+      {/* アバターモーダル */}
+      <dialog id="avatarModal" className="modal">
+        <div className="modal-box relative">
+          <button
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+            onClick={() => document.getElementById("avatarModal").close()}
+          >
+            ✕
+          </button>
+          {selectedAvatar && (
+            <img
+              src={`${selectedAvatar.avatar_url}`}
+              alt="Selected Avatar"
+              className="w-full h-auto rounded"
+            />
+          )}
+        </div>
+      </dialog>
     </div>
   );
 };
