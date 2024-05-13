@@ -133,6 +133,7 @@ export const MyPage = () => {
           <div className="bg-base-200 p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-2">ステータス</h2>
             <p>Level: {currentUser.latest_status.level}</p>
+            <p>{currentUser.latest_status.job.name}</p>
             <p>HP: {currentUser.latest_status.hp}</p>
             <p>体力: {currentUser.latest_status.strength}</p>
             <p>知力: {currentUser.latest_status.intelligence}</p>

@@ -46,6 +46,7 @@ export const UsersShow = () => {
           <div className="bg-base-200 p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-2">ステータス</h2>
             <p>Level: {user.latest_status.level}</p>
+            <p>{user.latest_status.job.name}</p>
             <p>HP: {user.latest_status.hp}</p>
             <p>体力: {user.latest_status.strength}</p>
             <p>知力: {user.latest_status.intelligence}</p>
