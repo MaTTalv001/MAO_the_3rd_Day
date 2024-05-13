@@ -5,6 +5,8 @@ module Api
 
       def create
         activity = @current_user.activities.build(activity_params)
+
+        
         if activity.save
           # ユーザーの連続記録日数、特別モードのアンロック、達成回数を更新
           update_user_status(activity.created_at.to_date)
