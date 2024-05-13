@@ -13,6 +13,8 @@ export const MyPage = () => {
   const [isProfileEditing, setIsProfileEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState("");
   const [activeTab, setActiveTab] = useState("entry");
+  const [showAllItems, setShowAllItems] = useState(false);
+  const [showAllAvatars, setShowAllAvatars] = useState(false);
 
   useEffect(() => {
     setCurrentUser(authUser);
@@ -166,14 +168,107 @@ export const MyPage = () => {
             </div>
           </div>
         )}
-        {/* 所持品 */}
+        {/* 所持品とアバター */}
         <div className="bg-base-200 p-4 rounded-lg">
-          <h2 className="text-xl font-bold mb-2">所持品</h2>
-          {/* 仮のボックスを表示 */}
-          <div className="bg-base-300 h-40 rounded-lg flex items-center justify-center">
-            <p className="text-lg">データがありません</p>
+          <div role="tablist" className="tabs tabs-lifted mb-4">
+            <a
+              role="tab"
+              className={`tab ${activeTab === "items" ? "tab-active" : ""}`}
+              onClick={() => setActiveTab("items")}
+            >
+              所持品
+            </a>
+            <a
+              role="tab"
+              className={`tab ${activeTab === "avatars" ? "tab-active" : ""}`}
+              onClick={() => setActiveTab("avatars")}
+            >
+              アバター
+            </a>
           </div>
+          {activeTab === "items" ? (
+            <>
+              <h2 className="text-xl font-bold mb-4 cursor-pointer">所持品</h2>
+              {currentUser.users_items.length > 0 ? (
+                <>
+                  <div className="flex flex-col divide-y divide-base-300">
+                    {currentUser.users_items
+                      .slice(
+                        0,
+                        showAllItems ? currentUser.users_items.length : 5
+                      )
+                      .map((userItem, index) => (
+                        <div key={index} className="py-4 relative">
+                          <div className="badge badge-primary absolute right-2 top-2">
+                            {userItem.amount}
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <img
+                              src={userItem.item.item_url}
+                              alt={userItem.item.name}
+                              className="w-16 h-16 object-contain"
+                            />
+                            <div>
+                              <h3 className="text-lg font-medium">
+                                {userItem.item.name}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                  {currentUser.users_items.length > 5 && (
+                    <button
+                      className="mt-4 text-primary underline"
+                      onClick={() => setShowAllItems(!showAllItems)}
+                    >
+                      {showAllItems ? "一部を表示" : "すべて表示"}
+                    </button>
+                  )}
+                </>
+              ) : (
+                <div className="h-40 flex items-center justify-center">
+                  <p className="text-lg">データがありません</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold mb-4 cursor-pointer">
+                アバター
+              </h2>
+              {currentUser.avatars.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-3 gap-2">
+                    {currentUser.avatars
+                      .slice(0, showAllAvatars ? currentUser.avatars.length : 9)
+                      .map((avatar) => (
+                        <img
+                          key={avatar.id}
+                          src={`${avatar.avatar_url}`}
+                          alt="User Avatar"
+                          className="w-full h-auto rounded"
+                        />
+                      ))}
+                  </div>
+                  {currentUser.avatars.length > 9 && (
+                    <button
+                      className="mt-4 text-primary underline"
+                      onClick={() => setShowAllAvatars(!showAllAvatars)}
+                    >
+                      {showAllAvatars ? "一部を表示" : "すべて表示"}
+                    </button>
+                  )}
+                </>
+              ) : (
+                <div className="h-40 flex items-center justify-center">
+                  <p className="text-lg">データがありません</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
+        {/* ここまで所持品とアバター */}
       </div>
       {/* 活動報告 */}
       <div className="bg-base-200 mt-4 p-4 rounded-lg">
