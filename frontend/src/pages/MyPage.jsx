@@ -12,7 +12,8 @@ export const MyPage = () => {
   const [editedNickname, setEditedNickname] = useState("");
   const [isProfileEditing, setIsProfileEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState("");
-  const [activeTab, setActiveTab] = useState("entry");
+  const [itemsTab, setItemsTab] = useState("items");
+  const [activitiesTab, setActivitiesTab] = useState("entry");
   const [showAllItems, setShowAllItems] = useState(false);
   const [showAllAvatars, setShowAllAvatars] = useState(false);
 
@@ -85,7 +86,6 @@ export const MyPage = () => {
   if (!currentUser) {
     return <p>Loading profile...</p>;
   }
-  console.log(currentUser);
 
   return (
     <div className="container mx-auto p-4">
@@ -173,20 +173,20 @@ export const MyPage = () => {
           <div role="tablist" className="tabs tabs-lifted mb-4">
             <a
               role="tab"
-              className={`tab ${activeTab === "items" ? "tab-active" : ""}`}
-              onClick={() => setActiveTab("items")}
+              className={`tab ${itemsTab === "items" ? "tab-active" : ""}`}
+              onClick={() => setItemsTab("items")}
             >
               所持品
             </a>
             <a
               role="tab"
-              className={`tab ${activeTab === "avatars" ? "tab-active" : ""}`}
-              onClick={() => setActiveTab("avatars")}
+              className={`tab ${itemsTab === "avatars" ? "tab-active" : ""}`}
+              onClick={() => setItemsTab("avatars")}
             >
               アバター
             </a>
           </div>
-          {activeTab === "items" ? (
+          {itemsTab === "items" ? (
             <>
               <h2 className="text-xl font-bold mb-4 cursor-pointer">所持品</h2>
               {currentUser.users_items.length > 0 ? (
@@ -195,7 +195,7 @@ export const MyPage = () => {
                     {currentUser.users_items
                       .slice(
                         0,
-                        showAllItems ? currentUser.users_items.length : 5
+                        showAllItems ? currentUser.users_items.length : 3
                       )
                       .map((userItem, index) => (
                         <div key={index} className="py-4 relative">
@@ -217,7 +217,7 @@ export const MyPage = () => {
                         </div>
                       ))}
                   </div>
-                  {currentUser.users_items.length > 5 && (
+                  {currentUser.users_items.length > 3 && (
                     <button
                       className="mt-4 text-primary underline"
                       onClick={() => setShowAllItems(!showAllItems)}
@@ -275,20 +275,20 @@ export const MyPage = () => {
         <div role="tablist" className="tabs tabs-lifted mb-4">
           <a
             role="tab"
-            className={`tab ${activeTab === "entry" ? "tab-active" : ""}`}
-            onClick={() => setActiveTab("entry")}
+            className={`tab ${activitiesTab === "entry" ? "tab-active" : ""}`}
+            onClick={() => setActivitiesTab("entry")}
           >
             今日の活動登録
           </a>
           <a
             role="tab"
-            className={`tab ${activeTab === "show" ? "tab-active" : ""}`}
-            onClick={() => setActiveTab("show")}
+            className={`tab ${activitiesTab === "show" ? "tab-active" : ""}`}
+            onClick={() => setActivitiesTab("show")}
           >
             これまでの活動履歴
           </a>
         </div>
-        {activeTab === "entry" ? (
+        {activitiesTab === "entry" ? (
           <ActivityEntry
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
