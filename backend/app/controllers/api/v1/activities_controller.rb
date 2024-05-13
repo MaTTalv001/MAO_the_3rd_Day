@@ -27,16 +27,24 @@ module Api
         if @current_user.activities.where(created_at: activity_date.all_day).count > 1
           # 同じ日付の活動が既に存在する場合は、連続記録日数を加算しない
           consecutive_days = @current_user.consecutive_days
-        elsif last_activity_date && activity_date == last_activity_date + 1.day
+          Rails.logger.info("同じ日付の活動が既に存在する場合は、連続記録日数を加算しない")
+        elsif last_activity_date == activity_date - 1.day
           # 連続している場合は、連続記録日数を1加算
           consecutive_days = @current_user.consecutive_days + 1
+          Rails.logger.info("連続している場合は、連続記録日数を1加算")
         else
           # 連続していない場合は、連続記録日数を1にリセット
           consecutive_days = 1
+          Rails.logger.info("連続していない場合は、連続記録日数を1にリセット")
         end
         
         special_mode_unlocked = consecutive_days >= 3 && !@current_user.special_mode_unlocked
         achievement = special_mode_unlocked ? @current_user.achievement + 1 : @current_user.achievement
+
+        if special_mode_unlocked
+          # 特典条件を満たした場合は、consecutive_daysを1にリセット
+          consecutive_days = 0
+        end
         
         @current_user.update(
           consecutive_days: consecutive_days,
