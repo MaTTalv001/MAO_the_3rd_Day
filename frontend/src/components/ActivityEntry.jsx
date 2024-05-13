@@ -150,6 +150,29 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       !todayActivities.some((activity) => activity.category.id === category.id)
   );
 
+  const handleSpecialModeParticipation = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/special_modes/participate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setCurrentUser({ ...currentUser, special_mode_unlocked: false });
+      } else {
+        console.error("魔王戦の参加に失敗しました");
+      }
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+    }
+  };
+
   return (
     <div
       className={`bg-base-200 p-4 rounded-lg ${
@@ -221,6 +244,15 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             登録
           </button>
         </div>
+      )}
+      {/*魔王戦のボタン*/}
+      {currentUser.special_mode_unlocked && (
+        <button
+          className="btn btn-secondary mt-4"
+          onClick={handleSpecialModeParticipation}
+        >
+          特別なモードに参加する
+        </button>
       )}
     </div>
   );

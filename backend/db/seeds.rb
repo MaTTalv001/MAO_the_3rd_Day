@@ -31,7 +31,7 @@ items = [
   { name: "東国の揚げ鶏", cost: 10, item_url: "imgs/items/item_009.png", category: "道具" },
   { name: "毒消しハーブ", cost: 20, item_url: "imgs/items/item_010.png", category: "道具" },
   { name: "棍棒", cost: 30, item_url: "imgs/items/item_011.png", category: "武器" },
-  { name: "銅の剣", cost: 50, item_url: "imgs/items/tem_012.png", category: "武器" },
+  { name: "銅の剣", cost: 50, item_url: "imgs/items/item_012.png", category: "武器" },
   { name: "鉄の槍", cost: 100, item_url: "imgs/items/item_013.png", category: "武器" },
   { name: "魔法の杖", cost: 100, item_url: "imgs/items/item_014.png", category: "武器" },
   { name: "盗賊のナイフ", cost: 100, item_url: "imgs/items/item_015.png", category: "武器" },

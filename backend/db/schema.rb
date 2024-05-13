@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_29_075739) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_12_035723) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -149,6 +149,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_075739) do
     t.integer "achievement"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "consecutive_days", default: 0
+    t.boolean "special_mode_unlocked", default: false
+    t.date "last_special_unlocked_date"
   end
 
   create_table "users_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
