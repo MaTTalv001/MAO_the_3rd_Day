@@ -16,6 +16,7 @@ export const MyPage = () => {
   const [activitiesTab, setActivitiesTab] = useState("entry");
   const [showAllItems, setShowAllItems] = useState(false);
   const [showAllAvatars, setShowAllAvatars] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   useEffect(() => {
     setCurrentUser(authUser);
@@ -247,7 +248,11 @@ export const MyPage = () => {
                           key={avatar.id}
                           src={`${avatar.avatar_url}`}
                           alt="User Avatar"
-                          className="w-full h-auto rounded"
+                          className="w-full h-auto rounded cursor-pointer"
+                          onClick={() => {
+                            setSelectedAvatar(avatar);
+                            document.getElementById("avatarModal").showModal();
+                          }}
                         />
                       ))}
                   </div>
@@ -297,6 +302,44 @@ export const MyPage = () => {
           <ActivityShow activities={currentUser.activities} />
         )}
       </div>
+
+      {/* アバターモーダル */}
+      <dialog id="avatarModal" className="modal">
+        <div className="modal-box relative">
+          <button
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+            onClick={() => document.getElementById("avatarModal").close()}
+          >
+            ✕
+          </button>
+          {selectedAvatar && (
+            <img
+              src={`${selectedAvatar.avatar_url}`}
+              alt="Selected Avatar"
+              className="w-full h-auto rounded"
+            />
+          )}
+        </div>
+      </dialog>
+
+      <style>
+        {`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: scale(0.8);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          .modal-box {
+            animation: fadeIn 0.3s ease-out;
+          }
+        `}
+      </style>
     </div>
   );
 };
