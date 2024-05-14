@@ -5,8 +5,13 @@ module Api
 
       def create
         prompt = avatar_params[:prompt]
+        job_id = avatar_params[:job_id]
         image_url = ChatgptService.download_image(prompt)
         avatar = @user.avatars.create(avatar_url: image_url)
+
+        # userの直近のステータスのジョブを変更する
+        user_status = @user.user_statuses.last || @user.user_statuses.new
+        user_status.update(job_id: job_id)
 
         if avatar.persisted?
           render json: avatar, status: :created
@@ -23,7 +28,7 @@ module Api
       end
 
       def avatar_params
-        params.permit(:prompt)
+        params.permit(:prompt, :job_id)
       end
     end
   end

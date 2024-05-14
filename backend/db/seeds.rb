@@ -67,19 +67,19 @@ end
 
 
 jobs_data = [
-  { name: '冒険者', item_id: 1 },
-  { name: '戦士', item_id: 1 },
-  { name: '魔法使い', item_id: 1 },
-  { name: '僧侶', item_id: 1 },
-  { name: '武闘家', item_id: 1 },
-  { name: '狩人', item_id: 1 },
-  { name: '遊び人', item_id: 1 },
-  { name: 'バトルマスター', item_id: 2 },
-  { name: '賢者', item_id: 3 },
-  { name: 'アークプリースト', item_id: 4 },
-  { name: '忍者', item_id: 5 },
-  { name: 'スーパースター', item_id: 6 },
-  { name: '勇者', item_id: 7 }
+  { name: '冒険者', item_id: 32 },
+  { name: '戦士', item_id: 32 },
+  { name: '魔法使い', item_id: 32 },
+  { name: '僧侶', item_id: 32 },
+  { name: '武闘家', item_id: 32 },
+  { name: '狩人', item_id: 32 },
+  { name: '遊び人', item_id: 32 },
+  { name: 'バトルマスター', item_id: 33 },
+  { name: '賢者', item_id: 34 },
+  { name: 'アークプリースト', item_id: 35 },
+  { name: '忍者', item_id: 36 },
+  { name: 'スーパースター', item_id: 37 },
+  { name: '勇者', item_id: 38 }
 ]
 
 jobs_data.each do |job|
