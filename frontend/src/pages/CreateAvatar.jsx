@@ -13,6 +13,7 @@ export const CreateAvatar = () => {
     currentUser?.latest_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const genders = ["男性", "女性", "性別指定なし"];
   const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
@@ -20,6 +21,8 @@ export const CreateAvatar = () => {
 
   useEffect(() => {
     const fetchJobs = async () => {
+      if (!token) return;
+      setLoading(true);
       try {
         const response = await fetch(`${API_URL}/api/v1/jobs`, {
           headers: {
@@ -33,6 +36,8 @@ export const CreateAvatar = () => {
         setJobs(data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -40,8 +45,10 @@ export const CreateAvatar = () => {
   }, [token]);
 
   const generateAvatar = async () => {
-    const basePrompt = "ドラゴンクエスト風の32bit RPGのキャラクター";
-    const prompt = `${basePrompt} ${selectedJob} ${selectedGender} ${selectedAge} ${selectedSupplement}`;
+    const basePrompt =
+      "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, with a sword in one hand and a shield in the other, wearing elaborate armor and a majestic cape, showcasing the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
+    const prompt = `${basePrompt} 職業：${selectedJob} 性別：${selectedGender} 年齢：${selectedAge} 性格：${selectedSupplement}`;
+    const job_id = jobs.find((job) => job.name === selectedJob).id;
     try {
       const response = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
@@ -51,7 +58,7 @@ export const CreateAvatar = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ prompt }),
+          body: JSON.stringify({ prompt, job_id }),
         }
       );
       const avatar = await response.json();
