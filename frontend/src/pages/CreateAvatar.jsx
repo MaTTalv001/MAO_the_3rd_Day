@@ -13,7 +13,8 @@ export const CreateAvatar = () => {
     currentUser?.latest_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(true); // ページ読み込み時のローディング
+  const [loadingAvatar, setLoadingAvatar] = useState(false); // アバター生成時のローディング
 
   const genders = ["男性", "女性", "性別指定なし"];
   const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
@@ -22,7 +23,6 @@ export const CreateAvatar = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       if (!token) return;
-      setLoading(true);
       try {
         const response = await fetch(`${API_URL}/api/v1/jobs`, {
           headers: {
@@ -37,7 +37,7 @@ export const CreateAvatar = () => {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
-        setLoading(false);
+        setLoadingPage(false); // ページ読み込み終了
       }
     };
 
@@ -45,7 +45,7 @@ export const CreateAvatar = () => {
   }, [token]);
 
   const generateAvatar = async () => {
-    setLoading(true);
+    setLoadingAvatar(true);
     const basePrompt =
       "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
     const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}`;
@@ -67,12 +67,25 @@ export const CreateAvatar = () => {
     } catch (error) {
       console.error("Error generating avatar:", error);
     } finally {
-      setLoading(false);
+      setLoadingAvatar(false);
     }
   };
 
+  if (loadingPage) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
   if (!currentUser) {
-    return <p>Loading...</p>;
+    return (
+      <p>
+        Loading...
+        <span className="loading loading-spinner loading-lg"></span>
+      </p>
+    );
   }
 
   return (
@@ -168,7 +181,7 @@ export const CreateAvatar = () => {
           </div>
         </div>
       </div>
-      {loading && (
+      {loadingAvatar && (
         <div className="modal modal-open">
           <div className="modal-box">
             <h3 className="font-bold text-lg">
@@ -178,7 +191,6 @@ export const CreateAvatar = () => {
             <p className="py-4">
               アバターを生成しています。少々お待ちください。
             </p>
-
             <img
               src="/imgs/npc/god.png"
               alt="Generating Avatar"
@@ -186,7 +198,7 @@ export const CreateAvatar = () => {
             />
             <div className="flex justify-center"></div>
             <div className="modal-action">
-              <button className="btn" onClick={() => setLoading(false)}>
+              <button className="btn" onClick={() => setLoadingAvatar(false)}>
                 閉じる
               </button>
             </div>

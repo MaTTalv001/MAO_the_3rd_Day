@@ -85,7 +85,12 @@ export const MyPage = () => {
   };
 
   if (!currentUser) {
-    return <p>Loading profile...</p>;
+    return (
+      <p>
+        Loading profile...
+        <span className="loading loading-spinner loading-lg"></span>
+      </p>
+    );
   }
 
   return (
