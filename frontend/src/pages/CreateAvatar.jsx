@@ -46,8 +46,8 @@ export const CreateAvatar = () => {
 
   const generateAvatar = async () => {
     const basePrompt =
-      "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, with a sword in one hand and a shield in the other, wearing elaborate armor and a majestic cape, showcasing the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
-    const prompt = `${basePrompt} 職業：${selectedJob} 性別：${selectedGender} 年齢：${selectedAge} 性格：${selectedSupplement}`;
+      "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
+    const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}`;
     const job_id = jobs.find((job) => job.name === selectedJob).id;
     try {
       const response = await fetch(
