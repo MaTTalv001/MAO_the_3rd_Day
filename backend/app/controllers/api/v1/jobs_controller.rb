@@ -4,7 +4,7 @@ module Api
       before_action :authenticate_request
 
       def index
-        jobs = Job.select(:id, :name)
+        jobs = Job.select(:id, :name, :item_id)
         render json: jobs
       end
     end

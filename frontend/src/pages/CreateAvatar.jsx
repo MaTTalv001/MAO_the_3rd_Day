@@ -37,7 +37,7 @@ export const CreateAvatar = () => {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
-        setLoadingPage(false); // ページ読み込み終了
+        setLoadingPage(false);
       }
     };
 
@@ -88,6 +88,11 @@ export const CreateAvatar = () => {
     );
   }
 
+  // 所有しているアバター生成アイテムでジョブをフィルタリングする
+  const availableJobs = jobs.filter((job) =>
+    currentUser.users_items.some((userItem) => userItem.item.id === job.item_id)
+  );
+
   return (
     <div className="container mx-auto p-4 max-w-5xl">
       <h1 className="text-3xl font-bold mb-6">アバター生成</h1>
@@ -98,9 +103,10 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedJob}
             onChange={(e) => setSelectedJob(e.target.value)}
+            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
           >
             <option value="">選択してください</option>
-            {jobs.map((job) => (
+            {availableJobs.map((job) => (
               <option key={job.id} value={job.name}>
                 {job.name}
               </option>
@@ -113,6 +119,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedGender}
             onChange={(e) => setSelectedGender(e.target.value)}
+            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
           >
             <option value="">選択してください</option>
             {genders.map((gender) => (
@@ -128,6 +135,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedAge}
             onChange={(e) => setSelectedAge(e.target.value)}
+            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
           >
             <option value="">選択してください</option>
             {ages.map((age) => (
@@ -143,6 +151,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedSupplement}
             onChange={(e) => setSelectedSupplement(e.target.value)}
+            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
           >
             <option value="">選択してください</option>
             {supplements.map((supplement) => (
@@ -153,9 +162,18 @@ export const CreateAvatar = () => {
           </select>
         </div>
       </div>
-      <button className="btn btn-primary w-full mb-6" onClick={generateAvatar}>
+      <button
+        className="btn btn-primary w-full mb-6"
+        onClick={generateAvatar}
+        disabled={availableJobs.length === 0} // ジョブがない場合はボタンを非アクティブにする
+      >
         アバター生成
       </button>
+      {availableJobs.length === 0 && (
+        <p className="text-red-500 text-center">
+          アバター生成アイテムがありません
+        </p>
+      )}
       <div className="mt-6">
         <h2 className="text-lg font-bold mb-4">アバター</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

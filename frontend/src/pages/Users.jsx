@@ -15,9 +15,12 @@ export const Users = () => {
   }, []);
 
   if (!currentUser) {
-    return <p>Loading profile...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
   }
-  console.log(users);
 
   return (
     <div className="container mx-auto p-4">

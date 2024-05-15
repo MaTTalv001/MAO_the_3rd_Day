@@ -20,7 +20,11 @@ export const UsersShow = () => {
   }, [id]);
 
   if (!user) {
-    return <p>Loading profile...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
   }
 
   return (
