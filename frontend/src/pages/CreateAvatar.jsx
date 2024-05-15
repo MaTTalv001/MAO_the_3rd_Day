@@ -13,7 +13,7 @@ export const CreateAvatar = () => {
     currentUser?.latest_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const genders = ["男性", "女性", "性別指定なし"];
   const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
@@ -45,6 +45,7 @@ export const CreateAvatar = () => {
   }, [token]);
 
   const generateAvatar = async () => {
+    setLoading(true);
     const basePrompt =
       "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
     const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}`;
@@ -65,6 +66,8 @@ export const CreateAvatar = () => {
       setGeneratedAvatar(avatar.avatar_url);
     } catch (error) {
       console.error("Error generating avatar:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +78,6 @@ export const CreateAvatar = () => {
   return (
     <div className="container mx-auto p-4 max-w-5xl">
       <h1 className="text-3xl font-bold mb-6">アバター生成</h1>
-      {/* プロンプトに用いるための選択肢 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
           <h2 className="text-lg font-bold mb-2">ジョブ</h2>
@@ -166,6 +168,31 @@ export const CreateAvatar = () => {
           </div>
         </div>
       </div>
+      {loading && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">
+              アバター作成中
+              <span className="loading loading-dots loading-xs"></span>{" "}
+            </h3>
+            <p className="py-4">
+              アバターを生成しています。少々お待ちください。
+            </p>
+
+            <img
+              src="/imgs/npc/god.png"
+              alt="Generating Avatar"
+              className="w-48 h-48 mx-auto"
+            />
+            <div className="flex justify-center"></div>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setLoading(false)}>
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

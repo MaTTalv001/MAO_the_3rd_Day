@@ -243,6 +243,7 @@ export const MyPage = () => {
                 <>
                   <div className="grid grid-cols-3 gap-2">
                     {currentUser.avatars
+                      .sort((a, b) => b.id - a.id) // ここで降順にソートしています
                       .slice(0, showAllAvatars ? currentUser.avatars.length : 9)
                       .map((avatar) => (
                         <img
@@ -267,9 +268,7 @@ export const MyPage = () => {
                   )}
                 </>
               ) : (
-                <div className="h-40 flex items-center justify-center">
-                  <p className="text-lg">データがありません</p>
-                </div>
+                <p>アバターがありません</p>
               )}
             </>
           )}
