@@ -41,8 +41,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
     duration: 0,
     category_id: "",
   });
-
   const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleContentChange = (event) => {
     setActivity({ ...activity, action: event.target.value });
@@ -80,7 +81,6 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
 
       const createdActivity = await response.json();
 
-      // user_statusを更新するリクエストを送信
       const userStatusResponse = await fetch(
         `${API_URL}/api/v1/user_statuses`,
         {
@@ -119,10 +119,8 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
         throw new Error("ステータスのアップデートに失敗しました");
       }
 
-      // 成功した場合のフォームのクリア
       setActivity({ action: "", duration: 0, category_id: "" });
 
-      // ユーザーステータスを更新
       const userResponse = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}`,
         {
@@ -133,6 +131,12 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       );
       const updatedUser = await userResponse.json();
       setCurrentUser(updatedUser);
+
+      setModalMessage("ステータスが向上しました！");
+      if (updatedUser.special_mode_unlocked) {
+        setModalMessage("ステータスが向上しました！ 魔王が現れた！");
+      }
+      setShowModal(true);
     } catch (error) {
       console.error("ユーザーステータスの更新に失敗しました:", error);
     }
@@ -209,8 +213,13 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
               type="range"
               min="0"
               max="600"
+              step="10" // 10分刻みに設定
               value={activity.duration}
-              onChange={handleDurationChange}
+              onChange={(event) => {
+                // スライダーの値を10の倍数に丸める
+                const roundedValue = Math.round(event.target.value / 10) * 10;
+                setActivity({ ...activity, duration: roundedValue });
+              }}
               className="range range-primary mr-2"
             />
             <span>{activity.duration}分</span>
@@ -245,7 +254,6 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
           </button>
         </div>
       )}
-      {/*魔王戦のボタン*/}
       {currentUser.special_mode_unlocked && (
         <button
           className="btn btn-secondary mt-4"
@@ -253,6 +261,19 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
         >
           特別なモードに参加する
         </button>
+      )}
+      {showModal && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">活動の記録</h3>
+            <p className="py-4">{modalMessage}</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setShowModal(false)}>
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
