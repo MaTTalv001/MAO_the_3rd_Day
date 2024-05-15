@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
       user = User.create(nickname: "新規ユーザー", achievement: 0)
       # UserStatusを作成し、ユーザーに関連付け
       status = user.user_statuses.create(user_id: user.id, job_id: 1, level: 1, hp: 100, strength: 1, intelligence: 1, wisdom: 1, dexterity: 1, charisma: 1)
-      avatar = user.avatars.create(user_id: user.id, avatar_url: "default/default_player.png")
+      avatar = user.avatars.create(user_id: user.id, avatar_url: "/default/default_player.png")
       UserAuthentication.create(user_id: user.id, uid: google_user_id, provider: provider)
       redirect_to "#{frontend_url}/MyPage?token=#{token}", allow_other_host: true
     end
