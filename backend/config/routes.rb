@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       resources :users do
         resources :avatars, only: [:create]
         post 'purchase', on: :member
+        post 'gain_coins', on: :member
       end
     end
   end

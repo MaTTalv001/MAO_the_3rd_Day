@@ -68,6 +68,20 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def gain_coins
+    user = @current_user
+    base_amount = [10, 20, 30].sample
+    charisma_bonus = user.latest_status.charisma * 0.01
+    total_amount = (base_amount * (1 + charisma_bonus)).floor
+
+    user.coin.amount += total_amount
+    if user.coin.save
+      render json: { user: user.as_json(include: { coin: { only: [:amount] } }), gained_coins: total_amount }, status: :ok
+    else
+      render json: { error: "金貨獲得処理に失敗しました" }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params

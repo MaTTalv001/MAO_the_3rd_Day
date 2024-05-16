@@ -15,6 +15,7 @@ export const Battle = () => {
   const [gameOver, setGameOver] = useState(false);
   const [attackTimeoutId, setAttackTimeoutId] = useState(null);
   const [background, setBackground] = useState(null);
+  const [gainedCoins, setGainedCoins] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/enemies/random`)
@@ -59,6 +60,35 @@ export const Battle = () => {
       }
     } catch (error) {
       console.error("Error saving battle log:", error);
+    }
+  };
+
+  const gainCoins = async () => {
+    if (!currentUser) return;
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}/gain_coins`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.user);
+        setGainedCoins(data.gained_coins);
+        setGameLog((prevLog) => [
+          ...prevLog,
+          `${data.gained_coins}枚の金貨を得た！`,
+        ]);
+      } else {
+        console.error("Failed to gain coins");
+      }
+    } catch (error) {
+      console.error("Error gaining coins:", error);
     }
   };
 
@@ -119,6 +149,7 @@ export const Battle = () => {
         if (enemyHP - totalDamage <= 0) {
           setGameLog([`${enemy.name}をたおした`]);
           saveBattleLog(true); // 勝利を保存
+          gainCoins(); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -187,6 +218,7 @@ export const Battle = () => {
           if (enemyHP - totalDamage <= 0) {
             setGameLog([`${enemy.name}をたおした`]);
             saveBattleLog(true); // 勝利を保存
+            gainCoins(); // 金貨を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -231,8 +263,9 @@ export const Battle = () => {
 
   return (
     <div className="min-h-screen bg-base-100 py-10">
+      {/* 上部: グラフィックコンテナ */}
       <div
-        className="bg-center mx-auto py-8 max-w-4xl"
+        className="flex justify-center py-8"
         style={{
           backgroundImage: `url(${background.url})`,
           backgroundPosition: "center bottom",
