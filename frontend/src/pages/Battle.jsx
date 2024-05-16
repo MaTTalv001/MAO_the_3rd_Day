@@ -341,7 +341,7 @@ export const Battle = () => {
           </div>
 
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">
-            <h2 className="text-2xl font-bold mb-4">バトルログ</h2>
+            <h2 className="text-2xl font-bold mb-4">モンスター討伐</h2>
             <GameLog
               logs={gameLog}
               isPlayerDefeated={playerHP <= 0}
