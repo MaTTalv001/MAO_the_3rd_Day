@@ -9,7 +9,7 @@ export const Battle = () => {
   const [enemy, setEnemy] = useState(null);
   const [playerHP, setPlayerHP] = useState(currentUser.latest_status.hp);
   const [enemyHP, setEnemyHP] = useState(null);
-  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]);
+  const [gameLog, setGameLog] = useState([`モンスターが現れた！`]);
   const [isAttacking, setIsAttacking] = useState(false);
   const [showRestart, setShowRestart] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -78,7 +78,7 @@ export const Battle = () => {
         setEnemyHP(Math.max(0, enemyHP - finalPlayerDamage));
         setGameLog((prevLog) => [
           ...prevLog,
-          `プレーヤーの${
+          `${currentUser.nickname}の${
             attackType === "attack" ? "攻撃" : "まほう"
           }、${finalPlayerDamage}のダメージ`,
         ]);
@@ -92,13 +92,13 @@ export const Battle = () => {
           );
           setGameLog((prevLog) => [
             ...prevLog,
-            `プレーヤーの2回連続攻撃発動！さらに${doubleAttackDamage}のダメージ`,
+            `${currentUser.nickname}の2回連続攻撃発動！さらに${doubleAttackDamage}のダメージ`,
           ]);
           totalDamage += doubleAttackDamage;
         }
 
         if (enemyHP - totalDamage <= 0) {
-          setGameLog(["モンスターをたおした"]);
+          setGameLog([`${enemy.name}をたおした`]);
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -108,7 +108,7 @@ export const Battle = () => {
         setPlayerHP(Math.max(0, playerHP - finalEnemyDamage));
         setGameLog((prevLog) => [
           ...prevLog,
-          `モンスターの攻撃、${finalEnemyDamage}のダメージ`,
+          `${enemy.name}の攻撃、${finalEnemyDamage}のダメージ`,
         ]);
         triggerShakeEffect();
         if (playerHP - finalEnemyDamage <= 0) {
@@ -128,7 +128,7 @@ export const Battle = () => {
             setPlayerHP(Math.max(0, playerHP - finalEnemyDamage));
             setGameLog((prevLog) => [
               ...prevLog,
-              `モンスターの攻撃、${finalEnemyDamage}のダメージ`,
+              `${enemy.name}の攻撃、${finalEnemyDamage}のダメージ`,
             ]);
             triggerShakeEffect();
             if (playerHP - finalEnemyDamage <= 0) {
@@ -143,7 +143,7 @@ export const Battle = () => {
           setEnemyHP(Math.max(0, enemyHP - finalPlayerDamage));
           setGameLog((prevLog) => [
             ...prevLog,
-            `プレーヤーの${
+            `${currentUser.nickname}の${
               attackType === "attack" ? "攻撃" : "まほう"
             }、${finalPlayerDamage}のダメージ`,
           ]);
@@ -157,13 +157,13 @@ export const Battle = () => {
             );
             setGameLog((prevLog) => [
               ...prevLog,
-              `プレーヤーの2回連続攻撃発動！さらに${doubleAttackDamage}のダメージ`,
+              `${currentUser.nickname}の2回連続攻撃発動！さらに${doubleAttackDamage}のダメージ`,
             ]);
             totalDamage += doubleAttackDamage;
           }
 
           if (enemyHP - totalDamage <= 0) {
-            setGameLog(["モンスターをたおした"]);
+            setGameLog([`${enemy.name}をたおした`]);
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -183,7 +183,7 @@ export const Battle = () => {
     }
     setPlayerHP(currentUser.latest_status.hp);
     setEnemyHP(enemy.hp);
-    setGameLog(["モンスターが現れた！"]);
+    setGameLog([`${enemy.name}が現れた！`]);
     setShowRestart(false);
     setGameOver(false);
     setAttackTimeoutId(null);
