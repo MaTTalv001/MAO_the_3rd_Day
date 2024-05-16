@@ -51,3 +51,21 @@
 .modal-box {
   animation: fadeIn 0.3s ease-out;
 }
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-10px);
+  }
+
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+.shake-animation {
+  animation: shake 0.3s ease-in-out;
+}

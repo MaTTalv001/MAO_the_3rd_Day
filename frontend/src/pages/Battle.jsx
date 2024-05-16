@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
+import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
 
 export const Battle = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
+  const [enemy, setEnemy] = useState(null);
+  const [playerHP, setPlayerHP] = useState(currentUser.latest_status.hp);
+  const [enemyHP, setEnemyHP] = useState(null);
+  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]);
+  const [isAttacking, setIsAttacking] = useState(false);
+  const [showRestart, setShowRestart] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [attackTimeoutId, setAttackTimeoutId] = useState(null);
+  const [background, setBackground] = useState(null);
 
-  if (!currentUser) {
+  useEffect(() => {
+    fetch(`${API_URL}/api/v1/enemies/random`)
+      .then((response) => response.json())
+      .then((data) => {
+        setEnemy(data);
+        setEnemyHP(data.hp);
+      })
+      .catch((error) => console.error("Error fetching enemy:", error));
+  }, []);
+
+  useEffect(() => {
+    const backgroundKeys = Object.keys(BackGround);
+    const randomKey =
+      backgroundKeys[Math.floor(Math.random() * backgroundKeys.length)];
+    setBackground(BackGround[randomKey]);
+  }, []);
+
+  if (!currentUser || !enemy) {
     return (
       <div className="flex items-center justify-center h-screen">
         <span className="loading loading-ring loading-lg"></span>
       </div>
     );
   }
-
-  //データの仮置き
-  const enemy = {
-    name: "魔王（開発中）",
-    hp: 50,
-    attack: 10,
-    defence: 10,
-    enemy_url: "/monster.png",
-  };
-
-  const [playerHP, setPlayerHP] = useState(currentUser.latest_status.hp);
-  const [enemyHP, setEnemyHP] = useState(enemy.hp);
-  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]);
-  const [isAttacking, setIsAttacking] = useState(false);
-  const [showRestart, setShowRestart] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [attackTimeoutId, setAttackTimeoutId] = useState(null);
 
   const attack = (attackType) => {
     if (gameOver) return;
@@ -192,28 +202,26 @@ export const Battle = () => {
     <div className="min-h-screen bg-base-100 py-10">
       {/* 上部: グラフィックコンテナ */}
       <div
-        className="bg-center mx-auto py-8 max-w-4xl"
+        className="flex justify-center py-8"
         style={{
-          backgroundImage: "url('/background.png')",
+          backgroundImage: `url(${background.url}`,
           backgroundPosition: "center bottom",
         }}
       >
-        <div className="container mx-auto max-w-4xl">
-          <div className="relative">
-            <div className={`bg-base-200 p-4 rounded-box mb-4 inline-block `}>
-              <h2 className="text-2xl font-bold">{enemy.name}</h2>
-              <p className="text-lg">HP: {enemyHP}</p>
-            </div>
-            <div
-              className="aspect-w-1 aspect-h-1 mx-auto"
-              style={{ maxWidth: "300px" }}
-            >
-              <img
-                src={enemy.enemy_url}
-                alt="Monster"
-                className={`object-contain ${enemyHP <= 0 ? "opacity-0" : ""}`}
-              />
-            </div>
+        <div className="flex flex-col items-center">
+          <div className="bg-base-200 p-4 rounded-box mb-4 inline-block text-center">
+            <h2 className="text-2xl font-bold">{enemy.name}</h2>
+            <p className="text-lg">HP: {enemyHP}</p>
+          </div>
+          <div
+            className="aspect-w-1 aspect-h-1 mx-auto"
+            style={{ maxWidth: "300px" }}
+          >
+            <img
+              src={enemy.enemy_url}
+              alt="Monster"
+              className={`object-contain ${enemyHP <= 0 ? "opacity-0" : ""}`}
+            />
           </div>
         </div>
       </div>

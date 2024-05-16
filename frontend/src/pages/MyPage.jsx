@@ -31,7 +31,6 @@ export const MyPage = () => {
   const handleProfileEditClick = () => {
     setIsProfileEditing(true);
   };
-
   const handleNicknameSaveClick = async () => {
     try {
       const response = await fetch(

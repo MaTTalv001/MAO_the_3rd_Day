@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 	    # カレントユーザーの呼び出し
       get 'users/current', to: 'users#current'
       post '/special_modes/participate', to: 'special_modes#participate'
+      get '/enemies/random', to: 'enemies#random'
       resources :jobs, only: [:index]
       resources :activities, only: [:create] do
         resources :activity_likes, only: [:index, :create, :destroy]
