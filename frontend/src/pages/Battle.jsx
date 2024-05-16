@@ -32,19 +32,35 @@ export const Battle = () => {
       backgroundKeys[Math.floor(Math.random() * backgroundKeys.length)];
     setBackground(BackGround[randomKey]);
   }, []);
+
   useEffect(() => {
     if (currentUser) {
       setPlayerHP(currentUser.latest_status.hp);
     }
   }, [currentUser]);
 
-  if (!currentUser || !enemy || playerHP === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <span className="loading loading-ring loading-lg"></span>
-      </div>
-    );
-  }
+  const saveBattleLog = async (result) => {
+    if (!currentUser || !enemy) return;
+    try {
+      const response = await fetch(`${API_URL}/api/v1/battle_logs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: currentUser.id,
+          enemy_id: enemy.id,
+          result: result,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to save battle log");
+      }
+    } catch (error) {
+      console.error("Error saving battle log:", error);
+    }
+  };
 
   const attack = (attackType) => {
     if (gameOver) return;
@@ -52,7 +68,6 @@ export const Battle = () => {
     setGameLog([]);
     setIsAttacking(true);
 
-    //ダメージ計算式
     const playerAttack =
       Math.floor(Math.random() * (currentUser.latest_status.strength * 2)) + 1;
     const playerMagic =
@@ -73,7 +88,6 @@ export const Battle = () => {
     const finalEnemyDamage = enemyDamage < 1 ? 1 : enemyDamage;
 
     const playerGoesFirst = Math.random() < 0.5;
-    //dexterityによってダブルアタック
     const doubleAttackChance = currentUser.latest_status.dexterity / 100;
 
     setTimeout(() => {
@@ -104,6 +118,7 @@ export const Battle = () => {
 
         if (enemyHP - totalDamage <= 0) {
           setGameLog([`${enemy.name}をたおした`]);
+          saveBattleLog(true); // 勝利を保存
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -118,6 +133,7 @@ export const Battle = () => {
         triggerShakeEffect();
         if (playerHP - finalEnemyDamage <= 0) {
           setGameLog(["全滅した"]);
+          saveBattleLog(false); // 敗北を保存
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -138,6 +154,7 @@ export const Battle = () => {
             triggerShakeEffect();
             if (playerHP - finalEnemyDamage <= 0) {
               setGameLog(["全滅した"]);
+              saveBattleLog(false); // 敗北を保存
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -169,6 +186,7 @@ export const Battle = () => {
 
           if (enemyHP - totalDamage <= 0) {
             setGameLog([`${enemy.name}をたおした`]);
+            saveBattleLog(true); // 勝利を保存
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -188,28 +206,35 @@ export const Battle = () => {
     }
     setPlayerHP(currentUser.latest_status.hp);
     setEnemyHP(enemy.hp);
-    setGameLog([`${enemy.name}が現れた！`]);
+    setGameLog(["モンスターが現れた！"]);
     setShowRestart(false);
     setGameOver(false);
     setAttackTimeoutId(null);
   };
-  // 被ダメージ時に画面を揺らす
+
   const triggerShakeEffect = () => {
     const body = document.body;
     body.classList.add("shake-animation");
 
     setTimeout(() => {
       body.classList.remove("shake-animation");
-    }, 500); // アニメーションの時間に合わせてクラスを削除
+    }, 500);
   };
+
+  if (!currentUser || !enemy || playerHP === null || background === null) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-base-100 py-10">
-      {/* 上部: グラフィックコンテナ */}
       <div
-        className="flex justify-center py-8"
+        className="bg-center mx-auto py-8 max-w-4xl"
         style={{
-          backgroundImage: `url(${background.url}`,
+          backgroundImage: `url(${background.url})`,
           backgroundPosition: "center bottom",
         }}
       >
@@ -231,10 +256,8 @@ export const Battle = () => {
         </div>
       </div>
 
-      {/* 下部: プレイヤーウィンドウとバトルログ */}
       <div className="container mx-auto py-8 max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-4">
-          {/* 左側: プレイヤー情報 */}
           <div
             className={`bg-base-200 p-4 rounded-box ${
               playerHP <= 0 ? "opacity-50" : ""
@@ -294,7 +317,6 @@ export const Battle = () => {
             </div>
           </div>
 
-          {/* 右側: バトルログ */}
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">
             <h2 className="text-2xl font-bold mb-4">バトルログ</h2>
             <GameLog logs={gameLog} isPlayerDefeated={playerHP <= 0} />
