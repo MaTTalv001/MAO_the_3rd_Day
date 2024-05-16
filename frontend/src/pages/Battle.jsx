@@ -7,9 +7,9 @@ import GameLog from "../components/GameLog";
 export const Battle = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
   const [enemy, setEnemy] = useState(null);
-  const [playerHP, setPlayerHP] = useState(currentUser.latest_status.hp);
+  const [playerHP, setPlayerHP] = useState(null);
   const [enemyHP, setEnemyHP] = useState(null);
-  const [gameLog, setGameLog] = useState([`モンスターが現れた！`]);
+  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]);
   const [isAttacking, setIsAttacking] = useState(false);
   const [showRestart, setShowRestart] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -32,8 +32,13 @@ export const Battle = () => {
       backgroundKeys[Math.floor(Math.random() * backgroundKeys.length)];
     setBackground(BackGround[randomKey]);
   }, []);
+  useEffect(() => {
+    if (currentUser) {
+      setPlayerHP(currentUser.latest_status.hp);
+    }
+  }, [currentUser]);
 
-  if (!currentUser || !enemy) {
+  if (!currentUser || !enemy || playerHP === null) {
     return (
       <div className="flex items-center justify-center h-screen">
         <span className="loading loading-ring loading-lg"></span>
