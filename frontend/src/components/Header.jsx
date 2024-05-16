@@ -57,6 +57,11 @@ export const Header = memo(() => {
               </Link>
             </li>
             <li>
+              <Link to="/battle" className="btn btn-ghost normal-case text-xl">
+                討伐
+              </Link>
+            </li>
+            <li>
               <a
                 onClick={handleClickLogout}
                 className="btn btn-ghost normal-case text-xl"
