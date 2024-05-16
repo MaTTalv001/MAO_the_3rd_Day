@@ -321,16 +321,6 @@ export const Battle = () => {
                   ? "たたかえない！"
                   : "たたかう"}
               </button>
-              {showRestart && (
-                <div className="flex space-x-2">
-                  <button
-                    className="btn btn-accent btn-block mt-2"
-                    onClick={restartGame}
-                  >
-                    再戦
-                  </button>
-                </div>
-              )}
             </div>
 
             <div className="flex space-x-2 pt-3">
@@ -352,7 +342,11 @@ export const Battle = () => {
 
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">
             <h2 className="text-2xl font-bold mb-4">バトルログ</h2>
-            <GameLog logs={gameLog} isPlayerDefeated={playerHP <= 0} />
+            <GameLog
+              logs={gameLog}
+              isPlayerDefeated={playerHP <= 0}
+              showMyPageLink={gameOver}
+            />
           </div>
         </div>
       </div>
