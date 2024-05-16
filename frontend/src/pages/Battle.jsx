@@ -265,7 +265,7 @@ export const Battle = () => {
     <div className="min-h-screen bg-base-100 py-10">
       {/* 上部: グラフィックコンテナ */}
       <div
-        className="flex justify-center py-8"
+        className="bg-center mx-auto py-8 max-w-4xl"
         style={{
           backgroundImage: `url(${background.url})`,
           backgroundPosition: "center bottom",
