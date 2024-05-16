@@ -311,7 +311,7 @@ export const Battle = () => {
               <button
                 className={`btn btn-primary btn-block ${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
-                    ? "loading btn-disabled"
+                    ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("attack")}
@@ -327,7 +327,7 @@ export const Battle = () => {
               <button
                 className={`btn btn-primary btn-block ${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
-                    ? "loading btn-disabled"
+                    ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("magic")}
