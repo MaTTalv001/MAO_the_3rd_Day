@@ -1,15 +1,32 @@
 import { useAuth } from "providers/auth";
 import { RoutePath } from "config/route_path";
 import { Link, useNavigate } from "react-router-dom";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 
 export const Header = memo(() => {
   const { setToken, logout, currentUser } = useAuth();
   const navigate = useNavigate();
+  const [hasBattledToday, setHasBattledToday] = useState(false);
 
   useEffect(() => {
     setToken(localStorage.getItem("authToken"));
   }, [localStorage.getItem("authToken")]);
+  console.log(currentUser);
+
+  useEffect(() => {
+    if (currentUser && currentUser.battle_logs) {
+      const today = new Date();
+      const todayBattles = currentUser.battle_logs.filter((log) => {
+        const logDate = new Date(log.created_at);
+        return (
+          logDate.getFullYear() === today.getFullYear() &&
+          logDate.getMonth() === today.getMonth() &&
+          logDate.getDate() === today.getDate()
+        );
+      });
+      setHasBattledToday(todayBattles.length > 0);
+    }
+  }, [currentUser]);
 
   const handleClickLogout = () => {
     logout(); // トークンをクリアしてログアウト処理
@@ -18,7 +35,7 @@ export const Header = memo(() => {
   };
 
   return (
-    <header className="navbar bg-base-300 ">
+    <header className="navbar bg-base-300">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost">
@@ -54,6 +71,17 @@ export const Header = memo(() => {
             <li>
               <Link to="/shop" className="btn btn-ghost normal-case text-xl">
                 ショップ
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/battle"
+                className={`btn btn-ghost normal-case text-xl ${
+                  hasBattledToday ? "btn-disabled" : ""
+                }`}
+                onClick={(e) => hasBattledToday && e.preventDefault()}
+              >
+                討伐
               </Link>
             </li>
             <li>

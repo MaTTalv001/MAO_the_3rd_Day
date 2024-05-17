@@ -27,4 +27,8 @@ export const RoutePath = {
     path: "/my_items",
     name: "所持品",
   },
+  Battle: {
+    path: "/battle",
+    name: "モンスター討伐",
+  },
 };

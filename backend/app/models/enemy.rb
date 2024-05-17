@@ -6,5 +6,5 @@ class Enemy < ApplicationRecord
   validates :hp, numericality: { greater_than_or_equal_to: 0 }
   validates :attack, numericality: { greater_than_or_equal_to: 0 }
   validates :defence, numericality: { greater_than_or_equal_to: 0 }
-  validates :enemy_url, presence: true, format: { with: URI.regexp(%w[http https]) }
+  validates :enemy_url, presence: true 
 end
