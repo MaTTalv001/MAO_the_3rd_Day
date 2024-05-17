@@ -85,3 +85,20 @@ jobs_data = [
 jobs_data.each do |job|
   Job.find_or_create_by(name: job[:name], item_id: job[:item_id])
 end
+
+enemies_data = [
+  { name: 'ゴブリン', hp: 50, attack: 10, defence: 5, enemy_url: '/imgs/enemies/monster001.png' },
+  { name: 'ファントム', hp: 40, attack: 15, defence: 5, enemy_url: '/imgs/enemies/monster002.png' },
+  { name: 'ヘドロン', hp: 20, attack: 5, defence: 15, enemy_url: '/imgs/enemies/monster001.png' },
+  { name: 'ワイバーンキッズ', hp: 60, attack: 15, defence: 15, enemy_url: '/imgs/enemies/monster004.png' },
+]
+
+enemies_data.each do |enemy|
+  Enemy.find_or_initialize_by(name: enemy[:name]).tap do |e|
+    e.hp = enemy[:hp]
+    e.attack = enemy[:attack]
+    e.defence = enemy[:defence]
+    e.enemy_url = enemy[:enemy_url]
+    e.save!
+  end
+end
