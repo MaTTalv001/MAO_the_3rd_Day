@@ -13,7 +13,9 @@ class User < ApplicationRecord
   has_many :activity_likes, dependent: :destroy
   has_many :liked_activities, through: :activity_likes, source: :activity, dependent: :destroy
   has_many :battle_logs, dependent: :destroy
+  has_many :boss_battle_logs, dependent: :destroy
   has_many :enemies, through: :battle_logs
+  has_many :bosses, through: :boss_battle_logs
 
   after_create :create_default_coin
 

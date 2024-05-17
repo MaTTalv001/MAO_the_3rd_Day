@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_12_035723) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_17_133827) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -75,6 +75,27 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_12_035723) do
     t.datetime "updated_at", null: false
     t.index ["enemy_id"], name: "index_battle_logs_on_enemy_id"
     t.index ["user_id"], name: "index_battle_logs_on_user_id"
+  end
+
+  create_table "boss_battle_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "boss_id", null: false
+    t.integer "damage_dealt", null: false
+    t.boolean "result", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["boss_id"], name: "index_boss_battle_logs_on_boss_id"
+    t.index ["user_id"], name: "index_boss_battle_logs_on_user_id"
+  end
+
+  create_table "bosses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "hp", null: false
+    t.integer "attack", null: false
+    t.integer "defence", null: false
+    t.string "boss_url", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -175,6 +196,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_12_035723) do
   add_foreign_key "avatars", "users", name: "fk_user_avatars_users", on_delete: :cascade
   add_foreign_key "battle_logs", "enemies"
   add_foreign_key "battle_logs", "users"
+  add_foreign_key "boss_battle_logs", "bosses"
+  add_foreign_key "boss_battle_logs", "users"
   add_foreign_key "coins", "users"
   add_foreign_key "coins", "users", name: "fk_user_coins_users", on_delete: :cascade
   add_foreign_key "jobs", "items"

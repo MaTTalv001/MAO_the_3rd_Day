@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Linkをインポート
+import { Link } from "react-router-dom"; 
 
 const GameLog = ({ logs, isPlayerDefeated, showMyPageLink }) => (
   <div className={`game-log ${isPlayerDefeated ? "game-log-defeated" : ""}`}>
