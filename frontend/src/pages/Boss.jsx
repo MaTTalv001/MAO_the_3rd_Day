@@ -325,7 +325,7 @@ export const Boss = () => {
   }
 
   return (
-    <div className="min-h-screen bg-base-100 py-10">
+    <div data-theme="dark" className="min-h-screen bg-base-100 py-10">
       {/* 上部: グラフィックコンテナ */}
       <div
         className="bg-center mx-auto py-8 max-w-4xl"

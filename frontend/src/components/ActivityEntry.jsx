@@ -169,6 +169,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
 
       if (response.ok) {
         setCurrentUser({ ...currentUser, special_mode_unlocked: false });
+        window.location.href = "/boss";
       } else {
         console.error("魔王戦の参加に失敗しました");
       }
@@ -253,14 +254,6 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             登録
           </button>
         </div>
-      )}
-      {currentUser.special_mode_unlocked && (
-        <button
-          className="btn btn-secondary mt-4"
-          onClick={handleSpecialModeParticipation}
-        >
-          特別なモードに参加する
-        </button>
       )}
       {showModal && (
         <div className="modal modal-open">
