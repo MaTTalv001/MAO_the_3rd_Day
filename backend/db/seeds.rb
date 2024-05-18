@@ -12,43 +12,57 @@ end
 
 # アイテムデータを挿入
 items = [
-  { id: 1, name: "基本職の書", cost: 50, item_url: "imgs/items/item_001.png", category_name: "アバター生成" },
-  { id: 2, name: "バトルマスターの書", cost: 200, item_url: "imgs/items/item_002.png", category_name: "アバター生成" },
-  { id: 3, name: "賢者の書", cost: 200, item_url: "imgs/items/item_003.png", category_name: "アバター生成" },
-  { id: 4, name: "アークプリーストの書", cost: 200, item_url: "imgs/items/item_004.png", category_name: "アバター生成" },
-  { id: 5, name: "忍者の書", cost: 200, item_url: "imgs/items/item_005.png", category_name: "アバター生成" },
-  { id: 6, name: "スーパースターの書", cost: 200, item_url: "imgs/items/item_006.png", category_name: "アバター生成" },
-  { id: 7, name: "勇者の書", cost: 300, item_url: "imgs/items/item_007.png", category_name: "アバター生成" },
-  { id: 8, name: "回復のポーション", cost: 20, item_url: "imgs/items/item_008.png", category_name: "道具" },
-  { id: 9, name: "東国の揚げ鶏", cost: 10, item_url: "imgs/items/item_009.png", category_name: "道具" },
-  { id: 10, name: "毒消しハーブ", cost: 20, item_url: "imgs/items/item_010.png", category_name: "道具" },
-  { id: 11, name: "棍棒", cost: 30, item_url: "imgs/items/item_011.png", category_name: "武器" },
-  { id: 12, name: "銅の剣", cost: 50, item_url: "imgs/items/item_012.png", category_name: "武器" },
-  { id: 13, name: "鉄の槍", cost: 100, item_url: "imgs/items/item_013.png", category_name: "武器" },
-  { id: 14, name: "魔法の杖", cost: 100, item_url: "imgs/items/item_014.png", category_name: "武器" },
-  { id: 15, name: "盗賊のナイフ", cost: 100, item_url: "imgs/items/item_015.png", category_name: "武器" },
-  { id: 16, name: "エルフの弓", cost: 300, item_url: "imgs/items/item_016.png", category_name: "武器" },
-  { id: 17, name: "ドラゴン殺し", cost: 500, item_url: "imgs/items/item_017.png", category_name: "武器" },
-  { id: 18, name: "旅人の服", cost: 30, item_url: "imgs/items/item_018.png", category_name: "防具" },
-  { id: 19, name: "鉄の甲冑", cost: 200, item_url: "imgs/items/item_019.png", category_name: "防具" },
-  { id: 20, name: "魔導士のローブ", cost: 100, item_url: "imgs/items/item_020.png", category_name: "防具" },
-  { id: 21, name: "鉄の盾", cost: 100, item_url: "imgs/items/item_021.png", category_name: "防具" },
-  { id: 22, name: "オーガの大盾", cost: 200, item_url: "imgs/items/item_022.png", category_name: "防具" },
-  { id: 23, name: "英雄の盾", cost: 500, item_url: "imgs/items/item_023.png", category_name: "防具" },
-  { id: 24, name: "力の腕輪", cost: 100, item_url: "imgs/items/item_024.png", category_name: "アクセサリ" },
-  { id: 25, name: "スピードブーツ", cost: 200, item_url: "imgs/items/item_025.png", category_name: "アクセサリ" },
-  { id: 26, name: "魔法の水晶", cost: 300, item_url: "imgs/items/item_026.png", category_name: "アクセサリ" },
-  { id: 27, name: "金のブレスレット", cost: 300, item_url: "imgs/items/item_027.png", category_name: "アクセサリ" },
-  { id: 28, name: "女神のチョーカー", cost: 500, item_url: "imgs/items/item_028.png", category_name: "アクセサリ" },
-  { id: 29, name: "ルビーの宝玉", cost: 800, item_url: "imgs/items/item_029.png", category_name: "アクセサリ" },
-  { id: 30, name: "ダイヤの指輪", cost: 1000, item_url: "imgs/items/item_030.png", category_name: "アクセサリ" },
+  { id: 1, name: "基本職の書", cost: 50, item_url: "imgs/items/item_001.png", category: "アバター生成" },
+  { id: 2, name: "バトルマスターの書", cost: 200, item_url: "imgs/items/item_002.png", category: "アバター生成" },
+  { id: 3, name: "賢者の書", cost: 200, item_url: "imgs/items/item_003.png", category: "アバター生成" },
+  { id: 4, name: "アークプリーストの書", cost: 200, item_url: "imgs/items/item_004.png", category: "アバター生成" },
+  { id: 5, name: "忍者の書", cost: 200, item_url: "imgs/items/item_005.png", category: "アバター生成" },
+  { id: 6, name: "スーパースターの書", cost: 200, item_url: "imgs/items/item_006.png", category: "アバター生成" },
+  { id: 7, name: "勇者の書", cost: 300, item_url: "imgs/items/item_007.png", category: "アバター生成" },
+  { id: 8, name: "回復のポーション", cost: 20, item_url: "imgs/items/item_008.png", category: "道具" },
+  { id: 9, name: "東国の揚げ鶏", cost: 10, item_url: "imgs/items/item_009.png", category: "道具" },
+  { id: 10, name: "毒消しハーブ", cost: 20, item_url: "imgs/items/item_010.png", category: "道具" },
+  { id: 11, name: "棍棒", cost: 30, item_url: "imgs/items/item_011.png", category: "武器" },
+  { id: 12, name: "銅の剣", cost: 50, item_url: "imgs/items/item_012.png", category: "武器" },
+  { id: 13, name: "鉄の槍", cost: 100, item_url: "imgs/items/item_013.png", category: "武器" },
+  { id: 14, name: "魔法の杖", cost: 100, item_url: "imgs/items/item_014.png", category: "武器" },
+  { id: 15, name: "盗賊のナイフ", cost: 100, item_url: "imgs/items/item_015.png", category: "武器" },
+  { id: 16, name: "エルフの弓", cost: 300, item_url: "imgs/items/item_016.png", category: "武器" },
+  { id: 17, name: "ドラゴン殺し", cost: 500, item_url: "imgs/items/item_017.png", category: "武器" },
+  { id: 18, name: "旅人の服", cost: 30, item_url: "imgs/items/item_018.png", category: "防具" },
+  { id: 19, name: "鉄の甲冑", cost: 200, item_url: "imgs/items/item_019.png", category: "防具" },
+  { id: 20, name: "魔導士のローブ", cost: 100, item_url: "imgs/items/item_020.png", category: "防具" },
+  { id: 21, name: "鉄の盾", cost: 100, item_url: "imgs/items/item_021.png", category: "防具" },
+  { id: 22, name: "オーガの大盾", cost: 200, item_url: "imgs/items/item_022.png", category: "防具" },
+  { id: 23, name: "英雄の盾", cost: 500, item_url: "imgs/items/item_023.png", category: "防具" },
+  { id: 24, name: "力の腕輪", cost: 100, item_url: "imgs/items/item_024.png", category: "アクセサリ" },
+  { id: 25, name: "スピードブーツ", cost: 200, item_url: "imgs/items/item_025.png", category: "アクセサリ" },
+  { id: 26, name: "魔法の水晶", cost: 300, item_url: "imgs/items/item_026.png", category: "アクセサリ" },
+  { id: 27, name: "金のブレスレット", cost: 300, item_url: "imgs/items/item_027.png", category: "アクセサリ" },
+  { id: 28, name: "女神のチョーカー", cost: 500, item_url: "imgs/items/item_028.png", category: "アクセサリ" },
+  { id: 29, name: "ルビーの宝玉", cost: 800, item_url: "imgs/items/item_029.png", category: "アクセサリ" },
+  { id: 30, name: "ダイヤの指輪", cost: 1000, item_url: "imgs/items/item_030.png", category: "アクセサリ" },
 ]
 
 items.each do |item_data|
-  category = Category.find_by(name: item_data.delete(:category_name))
-  item = Item.find_or_initialize_by(id: item_data[:id])
-  item.assign_attributes(item_data.merge(category: category))
-  item.save!
+  item = Item.find_by(id: item_data[:id])
+  
+  if item
+    item.update(
+      name: item_data[:name],
+      cost: item_data[:cost],
+      item_url: item_data[:item_url],
+      category: item_data[:category]
+    )
+  else
+    Item.create(
+      id: item_data[:id],
+      name: item_data[:name],
+      cost: item_data[:cost],
+      item_url: item_data[:item_url],
+      category: item_data[:category]
+    )
+  end
 end
 
 # ジョブデータを挿入
