@@ -10,7 +10,7 @@ export const TitleComponent = () => {
             backgroundImage: `url("/imgs/title/title_story.jpg")`,
           }}
         >
-          <div className="hero-overlay bg-opacity-60 rounded-lg"></div>
+          <div className="hero-overlay bg-opacity-70 rounded-lg"></div>
           <div className="hero-content text-center text-base-content">
             <div className="max-w-md">
               <h1 className="mb-5 text-3xl font-bold">3日の力が魔王を討つ</h1>
@@ -48,7 +48,7 @@ export const TitleComponent = () => {
           </div>
           <div className="card bg-base-300 shadow-xl">
             <figure>
-              <img src="/default/default_player.png" alt="Default Player" />
+              <img src="/imgs/instruction/instruction001.jpg" alt="バトル" />
             </figure>
             <div className="card-body">
               <h2 className="card-title">バトル</h2>

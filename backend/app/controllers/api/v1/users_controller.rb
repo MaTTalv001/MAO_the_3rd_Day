@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
   # GET /api/v1/users
   def index
-    @users = User.all
+    @users = User.without_guest_users
     render json: @users.map { |user| user.as_json(index_view: true) } #as_json内分岐で情報量を絞る
   end
 

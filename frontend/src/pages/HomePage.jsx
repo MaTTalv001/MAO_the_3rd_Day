@@ -29,6 +29,21 @@ export const HomePage = () => {
     form.submit();
   };
 
+  const handleGuestLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API_URL}/guest_login`, {
+        method: "POST",
+      });
+      const data = await response.json();
+      setToken(data.token);
+      localStorage.setItem("auth", data.token);
+      navigate("/MyPage");
+    } catch (error) {
+      console.error("Error logging in as guest:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center">
       <div className="container mx-auto px-4 mb-10 ">
@@ -73,7 +88,10 @@ export const HomePage = () => {
                 </svg>
                 Googleログイン
               </button>
-              <button className="btn btn-accent gap-2 w-full">
+              <button
+                className="btn btn-accent gap-2 w-full"
+                onClick={handleGuestLogin}
+              >
                 <img
                   src="imgs/title/guest_login.png"
                   alt="Guest Login"
