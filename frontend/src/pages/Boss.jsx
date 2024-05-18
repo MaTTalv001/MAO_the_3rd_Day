@@ -3,6 +3,7 @@ import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
+import { Link } from "react-router-dom";
 
 export const Boss = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -322,6 +323,25 @@ export const Boss = () => {
         <span className="loading loading-ring loading-lg"></span>
       </div>
     );
+  }
+
+  if (currentUser && currentUser.boss_battle_logs) {
+    const today = new Date().toISOString().slice(0, 10);
+    const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
+      return log.created_at.slice(0, 10) === today;
+    });
+    if (hasTodaysBattleLog) {
+      return (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h2 className="text-2xl font-bold mb-4">
+            次回の魔王戦に備えましょう
+          </h2>
+          <Link to="/mypage" className="btn btn-primary">
+            マイページへ
+          </Link>
+        </div>
+      );
+    }
   }
 
   return (

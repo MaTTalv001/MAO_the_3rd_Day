@@ -3,6 +3,7 @@ import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
+import { Link } from "react-router-dom";
 
 export const Battle = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -63,7 +64,7 @@ export const Battle = () => {
     }
   };
 
-  const gainCoins = async () => {
+  const gainCoins = async (amount) => {
     if (!currentUser) return;
     try {
       const response = await fetch(
@@ -74,6 +75,9 @@ export const Battle = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({
+            base_amount: amount,
+          }),
         }
       );
       if (response.ok) {
@@ -149,7 +153,9 @@ export const Battle = () => {
         if (enemyHP - totalDamage <= 0) {
           setGameLog([`${enemy.name}をたおした`]);
           saveBattleLog(true); // 勝利を保存
-          gainCoins(); // 金貨を獲得
+          const amounts = [10, 20, 30];
+          const amount = amounts[Math.floor(Math.random() * amounts.length)];
+          gainCoins(amount); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -218,7 +224,9 @@ export const Battle = () => {
           if (enemyHP - totalDamage <= 0) {
             setGameLog([`${enemy.name}をたおした`]);
             saveBattleLog(true); // 勝利を保存
-            gainCoins(); // 金貨を獲得
+            const amounts = [10, 20, 30];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            gainCoins(amount); // 金貨を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -259,6 +267,25 @@ export const Battle = () => {
         <span className="loading loading-ring loading-lg"></span>
       </div>
     );
+  }
+
+  if (currentUser && currentUser.battle_logs) {
+    const today = new Date().toISOString().slice(0, 10);
+    const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
+      return log.created_at.slice(0, 10) === today;
+    });
+    if (hasTodaysBattleLog) {
+      return (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h2 className="text-2xl font-bold mb-4">
+            本日の討伐は終了しています
+          </h2>
+          <Link to="/mypage" className="btn btn-primary">
+            マイページへ
+          </Link>
+        </div>
+      );
+    }
   }
 
   return (

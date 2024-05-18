@@ -48,7 +48,8 @@ class User < ApplicationRecord
           },
           only: [:id, :action, :minute, :created_at]
         },
-        battle_logs: { only: [:id, :enemy_id, :result, :created_at] }
+        battle_logs: { only: [:id, :enemy_id, :result, :created_at] },
+        boss_battle_logs: { only: [:id, :enemy_id, :result, :created_at] }
       }
     )).tap do |hash|
       hash[:latest_status] = latest_status_as_json
