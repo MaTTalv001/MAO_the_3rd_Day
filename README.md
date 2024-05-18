@@ -114,7 +114,6 @@ PC、スマートフォンいずれも操作できます。気楽に入力でき
   - Rails API と React
 - 他ユーザーの情報確認
 - 他ユーザーへのいいね機能
-- LINE 通知
 
 #### 本リリース時に実装したい機能
 
@@ -163,7 +162,6 @@ Figma: https://www.figma.com/file/2shW2gj4lRB8dpAYwkmW9j/MAO_the_3Days?type=desi
 - [x] 報酬とアイテム購入機能
 - [x] バトル（簡易）
 - [x] 他ユーザーの情報確認
-- [x] LINE 通知
 - [ ]
 
 ### 未ログインでも閲覧または利用できるページ

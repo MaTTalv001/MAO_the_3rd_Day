@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :boss_battle_logs, dependent: :destroy
   has_many :enemies, through: :battle_logs
   has_many :bosses, through: :boss_battle_logs
+  scope :without_guest_users, -> { joins(:user_authentication).where.not(user_authentications: { provider: 'guest' }) }
 
   after_create :create_default_coin
 
