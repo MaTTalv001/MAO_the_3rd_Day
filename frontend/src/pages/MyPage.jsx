@@ -53,7 +53,7 @@ export const MyPage = () => {
       setCurrentUser(updatedUser);
       setIsNicknameEditing(false);
     } catch (error) {
-      console.error("Error updating nickname:", error);
+      console.error("ニックネームの更新に失敗しました:", error);
     }
   };
 
@@ -79,7 +79,7 @@ export const MyPage = () => {
       setCurrentUser(updatedUser);
       setIsProfileEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error("プロフィールの更新に失敗しました:", error);
     }
   };
 
@@ -278,7 +278,7 @@ export const MyPage = () => {
                 <>
                   <div className="grid grid-cols-3 gap-2">
                     {currentUser.avatars
-                      .sort((a, b) => b.id - a.id) // ここで降順にソートしています
+                      .sort((a, b) => b.id - a.id) // 降順ソート
                       .slice(0, showAllAvatars ? currentUser.avatars.length : 9)
                       .map((avatar) => (
                         <img

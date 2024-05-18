@@ -11,7 +11,7 @@ export const Header = memo(() => {
   useEffect(() => {
     setToken(localStorage.getItem("authToken"));
   }, [localStorage.getItem("authToken")]);
-  console.log(currentUser);
+  //console.log(currentUser);
 
   useEffect(() => {
     if (currentUser && currentUser.battle_logs) {
