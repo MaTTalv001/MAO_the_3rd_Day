@@ -225,10 +225,8 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             />
             <span>{activity.duration}分</span>
           </div>
+          <div className="my-2">各カテゴリ1日1回まで記録可能</div>
           <div className="flex justify-around relative mx-20">
-            <p>
-              カテゴリに応じてステータスが向上します。各カテゴリは1日1回までです。
-            </p>
             {availableCategories.map((category) => (
               <div
                 key={category.name}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 import { RoutePath } from "../config/route_path";
 import { API_URL } from "../config/settings";
+import { TitleComponent } from "../components/TitleComponent";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 mb-10 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex justify-center">
             <img
@@ -84,13 +85,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-4 mt-8">
-        <div className="bg-base-100 p-4 rounded-lg">
-          <p className="text-center text-base-content">
-            インストラクション（仮置き）
-          </p>
-        </div>
-      </div>
+      <TitleComponent />
     </div>
   );
 };
