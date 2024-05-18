@@ -6,7 +6,7 @@ const categories = [
   {
     id: 1,
     name: "運動",
-    description: "トレーニングやスポーツなど。体力を向上させます",
+    description: "トレーニングやスポーツなど。筋力を向上させます",
   },
   {
     id: 2,
@@ -194,7 +194,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
           <div className="flex items-center mb-2">
             <div
               className="relative tooltip w-full"
-              data-tip="活動内容を入力してください（50字以内）"
+              data-tip="活動内容や所感などを自由に入力してください（50字以内）"
             >
               <input
                 type="text"
@@ -226,6 +226,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             <span>{activity.duration}分</span>
           </div>
           <div className="flex justify-around relative mx-20">
+            <p>
+              カテゴリに応じてステータスが向上します。各カテゴリは1日1回までです。
+            </p>
             {availableCategories.map((category) => (
               <div
                 key={category.name}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
+import { Link } from "react-router-dom";
 
 export const CreateAvatar = () => {
-  const { currentUser, token } = useAuth();
+  const { currentUser, token, setCurrentUser } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
@@ -44,12 +45,28 @@ export const CreateAvatar = () => {
     fetchJobs();
   }, [token]);
 
+  // 所有しているアバター生成アイテムでジョブをフィルタリングする
+  const availableJobs = jobs.filter((job) =>
+    currentUser.users_items.some((userItem) => userItem.item.id === job.item_id)
+  );
+
+  // アバター生成アイテムを所有しているかの判定を非同期に行う
+  useEffect(() => {
+    const hasAvailableJobs = availableJobs.length > 0;
+    const button = document.querySelector("#generate-avatar-button");
+    if (button) {
+      button.disabled = !hasAvailableJobs;
+    }
+  }, [availableJobs]);
+
   const generateAvatar = async () => {
     setLoadingAvatar(true);
     const basePrompt =
       "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
     const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}`;
     const job_id = jobs.find((job) => job.name === selectedJob).id;
+    // 選択したジョブに関連するアイテムのIDを取得
+    const item_id = jobs.find((job) => job.id === job_id).item_id;
     try {
       const response = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
@@ -64,6 +81,25 @@ export const CreateAvatar = () => {
       );
       const avatar = await response.json();
       setGeneratedAvatar(avatar.avatar_url);
+
+      // アバター生成アイテムを1つ削除するAPIリクエストを送信
+      const deleteItemResponse = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}/items/${item_id}/consume`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (deleteItemResponse.ok) {
+        // アイテム削除が成功した場合のユーザー情報の更新
+        const updatedUser = await deleteItemResponse.json();
+        setCurrentUser(updatedUser);
+      } else {
+        console.error("Error deleting item:", deleteItemResponse.statusText);
+      }
     } catch (error) {
       console.error("Error generating avatar:", error);
     } finally {
@@ -87,11 +123,6 @@ export const CreateAvatar = () => {
       </p>
     );
   }
-
-  // 所有しているアバター生成アイテムでジョブをフィルタリングする
-  const availableJobs = jobs.filter((job) =>
-    currentUser.users_items.some((userItem) => userItem.item.id === job.item_id)
-  );
 
   return (
     <div className="container mx-auto p-4 max-w-5xl">
@@ -170,9 +201,14 @@ export const CreateAvatar = () => {
         アバター生成
       </button>
       {availableJobs.length === 0 && (
-        <p className="text-red-500 text-center">
-          アバター生成アイテムがありません
-        </p>
+        <>
+          <p className="text-warning text-center">
+            アバター生成アイテムがありません。ショップで購入できます。
+          </p>
+          <Link to={`/shop`} className="btn btn-accent w-full">
+            ショップ
+          </Link>
+        </>
       )}
       <div className="mt-6">
         <h2 className="text-lg font-bold mb-4">アバター</h2>
