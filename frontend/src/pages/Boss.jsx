@@ -9,7 +9,7 @@ export const Boss = () => {
   const [boss, setBoss] = useState(null);
   const [playerHP, setPlayerHP] = useState(null);
   const [bossHP, setBossHP] = useState(null);
-  const [gameLog, setGameLog] = useState(["ボスが現れた！"]);
+  const [gameLog, setGameLog] = useState(["魔王が現れた！"]);
   const [isAttacking, setIsAttacking] = useState(false);
   const [showRestart, setShowRestart] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -275,7 +275,7 @@ export const Boss = () => {
 
         if (turnsLeft - 1 <= 0) {
           setTotalDamage((prevDamage) => prevDamage + turnDamage); // 最後のダメージを加算
-          setGameLog(["ターンが終了しました"]);
+          setGameLog(["魔王は去りました。与えたダメージは次回に引き継ぎます"]);
           saveBattleLog(false, totalDamage + turnDamage); // 敗北を保存、ダメージを送信
           // 敗北の報酬を獲得
           const amounts = [10, 20, 30];
@@ -299,8 +299,7 @@ export const Boss = () => {
       clearTimeout(attackTimeoutId);
     }
     setPlayerHP(currentUser.latest_status.hp);
-    setBossHP(boss.hp);
-    setGameLog(["ボスが現れた！"]);
+    setGameLog(["魔王が現れた！"]);
     setShowRestart(false);
     setGameOver(false);
     setAttackTimeoutId(null);
@@ -331,28 +330,31 @@ export const Boss = () => {
       <div
         className="bg-center mx-auto py-8 max-w-4xl"
         style={{
-          backgroundImage: `url(${background.url})`,
+          backgroundImage: `url("/imgs/bg/boss_bg001.jpg")`,
           backgroundPosition: "center bottom",
         }}
       >
         <div className="flex flex-col items-center">
-          <div className="bg-base-200 p-4 rounded-box mb-4 inline-block text-center">
+          <div
+            className={`bg-base-200 p-4 rounded-box mb-4 inline-block text-center ${
+              gameOver ? "opacity-0" : ""
+            }`}
+            style={{ visibility: gameOver ? "hidden" : "visible" }}
+          >
             <h2 className="text-2xl font-bold">{boss.name}</h2>
             <p className="text-lg">HP: {bossHP}</p>
             <p className="text-lg">残りターン: {turnsLeft}</p>
           </div>
-          {bossHP > 0 && (
-            <div
-              className="aspect-w-1 aspect-h-1 mx-auto"
-              style={{ maxWidth: "300px" }}
-            >
-              <img
-                src={boss.boss_url}
-                alt="Boss"
-                className={`object-contain ${bossHP <= 0 ? "opacity-0" : ""}`}
-              />
-            </div>
-          )}
+          <div
+            className="aspect-w-1 aspect-h-1 mx-auto"
+            style={{ maxWidth: "300px" }}
+          >
+            <img
+              src={boss.boss_url}
+              alt="Boss"
+              className={`object-contain ${gameOver ? "opacity-0" : ""}`}
+            />
+          </div>
         </div>
       </div>
 
@@ -411,7 +413,7 @@ export const Boss = () => {
           </div>
 
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">
-            <h2 className="text-2xl font-bold mb-4">ボス討伐</h2>
+            <h2 className="text-2xl font-bold mb-4">魔王バトル</h2>
             <GameLog
               logs={gameLog}
               isPlayerDefeated={playerHP <= 0}
