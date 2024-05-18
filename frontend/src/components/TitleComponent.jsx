@@ -48,7 +48,7 @@ export const TitleComponent = () => {
           </div>
           <div className="card bg-base-300 shadow-xl">
             <figure>
-              <img src="/imgs/instruction/instruction001.jpg" alt="バトル" />
+              <img src="/imgs/instruction/instruction003.jpg" alt="バトル" />
             </figure>
             <div className="card-body">
               <h2 className="card-title">バトル</h2>
