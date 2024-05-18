@@ -68,6 +68,24 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def consume_item
+  user = @current_user
+  item = Item.find(params[:item_id])
+
+  user_item = user.users_items.find_by(item_id: item.id)
+  if user_item && user_item.amount > 0
+    user_item.amount -= 1
+    if user_item.amount <= 0
+      user_item.destroy
+    else
+      user_item.save!
+    end
+    render json: user.as_json(include: [coin: { only: [:amount] }, items: { only: [:id, :name, :cost, :item_url, :category] }]), status: :ok
+  else
+    render json: { error: "Item not found or insufficient amount" }, status: :unprocessable_entity
+  end
+end
+
   def gain_coins
   user = @current_user
   base_amount = params[:base_amount].to_i
