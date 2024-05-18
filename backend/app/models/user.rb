@@ -93,6 +93,6 @@ end
   private
 
   def create_default_coin
-    create_coin(amount: 100)  # Coinの初期値を設定
+    create_coin(amount: 200)  # Coinの初期値を設定
   end
 end
