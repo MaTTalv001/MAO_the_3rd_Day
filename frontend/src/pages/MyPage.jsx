@@ -83,6 +83,30 @@ export const MyPage = () => {
     }
   };
 
+  const handleSpecialModeParticipation = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/special_modes/participate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setCurrentUser({ ...currentUser, special_mode_unlocked: false });
+        window.location.href = "/boss";
+      } else {
+        console.error("魔王戦の参加に失敗しました");
+      }
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+    }
+  };
+
   if (!currentUser) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -130,6 +154,14 @@ export const MyPage = () => {
           <Link to={`/create_avatar`} className="btn btn-accent w-full">
             アバター変更
           </Link>
+          {currentUser.special_mode_unlocked && (
+            <button
+              className="btn btn-error mt-4 w-full"
+              onClick={handleSpecialModeParticipation}
+            >
+              魔王バトルに挑む
+            </button>
+          )}
         </div>
         {/* ステータス */}
         {currentUser.latest_status && (
@@ -138,11 +170,11 @@ export const MyPage = () => {
             <p>Level: {currentUser.latest_status.level}</p>
             <p>{currentUser.latest_status.job.name}</p>
             <p>HP: {currentUser.latest_status.hp}</p>
-            <p>体力: {currentUser.latest_status.strength}</p>
+            <p>筋力: {currentUser.latest_status.strength}</p>
             <p>知力: {currentUser.latest_status.intelligence}</p>
             <p>精神: {currentUser.latest_status.wisdom}</p>
-            <p>素速さ: {currentUser.latest_status.dexterity}</p>
-            <p>カリスマ: {currentUser.latest_status.charisma}</p>
+            <p>敏捷: {currentUser.latest_status.dexterity}</p>
+            <p>魅力: {currentUser.latest_status.charisma}</p>
             <p className="mt-4">3日達成数: {currentUser.achievement ?? 0}</p>
             <div className="mt-4 bg-base-300 p-2 rounded-lg">
               <div className="flex items-center mb-2">

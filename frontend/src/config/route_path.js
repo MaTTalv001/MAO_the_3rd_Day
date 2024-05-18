@@ -31,4 +31,8 @@ export const RoutePath = {
     path: "/battle",
     name: "モンスター討伐",
   },
+  Boss: {
+    path: "/boss",
+    name: "魔王バトル",
+  },
 };

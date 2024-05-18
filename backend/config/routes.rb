@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       post '/special_modes/participate', to: 'special_modes#participate'
       get '/enemies/random', to: 'enemies#random'
       resources :battle_logs, only: [:create]
+      resources :bosses, only: [:show]
+      resources :boss_battle_logs, only: [:create, :index]
       resources :jobs, only: [:index]
       resources :activities, only: [:create] do
         resources :activity_likes, only: [:index, :create, :destroy]

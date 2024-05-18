@@ -10,6 +10,7 @@ import { UsersShow } from "../pages/UsersShow";
 import { CreateAvatar } from "../pages/CreateAvatar";
 import { MyItems } from "../pages/MyItems";
 import { Battle } from "../pages/Battle";
+import { Boss } from "../pages/Boss";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.CreateAvatar.path, element: <CreateAvatar /> },
       { path: RoutePath.MyItems.path, element: <MyItems /> },
       { path: RoutePath.Battle.path, element: <Battle /> },
+      { path: RoutePath.Boss.path, element: <Boss /> },
     ],
   },
 ];

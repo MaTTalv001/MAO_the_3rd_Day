@@ -34,7 +34,7 @@ export const HomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex justify-center">
             <img
-              src="imgs/title/title.png"
+              src="imgs/title/title002.png"
               alt="App Title"
               className="max-w-full h-auto"
             />
