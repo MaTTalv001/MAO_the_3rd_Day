@@ -17,6 +17,7 @@ export const Battle = () => {
   const [attackTimeoutId, setAttackTimeoutId] = useState(null);
   const [background, setBackground] = useState(null);
   const [gainedCoins, setGainedCoins] = useState(null);
+  const [hasBattledToday, setHasBattledToday] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/enemies/random`)
@@ -29,6 +30,21 @@ export const Battle = () => {
         console.error("エネミーデータ取得に失敗しました:", error)
       );
   }, []);
+
+  useEffect(() => {
+    if (currentUser && currentUser.battle_logs) {
+      const today = new Date();
+      const todayBattles = currentUser.battle_logs.filter((log) => {
+        const logDate = new Date(log.created_at);
+        return (
+          logDate.getFullYear() === today.getFullYear() &&
+          logDate.getMonth() === today.getMonth() &&
+          logDate.getDate() === today.getDate()
+        );
+      });
+      setHasBattledToday(todayBattles.length > 0);
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     const backgroundKeys = Object.keys(BackGround);
@@ -279,29 +295,16 @@ export const Battle = () => {
     );
   }
 
-  // if (
-  //   !gameOver &&
-  //   currentUser &&
-  //   currentUser.battle_logs &&
-  //   currentUser.battle_logs.length > 0
-  // ) {
-  //   const today = new Date().toISOString().slice(0, 10);
-  //   const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
-  //     return log.created_at.slice(0, 10) === today;
-  //   });
-  //   if (hasTodaysBattleLog) {
-  //     return (
-  //       <div className="flex flex-col items-center justify-center h-screen">
-  //         <h2 className="text-2xl font-bold mb-4">
-  //           本日の討伐は終了しています
-  //         </h2>
-  //         <Link to="/mypage" className="btn btn-primary">
-  //           マイページへ
-  //         </Link>
-  //       </div>
-  //     );
-  //   }
-  // }
+  if (!gameOver && hasBattledToday) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h2 className="text-2xl font-bold mb-4">本日の討伐は終了しています</h2>
+        <Link to="/mypage" className="btn btn-primary">
+          マイページへ
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-base-100 py-10">
