@@ -88,17 +88,22 @@ export const HomePage = () => {
                 </svg>
                 Googleログイン
               </button>
-              <button
-                className="btn btn-accent gap-2 w-full"
-                onClick={handleGuestLogin}
+              <div
+                className="tooltip w-full"
+                data-tip="ゲストログインでほぼ全ての機能を利用できますが、再ログイン時にデータはリセットされます。"
               >
-                <img
-                  src="imgs/title/guest_login.png"
-                  alt="Guest Login"
-                  className="w-6 h-6"
-                />
-                ゲストログイン
-              </button>
+                <button
+                  className="btn btn-accent gap-2 w-full "
+                  onClick={handleGuestLogin}
+                >
+                  <img
+                    src="imgs/title/guest_login.png"
+                    alt="Guest Login"
+                    className="w-6 h-6"
+                  />
+                  ゲストログイン
+                </button>
+              </div>
             </div>
           </div>
         </div>

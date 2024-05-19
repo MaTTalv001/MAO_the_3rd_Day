@@ -11,6 +11,8 @@ import { CreateAvatar } from "../pages/CreateAvatar";
 import { MyItems } from "../pages/MyItems";
 import { Battle } from "../pages/Battle";
 import { Boss } from "../pages/Boss";
+import { PrivacyPolicy } from "../pages/PrivacyPolicy";
+import { TermsOfService } from "../pages/TermsOfService";
 
 const App = () => {
   return (
@@ -35,6 +37,8 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.MyItems.path, element: <MyItems /> },
       { path: RoutePath.Battle.path, element: <Battle /> },
       { path: RoutePath.Boss.path, element: <Boss /> },
+      { path: RoutePath.PrivacyPolicy.path, element: <PrivacyPolicy /> },
+      { path: RoutePath.TermsOfService.path, element: <TermsOfService /> },
     ],
   },
 ];
