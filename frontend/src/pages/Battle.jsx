@@ -279,24 +279,29 @@ export const Battle = () => {
     );
   }
 
-  if (!gameOver && currentUser && currentUser.battle_logs) {
-    const today = new Date().toISOString().slice(0, 10);
-    const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
-      return log.created_at.slice(0, 10) === today;
-    });
-    if (hasTodaysBattleLog) {
-      return (
-        <div className="flex flex-col items-center justify-center h-screen">
-          <h2 className="text-2xl font-bold mb-4">
-            本日の討伐は終了しています
-          </h2>
-          <Link to="/mypage" className="btn btn-primary">
-            マイページへ
-          </Link>
-        </div>
-      );
-    }
-  }
+  // if (
+  //   !gameOver &&
+  //   currentUser &&
+  //   currentUser.battle_logs &&
+  //   currentUser.battle_logs.length > 0
+  // ) {
+  //   const today = new Date().toISOString().slice(0, 10);
+  //   const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
+  //     return log.created_at.slice(0, 10) === today;
+  //   });
+  //   if (hasTodaysBattleLog) {
+  //     return (
+  //       <div className="flex flex-col items-center justify-center h-screen">
+  //         <h2 className="text-2xl font-bold mb-4">
+  //           本日の討伐は終了しています
+  //         </h2>
+  //         <Link to="/mypage" className="btn btn-primary">
+  //           マイページへ
+  //         </Link>
+  //       </div>
+  //     );
+  //   }
+  // }
 
   return (
     <div className="min-h-screen bg-base-100 py-10">
