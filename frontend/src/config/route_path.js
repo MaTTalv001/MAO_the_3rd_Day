@@ -35,4 +35,12 @@ export const RoutePath = {
     path: "/boss",
     name: "魔王バトル",
   },
+  TermsOfService: {
+    path: "/terms_of_service",
+    name: "利用規約",
+  },
+  PrivacyPolicy: {
+    path: "/privacy_policy",
+    name: "プライバシーポリシー",
+  },
 };

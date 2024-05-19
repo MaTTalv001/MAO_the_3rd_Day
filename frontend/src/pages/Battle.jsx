@@ -25,7 +25,9 @@ export const Battle = () => {
         setEnemy(data);
         setEnemyHP(data.hp);
       })
-      .catch((error) => console.error("Error fetching enemy:", error));
+      .catch((error) =>
+        console.error("エネミーデータ取得に失敗しました:", error)
+      );
   }, []);
 
   useEffect(() => {
@@ -57,10 +59,10 @@ export const Battle = () => {
         }),
       });
       if (!response.ok) {
-        throw new Error("Failed to save battle log");
+        throw new Error("バトルログの保存に失敗しました");
       }
     } catch (error) {
-      console.error("Error saving battle log:", error);
+      console.error("バトルログの保存に失敗しました:", error);
     }
   };
 
@@ -89,10 +91,10 @@ export const Battle = () => {
           `${data.gained_coins}枚の金貨を得た！`,
         ]);
       } else {
-        console.error("Failed to gain coins");
+        console.error("金貨の獲得に失敗しました");
       }
     } catch (error) {
-      console.error("Error gaining coins:", error);
+      console.error("金貨の獲得に失敗しました:", error);
     }
   };
 
