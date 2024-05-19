@@ -61,6 +61,11 @@ export const Battle = () => {
       if (!response.ok) {
         throw new Error("バトルログの保存に失敗しました");
       }
+      const newLog = await response.json();
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        battle_logs: [...prevUser.battle_logs, newLog],
+      }));
     } catch (error) {
       console.error("バトルログの保存に失敗しました:", error);
     }
@@ -274,7 +279,7 @@ export const Battle = () => {
     );
   }
 
-  if (currentUser && currentUser.battle_logs) {
+  if (!gameOver && currentUser && currentUser.battle_logs) {
     const today = new Date().toISOString().slice(0, 10);
     const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
       return log.created_at.slice(0, 10) === today;
