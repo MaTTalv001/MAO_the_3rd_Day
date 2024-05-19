@@ -43,4 +43,8 @@ export const RoutePath = {
     path: "/privacy_policy",
     name: "プライバシーポリシー",
   },
+  PublicAvatar: {
+    path: "/public_avatar",
+    name: "アバター投稿",
+  },
 };

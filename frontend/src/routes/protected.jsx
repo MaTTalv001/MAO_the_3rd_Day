@@ -13,6 +13,7 @@ import { Battle } from "../pages/Battle";
 import { Boss } from "../pages/Boss";
 import { PrivacyPolicy } from "../pages/PrivacyPolicy";
 import { TermsOfService } from "../pages/TermsOfService";
+import { PublicAvatar } from "../pages/PublicAvatar";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.Boss.path, element: <Boss /> },
       { path: RoutePath.PrivacyPolicy.path, element: <PrivacyPolicy /> },
       { path: RoutePath.TermsOfService.path, element: <TermsOfService /> },
+      { path: RoutePath.PublicAvatar.path, element: <PublicAvatar /> },
     ],
   },
 ];

@@ -3,7 +3,7 @@ import { useAuth } from "../providers/auth";
 import { Link } from "react-router-dom";
 import ActivityEntry from "../components/ActivityEntry";
 import ActivityShow from "../components/ActivityShow";
-import { API_URL } from "../config/settings";
+import { API_URL, FRONT_URL } from "../config/settings";
 
 export const MyPage = () => {
   const { currentUser: authUser, token } = useAuth();
@@ -107,10 +107,23 @@ export const MyPage = () => {
     }
   };
 
+  const handleTweet = () => {
+    const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
+    const imagePath = selectedAvatar.avatar_url.replace(baseUrl, "");
+    const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      `${FRONT_URL}/public_avatar?image=${imagePath}`
+    )}&text=${encodeURIComponent(tweetText)}`;
+
+    window.open(twitterUrl, "_blank");
+  };
+
   if (!currentUser) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <span className="loading loading-ring loading-lg"></span>
+        <div>
+          <span className="loading loading-ring loading-lg"></span>
+        </div>
       </div>
     );
   }
@@ -348,11 +361,28 @@ export const MyPage = () => {
             ✕
           </button>
           {selectedAvatar && (
-            <img
-              src={`${selectedAvatar.avatar_url}`}
-              alt="Selected Avatar"
-              className="w-full h-auto rounded"
-            />
+            <>
+              <img
+                src={`${selectedAvatar.avatar_url}`}
+                alt="Selected Avatar"
+                className="w-full h-auto rounded mb-4"
+              />
+              <button
+                onClick={handleTweet}
+                className="btn btn-primary flex items-center"
+              >
+                <svg
+                  viewBox="0 0 1200 1227"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="none"
+                  className="w-6 h-6 mr-2"
+                >
+                  <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+                </svg>
+                シェア
+              </button>
+            </>
           )}
         </div>
       </dialog>

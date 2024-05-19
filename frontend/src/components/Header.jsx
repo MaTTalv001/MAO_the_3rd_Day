@@ -96,7 +96,7 @@ export const Header = memo(() => {
         </div>
       </div>
       <div className="navbar-center">
-        <Link to="/MyPage" className="btn btn-ghost normal-case text-2xl">
+        <Link to="/" className="btn btn-ghost normal-case text-2xl">
           3日目に魔王がいる
         </Link>
       </div>
