@@ -19,6 +19,7 @@ export const Boss = () => {
   const [gainedCoins, setGainedCoins] = useState(null);
   const [turnsLeft, setTurnsLeft] = useState(5);
   const [totalDamage, setTotalDamage] = useState(0);
+  const [battleChecked, setBattleChecked] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/bosses/1`, {
@@ -68,6 +69,19 @@ export const Boss = () => {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
+      const today = new Date().toISOString().slice(0, 10);
+      const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
+        return log.created_at.slice(0, 10) === today;
+      });
+      if (hasTodaysBattleLog) {
+        setGameOver(true);
+      }
+      setBattleChecked(true);
+    }
+  }, [currentUser, battleChecked]);
+
   const saveBattleLog = async (result, damage) => {
     if (!currentUser || !boss) return;
     try {
@@ -87,7 +101,6 @@ export const Boss = () => {
       if (!response.ok) {
         throw new Error("Failed to save battle log");
       }
-      // 討伐成功時にリセット
       if (result) {
         setTotalDamage(0);
       }
@@ -137,10 +150,13 @@ export const Boss = () => {
     setIsAttacking(true);
 
     const playerAttack =
-      Math.floor(Math.random() * (currentUser.latest_status.strength * 2)) + 1;
+      Math.floor(
+        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+      ) + 1;
     const playerMagic =
-      Math.floor(Math.random() * (currentUser.latest_status.intelligence * 2)) +
-      1;
+      Math.floor(
+        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+      ) + 1;
     const playerDamage =
       attackType === "attack"
         ? playerAttack - Math.floor(boss.defence / 3)
@@ -207,7 +223,7 @@ export const Boss = () => {
           setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
           setGameLog(["全滅した"]);
           saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-          gainCoins([10, 20, 30].sample); // 敗北の報酬を獲得
+          gainCoins([10, 20, 30][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -230,7 +246,7 @@ export const Boss = () => {
               setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
               setGameLog(["全滅した"]);
               saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-              gainCoins([10, 20, 30].sample); // 敗北の報酬を獲得
+              gainCoins([10, 20, 30][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -300,6 +316,7 @@ export const Boss = () => {
       clearTimeout(attackTimeoutId);
     }
     setPlayerHP(currentUser.latest_status.hp);
+    setBossHP(boss.hp); // リスタート時にボスHPをリセット
     setGameLog(["魔王が現れた！"]);
     setShowRestart(false);
     setGameOver(false);
@@ -325,23 +342,15 @@ export const Boss = () => {
     );
   }
 
-  if (currentUser && currentUser.boss_battle_logs) {
-    const today = new Date().toISOString().slice(0, 10);
-    const hasTodaysBattleLog = currentUser.battle_logs.some((log) => {
-      return log.created_at.slice(0, 10) === today;
-    });
-    if (hasTodaysBattleLog) {
-      return (
-        <div className="flex flex-col items-center justify-center h-screen">
-          <h2 className="text-2xl font-bold mb-4">
-            次回の魔王戦に備えましょう
-          </h2>
-          <Link to="/mypage" className="btn btn-primary">
-            マイページへ
-          </Link>
-        </div>
-      );
-    }
+  if (gameOver && !showRestart) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h2 className="text-2xl font-bold mb-4">次回の魔王戦に備えましょう</h2>
+        <Link to="/mypage" className="btn btn-primary">
+          マイページへ
+        </Link>
+      </div>
+    );
   }
 
   return (

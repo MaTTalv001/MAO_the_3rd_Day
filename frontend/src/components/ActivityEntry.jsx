@@ -57,6 +57,36 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
     setActivity({ ...activity, category_id: category.id });
   };
 
+  const gainCoins = async (amount) => {
+    if (!currentUser) return;
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}/gain_coins`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            base_amount: amount,
+          }),
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentUser(data.user);
+        return data.gained_coins;
+      } else {
+        console.error("Failed to gain coins");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error gaining coins:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       const response = await fetch(`${API_URL}/api/v1/activities`, {
@@ -118,6 +148,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       if (!userStatusResponse.ok) {
         throw new Error("ステータスのアップデートに失敗しました");
       }
+      const gainedCoins = await gainCoins(
+        [10, 20, 30][Math.floor(Math.random() * 3)]
+      );
 
       setActivity({ action: "", duration: 0, category_id: "" });
 
@@ -132,10 +165,15 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       const updatedUser = await userResponse.json();
       setCurrentUser(updatedUser);
 
-      setModalMessage("ステータスが向上しました！");
-      if (updatedUser.special_mode_unlocked) {
-        setModalMessage("ステータスが向上しました！ 魔王が現れた！");
+      let message = "ステータスが向上しました！";
+      if (gainedCoins) {
+        message += ` ${gainedCoins}枚の金貨を獲得しました！`;
       }
+      if (updatedUser.special_mode_unlocked) {
+        message += " 魔王が現れた！";
+      }
+
+      setModalMessage(message);
       setShowModal(true);
     } catch (error) {
       console.error("ユーザーステータスの更新に失敗しました:", error);
