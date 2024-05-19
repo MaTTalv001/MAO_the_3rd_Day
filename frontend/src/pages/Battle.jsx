@@ -105,10 +105,13 @@ export const Battle = () => {
     setIsAttacking(true);
 
     const playerAttack =
-      Math.floor(Math.random() * (currentUser.latest_status.strength * 2)) + 1;
+      Math.floor(
+        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+      ) + 1;
     const playerMagic =
-      Math.floor(Math.random() * (currentUser.latest_status.intelligence * 2)) +
-      1;
+      Math.floor(
+        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+      ) + 1;
     const playerDamage =
       attackType === "attack"
         ? playerAttack - Math.floor(enemy.defence / 3)
