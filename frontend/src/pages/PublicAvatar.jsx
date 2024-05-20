@@ -12,7 +12,7 @@ export const PublicAvatar = () => {
   const imageUrl = `${baseUrl}${imagePath}`;
 
   return (
-    <div className="container mx-auto p-4 min-h-screen">
+    <div className="container mx-auto p-4 min-h-screen max-w-2xl">
       <div className="bg-base-200 p-8 rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold mb-4">投稿アバター</h1>
         {imageUrl ? (
@@ -20,7 +20,7 @@ export const PublicAvatar = () => {
             <img
               src={imageUrl}
               alt="Generated"
-              className="w-full h-auto rounded-lg"
+              className="w-full h-auto rounded-lg "
             />
           </div>
         ) : (
