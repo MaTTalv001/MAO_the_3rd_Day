@@ -131,7 +131,7 @@ export const Battle = () => {
       ) + 1;
     const playerMagic =
       Math.floor(
-        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+        Math.random() * ((currentUser.latest_status.intelligence + 10) * 2.2)
       ) + 1;
     const playerDamage =
       attackType === "attack"

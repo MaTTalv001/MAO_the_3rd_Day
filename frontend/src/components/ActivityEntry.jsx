@@ -21,12 +21,12 @@ const categories = [
   {
     id: 4,
     name: "仕事",
-    description: "アルバイトや業務など。素早さを向上させます",
+    description: "アルバイトや業務など。敏捷を向上させます",
   },
   {
     id: 5,
     name: "娯楽",
-    description: "趣味や遊びなど。カリスマを向上させます",
+    description: "趣味や遊びなど。魅力を向上させます",
   },
 ];
 
@@ -246,7 +246,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
           </div>
           <div
             className="flex items-center mb-2 relative tooltip"
-            data-tip="活動時間を指定してください（0〜600分）"
+            data-tip="活動時間を指定してください（0〜600分）　長さはステータスの上昇度に影響しません"
           >
             <input
               type="range"
