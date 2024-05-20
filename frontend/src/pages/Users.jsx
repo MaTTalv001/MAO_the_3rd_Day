@@ -24,7 +24,12 @@ export const Users = () => {
 
   return (
     <div className="container mx-auto p-4 min-h-screen">
-      <h1 className="text-4xl font-bold mb-4">酒場</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold mb-4">酒場</h1>
+        <Link to={`/MyPage`} className="btn btn-ghost btn-xl">
+          マイページ
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {users.map((user) => (
           <div key={user.id} className="bg-base-200 p-4 rounded-lg">
