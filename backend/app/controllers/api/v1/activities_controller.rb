@@ -40,11 +40,11 @@ module Api
           Rails.logger.info("連続していない場合は、連続記録日数を1にリセット")
         end
         
-        special_mode_unlocked = consecutive_days >= 3 && !@current_user.special_mode_unlocked
+        special_mode_unlocked = consecutive_days >= 3 ? true : @current_user.special_mode_unlocked
         achievement = special_mode_unlocked ? @current_user.achievement + 1 : @current_user.achievement
 
         if special_mode_unlocked
-          # 特典条件を満たした場合は、consecutive_daysを1にリセット
+          # 特典条件を満たした場合は、consecutive_daysを0にリセット
           consecutive_days = 0
         end
         

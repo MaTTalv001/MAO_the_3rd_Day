@@ -95,6 +95,29 @@ export const Boss = () => {
     }
   }, [currentUser, battleChecked]);
 
+  // バトル後に魔王戦条件をロック
+  const lockSpecialMode = async () => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/special_modes/participate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        setCurrentUser({ ...currentUser, special_mode_unlocked: false });
+      } else {
+        console.error("魔王戦条件のロックに失敗しました");
+      }
+    } catch (error) {
+      console.error("魔王戦条件のロックに失敗しました:", error);
+    }
+  };
+
   const saveBattleLog = async (result, damage) => {
     if (!currentUser || !boss) return;
     try {
@@ -117,6 +140,7 @@ export const Boss = () => {
       if (result) {
         setTotalDamage(0);
       }
+      await lockSpecialMode(); // 特別モードをロックする
     } catch (error) {
       console.error("Error saving battle log:", error);
     }
