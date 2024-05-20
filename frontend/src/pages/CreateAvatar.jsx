@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
-import { API_URL } from "../config/settings";
+import { API_URL, FRONT_URL } from "../config/settings";
 import { Link } from "react-router-dom";
 
 export const CreateAvatar = () => {
@@ -124,6 +124,18 @@ export const CreateAvatar = () => {
     );
   }
 
+  // X投稿機能
+  const handleTweet = () => {
+    const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
+    const imagePath = generatedAvatar.replace(baseUrl, "");
+    const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      `${FRONT_URL}/public_avatar?image=${imagePath}`
+    )}&text=${encodeURIComponent(tweetText)}`;
+
+    window.open(twitterUrl, "_blank");
+  };
+
   return (
     <div className="container mx-auto p-4 max-w-5xl min-h-screen">
       <h1 className="text-3xl font-bold mb-6">アバター生成</h1>
@@ -224,11 +236,28 @@ export const CreateAvatar = () => {
           <div>
             <h3 className="text-base font-bold mb-2">After</h3>
             {generatedAvatar ? (
-              <img
-                src={generatedAvatar}
-                alt="Generated Avatar"
-                className="w-full h-96 object-cover object-position-top rounded"
-              />
+              <>
+                <img
+                  src={generatedAvatar}
+                  alt="Generated Avatar"
+                  className="w-full h-96 object-cover object-position-top rounded mb-2"
+                />
+                <button
+                  onClick={handleTweet}
+                  className="btn btn-primary flex items-center"
+                >
+                  <svg
+                    viewBox="0 0 1200 1227"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    role="none"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+                  </svg>
+                  シェア
+                </button>
+              </>
             ) : (
               <div className="w-full h-96 bg-base-300 rounded"></div>
             )}
