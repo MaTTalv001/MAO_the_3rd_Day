@@ -222,9 +222,10 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
         isActivityLimitReached ? "bg-black text-white" : ""
       }`}
     >
-      <h2 className="text-xl font-bold mb-5">
-        {dateString}の活動登録 (残り：{3 - todayActivities.length})
+      <h2 className="text-xl font-bold mb-1">
+        {dateString}の活動記録 (残り：{3 - todayActivities.length})
       </h2>
+      <p className="text-md mb-5">活動を記録してステータスを向上させましょう</p>
       {isActivityLimitReached ? (
         <p>本日の活動上限に達成しました。</p>
       ) : (
@@ -290,7 +291,7 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             onClick={handleSubmit}
             className="btn btn-primary w-full mt-4"
           >
-            登録
+            記録
           </button>
         </div>
       )}
