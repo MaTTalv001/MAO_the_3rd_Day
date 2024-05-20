@@ -17,12 +17,21 @@ export const MyPage = () => {
   const [showAllItems, setShowAllItems] = useState(false);
   const [showAllAvatars, setShowAllAvatars] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setCurrentUser(authUser);
     setEditedNickname(authUser?.nickname || "");
     setEditedProfile(authUser?.profile || "");
   }, [authUser]);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleNicknameEditClick = () => {
     setIsNicknameEditing(true);
@@ -31,6 +40,7 @@ export const MyPage = () => {
   const handleProfileEditClick = () => {
     setIsProfileEditing(true);
   };
+
   const handleNicknameSaveClick = async () => {
     try {
       const response = await fetch(
@@ -178,8 +188,13 @@ export const MyPage = () => {
         </div>
         {/* ステータス */}
         {currentUser.latest_status && (
-          <div className="bg-base-200 p-4 rounded-lg">
-            <h2 className="text-xl font-bold mb-2">ステータス</h2>
+          <div className="bg-base-200 p-4 rounded-lg relative">
+            <h2 className="text-xl font-bold mb-2 flex items-center">
+              ステータス
+              <button onClick={openModal} className="ml-2 text-blue-500">
+                <i className="fas fa-question-circle"></i>
+              </button>
+            </h2>
             <p>Level: {currentUser.latest_status.level}</p>
             <p>{currentUser.latest_status.job.name}</p>
             <p>HP: {currentUser.latest_status.hp}</p>
@@ -386,6 +401,26 @@ export const MyPage = () => {
           )}
         </div>
       </dialog>
+
+      {/* ステータスモーダル */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
+          <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-2">ステータス説明</h2>
+            <p>Level: 出現モンスターレベルに影響します（予定）</p>
+            <p>筋力: 物理的な攻撃力と防御力に影響します</p>
+            <p>知力: 魔法攻撃力に影響します</p>
+            <p>精神: 防御力に影響します</p>
+            <p>敏捷: ダブルアタック発生率に影響します</p>
+            <p>魅力: 獲得金貨にボーナスがつきます</p>
+            <button className="mt-4 btn btn-primary" onClick={closeModal}>
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+export default MyPage;

@@ -82,6 +82,19 @@ export const Boss = () => {
     }
   }, [currentUser, battleChecked]);
 
+  useEffect(() => {
+    if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
+      const today = new Date().toISOString().slice(0, 10);
+      const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
+        return log.created_at.slice(0, 10) === today;
+      });
+      if (hasTodaysBattleLog) {
+        setGameOver(true);
+      }
+      setBattleChecked(true);
+    }
+  }, [currentUser, battleChecked]);
+
   const saveBattleLog = async (result, damage) => {
     if (!currentUser || !boss) return;
     try {
@@ -155,7 +168,7 @@ export const Boss = () => {
       ) + 1;
     const playerMagic =
       Math.floor(
-        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
+        Math.random() * ((currentUser.latest_status.intelligence + 10) * 2)
       ) + 1;
     const playerDamage =
       attackType === "attack"

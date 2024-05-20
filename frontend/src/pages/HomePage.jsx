@@ -56,6 +56,7 @@ export const HomePage = () => {
             />
           </div>
           <div className="flex flex-col justify-center">
+            <p className="text-md mb-2">習慣化支援RPG</p>
             <h2 className="text-4xl font-bold mb-4">3日目に魔王がいる</h2>
             <p className="text-xl mb-8">MAO the 3rd Day</p>
             <div className="space-y-4">
