@@ -19,6 +19,7 @@ export const MyPage = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasBattledToday, setHasBattledToday] = useState(false);
+  const [hasBossBattledToday, setHasBossBattledToday] = useState(false);
 
   useEffect(() => {
     setCurrentUser(authUser);
@@ -38,6 +39,22 @@ export const MyPage = () => {
         );
       });
       setHasBattledToday(todayBattles.length > 0);
+    }
+  }, [currentUser]);
+
+  // 今日のボス討伐が完了しているか
+  useEffect(() => {
+    if (currentUser && currentUser.boss_battle_logs) {
+      const today = new Date();
+      const todayBossBattles = currentUser.boss_battle_logs.filter((log) => {
+        const logDate = new Date(log.created_at);
+        return (
+          logDate.getFullYear() === today.getFullYear() &&
+          logDate.getMonth() === today.getMonth() &&
+          logDate.getDate() === today.getDate()
+        );
+      });
+      setHasBossBattledToday(todayBossBattles.length > 0);
     }
   }, [currentUser]);
 
@@ -156,7 +173,17 @@ export const MyPage = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4">マイページ</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold mb-4">マイページ</h1>
+        <div>
+          <Link to={`/users`} className="btn btn-ghost btn-xl">
+            酒場
+          </Link>
+          <Link to={`/shop`} className="btn btn-ghost btn-xl">
+            ショップ
+          </Link>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* プロフィール */}
         <div className="bg-base-200 p-4 rounded-lg">
@@ -194,17 +221,14 @@ export const MyPage = () => {
             アバター変更
           </Link>
           {!hasBattledToday && (
-            <Link to={`/battle`} className="btn btn-secondary w-full">
+            <Link to={`/battle`} className="btn btn-secondary w-full mb-1">
               討伐
             </Link>
           )}
-          {currentUser.special_mode_unlocked && (
-            <button
-              className="btn btn-error mt-4 w-full"
-              onClick={handleSpecialModeParticipation}
-            >
-              魔王バトルに挑む
-            </button>
+          {currentUser.special_mode_unlocked && !hasBossBattledToday && (
+            <Link to={`/boss`} className="btn btn-error w-full mb-1">
+              魔王戦に挑む
+            </Link>
           )}
         </div>
         {/* ステータス */}

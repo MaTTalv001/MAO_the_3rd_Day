@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../config/settings";
+import { Link } from "react-router-dom";
 
 export const Shop = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -68,7 +69,12 @@ export const Shop = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4">ショップ</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-4xl font-bold mb-4">ショップ</h1>
+        <Link to={`/MyPage`} className="btn btn-ghost btn-xl">
+          マイページ
+        </Link>
+      </div>
       <p className="text-xl mb-4">
         コイン：{currentUser.coin?.amount ?? "N/A"}
       </p>
