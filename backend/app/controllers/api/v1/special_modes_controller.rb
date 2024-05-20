@@ -4,9 +4,9 @@ class Api::V1::SpecialModesController < ApplicationController
   def participate
     if @current_user.special_mode_unlocked
       @current_user.update(special_mode_unlocked: false)
-      render json: { message: '魔王戦に挑みます' }, status: :ok
+      render json: { message: '魔王戦を再びロックします' }, status: :ok
     else
-      render json: { error: '魔王戦に挑むことができませんでした' }, status: :unprocessable_entity
+      render json: { error: '魔王戦はすでにロックされています' }, status: :unprocessable_entity
     end
   end
 end
