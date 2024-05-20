@@ -236,7 +236,7 @@ export const Boss = () => {
           setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
           setGameLog(["全滅した"]);
           saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-          gainCoins([10, 20, 30][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
+          gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -259,7 +259,7 @@ export const Boss = () => {
               setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
               setGameLog(["全滅した"]);
               saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-              gainCoins([10, 20, 30][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
+              gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -293,7 +293,7 @@ export const Boss = () => {
           if (bossHP - turnDamage <= 0) {
             setGameLog([`${boss.name}をたおした`]);
             saveBattleLog(true, totalDamage + turnDamage); // 勝利を保存
-            gainCoins(300); // 勝利の報酬を獲得
+            gainCoins(3000); // 勝利の報酬を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -308,7 +308,7 @@ export const Boss = () => {
           setGameLog(["魔王は去りました。与えたダメージは次回に引き継ぎます"]);
           saveBattleLog(false, totalDamage + turnDamage); // 敗北を保存、ダメージを送信
           // 敗北の報酬を獲得
-          const amounts = [10, 20, 30];
+          const amounts = [100, 200, 300];
           const amount = amounts[Math.floor(Math.random() * amounts.length)];
           gainCoins(amount);
           setShowRestart(true);
