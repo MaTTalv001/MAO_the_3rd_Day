@@ -18,12 +18,28 @@ export const MyPage = () => {
   const [showAllAvatars, setShowAllAvatars] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasBattledToday, setHasBattledToday] = useState(false);
 
   useEffect(() => {
     setCurrentUser(authUser);
     setEditedNickname(authUser?.nickname || "");
     setEditedProfile(authUser?.profile || "");
   }, [authUser]);
+  // 今日の討伐が完了しているか
+  useEffect(() => {
+    if (currentUser && currentUser.battle_logs) {
+      const today = new Date();
+      const todayBattles = currentUser.battle_logs.filter((log) => {
+        const logDate = new Date(log.created_at);
+        return (
+          logDate.getFullYear() === today.getFullYear() &&
+          logDate.getMonth() === today.getMonth() &&
+          logDate.getDate() === today.getDate()
+        );
+      });
+      setHasBattledToday(todayBattles.length > 0);
+    }
+  }, [currentUser]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -174,9 +190,14 @@ export const MyPage = () => {
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
-          <Link to={`/create_avatar`} className="btn btn-accent w-full">
+          <Link to={`/create_avatar`} className="btn btn-accent w-full mb-1">
             アバター変更
           </Link>
+          {!hasBattledToday && (
+            <Link to={`/battle`} className="btn btn-secondary w-full">
+              討伐
+            </Link>
+          )}
           {currentUser.special_mode_unlocked && (
             <button
               className="btn btn-error mt-4 w-full"
