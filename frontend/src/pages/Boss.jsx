@@ -4,6 +4,7 @@ import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
+//import { gainCoins } from "../services/CoinService";
 
 export const Boss = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -20,6 +21,7 @@ export const Boss = () => {
   const [turnsLeft, setTurnsLeft] = useState(5);
   const [totalDamage, setTotalDamage] = useState(0);
   const [battleChecked, setBattleChecked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/bosses/1`, {
@@ -53,7 +55,7 @@ export const Boss = () => {
             });
         }
       })
-      .catch((error) => console.error("Error fetching boss:", error));
+      .catch((error) => console.error("魔王の取得に失敗しました:", error));
   }, [currentUser, token]);
 
   useEffect(() => {
@@ -95,6 +97,13 @@ export const Boss = () => {
     }
   }, [currentUser, battleChecked]);
 
+  // 魔王戦説明モーダル
+  useEffect(() => {
+    if (!gameOver) {
+      setShowModal(true);
+    }
+  }, [gameOver]);
+
   // バトル後に魔王戦条件をロック
   const lockSpecialMode = async () => {
     try {
@@ -135,14 +144,14 @@ export const Boss = () => {
         }),
       });
       if (!response.ok) {
-        throw new Error("Failed to save battle log");
+        throw new Error("バトルログ記録に失敗しました");
       }
       if (result) {
         setTotalDamage(0);
       }
       await lockSpecialMode(); // 特別モードをロックする
     } catch (error) {
-      console.error("Error saving battle log:", error);
+      console.error("バトルログ記録に失敗しました:", error);
     }
   };
 
@@ -173,10 +182,10 @@ export const Boss = () => {
           `${data.gained_coins}枚の金貨を得た！`,
         ]);
       } else {
-        console.error("Failed to gain coins");
+        console.error("金貨獲得に失敗しました");
       }
     } catch (error) {
-      console.error("Error gaining coins:", error);
+      console.error("金貨獲得に失敗しました:", error);
     }
   };
 
@@ -488,6 +497,21 @@ export const Boss = () => {
           </div>
         </div>
       </div>
+      {/* 開始時のルール説明モーダル*/}
+      {showModal && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">魔王戦について</h3>
+            <p className="py-4">魔王戦は5ターン限定です</p>
+            <p>このバトルで与えたダメージは次回に引き継がれます</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setShowModal(false)}>
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
