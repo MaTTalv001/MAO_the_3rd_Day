@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 export const Shop = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
   const [items, setItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [purchaseResult, setPurchaseResult] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/items`)
@@ -22,12 +24,11 @@ export const Shop = () => {
     );
   }
 
-  const handlePurchase = async (itemId) => {
-    const item = items.find((item) => item.id === itemId);
-    if (!item) return;
+  const handlePurchase = async () => {
+    if (!selectedItem) return;
 
-    if (currentUser.coin.amount < item.cost) {
-      alert("コインが足りません");
+    if (currentUser.coin.amount < selectedItem.cost) {
+      setPurchaseResult({ success: false, message: "コインが足りません" });
       return;
     }
 
@@ -40,20 +41,20 @@ export const Shop = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ item_id: itemId }),
+          body: JSON.stringify({ item_id: selectedItem.id }),
         }
       );
 
       if (response.ok) {
         const updatedUser = await response.json();
         setCurrentUser(updatedUser);
-        alert("購入が完了しました");
+        setPurchaseResult({ success: true, message: "購入が完了しました" });
       } else {
-        alert("購入に失敗しました");
+        setPurchaseResult({ success: false, message: "購入に失敗しました" });
       }
     } catch (error) {
       console.error("Error purchasing item:", error);
-      alert("購入に失敗しました");
+      setPurchaseResult({ success: false, message: "購入に失敗しました" });
     }
   };
 
@@ -65,6 +66,11 @@ export const Shop = () => {
       return userItem ? userItem.amount : 0;
     }
     return 0;
+  };
+
+  const closeModals = () => {
+    setSelectedItem(null);
+    setPurchaseResult(null);
   };
 
   return (
@@ -94,13 +100,44 @@ export const Shop = () => {
             <p className="text-base mb-4">所持数: {getItemCount(item.id)}</p>
             <button
               className="btn btn-primary btn-block"
-              onClick={() => handlePurchase(item.id)}
+              onClick={() => setSelectedItem(item)}
             >
               購入
             </button>
           </div>
         ))}
       </div>
+
+      {selectedItem && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">購入確認</h3>
+            <p className="py-4">{selectedItem.name}を購入しますか？</p>
+            <div className="modal-action">
+              <button className="btn btn-primary" onClick={handlePurchase}>
+                購入する
+              </button>
+              <button className="btn" onClick={() => setSelectedItem(null)}>
+                キャンセル
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {purchaseResult && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">購入結果</h3>
+            <p className="py-4">{purchaseResult.message}</p>
+            <div className="modal-action">
+              <button className="btn" onClick={closeModals}>
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
