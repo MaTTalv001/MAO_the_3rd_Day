@@ -41,7 +41,7 @@ module Api
         end
         
         special_mode_unlocked = consecutive_days >= 3 ? true : @current_user.special_mode_unlocked
-        achievement = special_mode_unlocked ? @current_user.achievement + 1 : @current_user.achievement
+        achievement = special_mode_unlocked && !@current_user.special_mode_unlocked ? @current_user.achievement + 1 : @current_user.achievement
 
         if special_mode_unlocked
           # 特典条件を満たした場合は、consecutive_daysを0にリセット
