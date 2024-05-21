@@ -4,21 +4,24 @@ import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
+//import { gainCoins } from "../services/CoinService";
 
+//Battleコンポーネント
 export const Battle = () => {
-  const { currentUser, token, setCurrentUser } = useAuth();
-  const [enemy, setEnemy] = useState(null);
-  const [playerHP, setPlayerHP] = useState(null);
-  const [enemyHP, setEnemyHP] = useState(null);
-  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]);
-  const [isAttacking, setIsAttacking] = useState(false);
-  const [showRestart, setShowRestart] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [attackTimeoutId, setAttackTimeoutId] = useState(null);
-  const [background, setBackground] = useState(null);
-  const [gainedCoins, setGainedCoins] = useState(null);
-  const [hasBattledToday, setHasBattledToday] = useState(false);
+  const { currentUser, token, setCurrentUser } = useAuth(); // 認証情報の取得
+  const [enemy, setEnemy] = useState(null); // 敵情報の状態管理
+  const [playerHP, setPlayerHP] = useState(null); // プレイヤーHPの状態管理
+  const [enemyHP, setEnemyHP] = useState(null); // 敵HPの状態管理
+  const [gameLog, setGameLog] = useState(["モンスターが現れた！"]); // ゲームログの状態管理
+  const [isAttacking, setIsAttacking] = useState(false); // 攻撃中かどうかの状態管理
+  const [showRestart, setShowRestart] = useState(false); // 再スタートボタン表示の状態管理
+  const [gameOver, setGameOver] = useState(false); // ゲームオーバー状態の管理
+  const [attackTimeoutId, setAttackTimeoutId] = useState(null); // 攻撃タイムアウトIDの管理
+  const [background, setBackground] = useState(null); // 背景の状態管理
+  const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
+  const [hasBattledToday, setHasBattledToday] = useState(false); // 本日のバトル実施状況の管理
 
+  // 初回レンダリング時に敵データを取得
   useEffect(() => {
     fetch(`${API_URL}/api/v1/enemies/random`)
       .then((response) => response.json())
@@ -31,21 +34,26 @@ export const Battle = () => {
       );
   }, []);
 
+  // ログインユーザーのバトルログをチェックして本日バトルしたかどうかを設定
   useEffect(() => {
     if (currentUser && currentUser.battle_logs) {
       const today = new Date();
+      // currentUserのバトルログから、本日行われたバトルをフィルタリング
       const todayBattles = currentUser.battle_logs.filter((log) => {
-        const logDate = new Date(log.created_at);
+        const logDate = new Date(log.created_at); // 各バトルログの日付を取得
         return (
+          // バトルログの日付が今日の日付と同じかどうかをチェック
           logDate.getFullYear() === today.getFullYear() &&
           logDate.getMonth() === today.getMonth() &&
           logDate.getDate() === today.getDate()
         );
       });
+      // 今日行われたバトルが一つ以上あれば、hasBattledTodayをtrueに設定
       setHasBattledToday(todayBattles.length > 0);
     }
   }, [currentUser]);
 
+  // 背景をランダムに設定
   useEffect(() => {
     const backgroundKeys = Object.keys(BackGround);
     const randomKey =
@@ -53,12 +61,14 @@ export const Battle = () => {
     setBackground(BackGround[randomKey]);
   }, []);
 
+  // ログインユーザーの最新ステータスからHPを設定
   useEffect(() => {
     if (currentUser) {
       setPlayerHP(currentUser.latest_status.hp);
     }
   }, [currentUser]);
 
+  // バトルログを保存
   const saveBattleLog = async (result) => {
     if (!currentUser || !enemy) return;
     try {
@@ -87,6 +97,7 @@ export const Battle = () => {
     }
   };
 
+  //コインを獲得;
   const gainCoins = async (amount) => {
     if (!currentUser) return;
     try {
@@ -119,6 +130,7 @@ export const Battle = () => {
     }
   };
 
+  // 攻撃処理
   const attack = (attackType) => {
     if (gameOver) return;
 
@@ -266,6 +278,7 @@ export const Battle = () => {
     }, 1000);
   };
 
+  // ゲームの再スタート（デバッグ用）
   const restartGame = () => {
     if (attackTimeoutId) {
       clearTimeout(attackTimeoutId);
@@ -278,6 +291,7 @@ export const Battle = () => {
     setAttackTimeoutId(null);
   };
 
+  // 攻撃エフェクトのトリガー
   const triggerShakeEffect = () => {
     const body = document.body;
     body.classList.add("shake-animation");
@@ -287,6 +301,7 @@ export const Battle = () => {
     }, 500);
   };
 
+  // 初期状態が揃っていない場合のロード画面表示
   if (!currentUser || !enemy || playerHP === null || background === null) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -295,6 +310,7 @@ export const Battle = () => {
     );
   }
 
+  // 本日バトル済みの場合のメッセージ表示
   if (!gameOver && hasBattledToday) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
