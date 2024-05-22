@@ -42,9 +42,9 @@ const RadarChart = ({ currentUser }) => {
             },
           },
           suggestedMin: 0,
-          suggestedMax: 30,
+          suggestedMax: 20,
           ticks: {
-            stepSize: 10,
+            stepSize: 5,
             color: "white",
             backdropColor: "rgba(0, 0, 0, 0)", // 背景のないテキストにする
           },
