@@ -16,6 +16,7 @@ export const CreateAvatar = () => {
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
   const [loadingPage, setLoadingPage] = useState(true); // ページ読み込み時のローディング
   const [loadingAvatar, setLoadingAvatar] = useState(false); // アバター生成時のローディング
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const genders = ["男性", "女性", "性別指定なし"];
   const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
@@ -107,6 +108,14 @@ export const CreateAvatar = () => {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   if (loadingPage) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -138,7 +147,12 @@ export const CreateAvatar = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-5xl min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">アバター生成</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        アバター生成
+        <button onClick={openModal} className="ml-2 text-blue-500">
+          <i className="fas fa-question-circle"></i>
+        </button>
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
           <h2 className="text-lg font-bold mb-2">ジョブ</h2>
@@ -223,7 +237,7 @@ export const CreateAvatar = () => {
         </>
       )}
       <div className="mt-6">
-        <h2 className="text-lg font-bold mb-4">アバター</h2>
+        {/* <h2 className="text-lg font-bold mb-4">アバター</h2> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-base font-bold mb-2">Before</h3>
@@ -285,6 +299,20 @@ export const CreateAvatar = () => {
                 閉じる
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* アバター説明モーダル */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
+          <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-2">アバター</h2>
+            <p>専用アイテムを用いてオリジナルアバターを生成できます</p>
+            <p>要素を選択して好みのアバターを創りましょう</p>
+            <p>アバターおよび各要素はステータスに影響しません</p>
+            <button className="mt-4 btn btn-primary" onClick={closeModal}>
+              閉じる
+            </button>
           </div>
         </div>
       )}
