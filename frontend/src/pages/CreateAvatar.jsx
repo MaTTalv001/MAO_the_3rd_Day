@@ -14,9 +14,10 @@ export const CreateAvatar = () => {
     currentUser?.latest_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
-  const [loadingPage, setLoadingPage] = useState(true); // ページ読み込み時のローディング
-  const [loadingAvatar, setLoadingAvatar] = useState(false); // アバター生成時のローディング
+  const [loadingPage, setLoadingPage] = useState(true);
+  const [loadingAvatar, setLoadingAvatar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
   const genders = ["男性", "女性", "性別指定なし"];
   const supplements = ["元気な", "勇敢な", "優しい", "賢明な", "気高い"];
@@ -46,12 +47,10 @@ export const CreateAvatar = () => {
     fetchJobs();
   }, [token]);
 
-  // 所有しているアバター生成アイテムでジョブをフィルタリングする
   const availableJobs = jobs.filter((job) =>
     currentUser.users_items.some((userItem) => userItem.item.id === job.item_id)
   );
 
-  // アバター生成アイテムを所有しているかの判定を非同期に行う
   useEffect(() => {
     const hasAvailableJobs = availableJobs.length > 0;
     const button = document.querySelector("#generate-avatar-button");
@@ -62,11 +61,11 @@ export const CreateAvatar = () => {
 
   const generateAvatar = async () => {
     setLoadingAvatar(true);
+    closeConfirmationModal();
     const basePrompt =
       "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
     const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}`;
     const job_id = jobs.find((job) => job.name === selectedJob).id;
-    // 選択したジョブに関連するアイテムのIDを取得
     const item_id = jobs.find((job) => job.id === job_id).item_id;
     try {
       const response = await fetch(
@@ -83,7 +82,6 @@ export const CreateAvatar = () => {
       const avatar = await response.json();
       setGeneratedAvatar(avatar.avatar_url);
 
-      // アバター生成アイテムを1つ削除するAPIリクエストを送信
       const deleteItemResponse = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/items/${item_id}/consume`,
         {
@@ -95,7 +93,6 @@ export const CreateAvatar = () => {
       );
 
       if (deleteItemResponse.ok) {
-        // アイテム削除が成功した場合のユーザー情報の更新
         const updatedUser = await deleteItemResponse.json();
         setCurrentUser(updatedUser);
       } else {
@@ -116,6 +113,22 @@ export const CreateAvatar = () => {
     setIsModalOpen(false);
   };
 
+  const openConfirmationModal = () => {
+    setIsConfirmationModalOpen(true);
+  };
+
+  const closeConfirmationModal = () => {
+    setIsConfirmationModalOpen(false);
+  };
+
+  const handleGenerateAvatarClick = () => {
+    openConfirmationModal();
+  };
+
+  const handleConfirmGenerateAvatar = () => {
+    generateAvatar();
+  };
+
   if (loadingPage) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -133,7 +146,6 @@ export const CreateAvatar = () => {
     );
   }
 
-  // X投稿機能
   const handleTweet = () => {
     const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
     const imagePath = generatedAvatar.replace(baseUrl, "");
@@ -160,7 +172,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedJob}
             onChange={(e) => setSelectedJob(e.target.value)}
-            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
+            disabled={availableJobs.length === 0}
           >
             <option value="">選択してください</option>
             {availableJobs.map((job) => (
@@ -176,7 +188,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedGender}
             onChange={(e) => setSelectedGender(e.target.value)}
-            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
+            disabled={availableJobs.length === 0}
           >
             <option value="">選択してください</option>
             {genders.map((gender) => (
@@ -192,7 +204,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedAge}
             onChange={(e) => setSelectedAge(e.target.value)}
-            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
+            disabled={availableJobs.length === 0}
           >
             <option value="">選択してください</option>
             {ages.map((age) => (
@@ -208,7 +220,7 @@ export const CreateAvatar = () => {
             className="select select-bordered w-full"
             value={selectedSupplement}
             onChange={(e) => setSelectedSupplement(e.target.value)}
-            disabled={availableJobs.length === 0} // ジョブがない場合は選択不可にする
+            disabled={availableJobs.length === 0}
           >
             <option value="">選択してください</option>
             {supplements.map((supplement) => (
@@ -220,9 +232,10 @@ export const CreateAvatar = () => {
         </div>
       </div>
       <button
+        id="generate-avatar-button"
         className="btn btn-primary w-full mb-6"
-        onClick={generateAvatar}
-        disabled={availableJobs.length === 0} // ジョブがない場合はボタンを非アクティブにする
+        onClick={handleGenerateAvatarClick}
+        disabled={availableJobs.length === 0}
       >
         アバター生成
       </button>
@@ -237,7 +250,6 @@ export const CreateAvatar = () => {
         </>
       )}
       <div className="mt-6">
-        {/* <h2 className="text-lg font-bold mb-4">アバター</h2> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-base font-bold mb-2">Before</h3>
@@ -302,7 +314,6 @@ export const CreateAvatar = () => {
           </div>
         </div>
       )}
-      {/* アバター説明モーダル */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
           <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
@@ -313,6 +324,25 @@ export const CreateAvatar = () => {
             <button className="mt-4 btn btn-primary" onClick={closeModal}>
               閉じる
             </button>
+          </div>
+        </div>
+      )}
+      {isConfirmationModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
+          <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-2">確認</h2>
+            <p>アバターを作成しますか？ジョブ: {selectedJob}</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="btn btn-primary mr-2"
+                onClick={handleConfirmGenerateAvatar}
+              >
+                作成する
+              </button>
+              <button className="btn" onClick={closeConfirmationModal}>
+                キャンセル
+              </button>
+            </div>
           </div>
         </div>
       )}
