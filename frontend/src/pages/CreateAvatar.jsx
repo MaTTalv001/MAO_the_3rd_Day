@@ -159,12 +159,20 @@ export const CreateAvatar = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-5xl min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">
-        アバター生成
-        <button onClick={openModal} className="ml-2 text-blue-500">
-          <i className="fas fa-question-circle"></i>
-        </button>
-      </h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold mb-6">
+          アバター生成
+          <button onClick={openModal} className="ml-2 text-blue-500">
+            <i className="fas fa-question-circle"></i>
+          </button>
+        </h1>
+        <div>
+          <Link to={`/MyPage`} className="btn btn-ghost btn-xl">
+            マイページ
+          </Link>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
           <h2 className="text-lg font-bold mb-2">ジョブ</h2>
@@ -320,7 +328,7 @@ export const CreateAvatar = () => {
             <h2 className="text-xl font-bold mb-2">アバター</h2>
             <p>専用アイテムを用いてオリジナルアバターを生成できます</p>
             <p>要素を選択して好みのアバターを創りましょう</p>
-            <p>アバターおよび各要素はステータスに影響しません</p>
+            <p>※アバターおよび各要素はステータスに影響しません</p>
             <button className="mt-4 btn btn-primary" onClick={closeModal}>
               閉じる
             </button>
