@@ -8,6 +8,7 @@ export const Shop = () => {
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [purchaseResult, setPurchaseResult] = useState(null);
+  const [isInstModalOpen, setIsInstModalOpen] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/items`)
@@ -73,10 +74,23 @@ export const Shop = () => {
     setPurchaseResult(null);
   };
 
+  const openInstModal = () => {
+    setIsInstModalOpen(true);
+  };
+
+  const closeInstModal = () => {
+    setIsInstModalOpen(false);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-4xl font-bold mb-4">ショップ</h1>
+        <h1 className="text-4xl font-bold mb-4">
+          ショップ
+          <button onClick={openInstModal} className="ml-2 text-blue-500">
+            <i className="fas fa-question-circle"></i>
+          </button>
+        </h1>
         <Link to={`/MyPage`} className="btn btn-ghost btn-xl">
           マイページ
         </Link>
@@ -135,6 +149,21 @@ export const Shop = () => {
                 閉じる
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {isInstModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
+          <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
+            <h2 className="text-xl font-bold mb-2">ショップ</h2>
+            <h3>金貨を消費してアイテムを購入できます</h3>
+            <p>アバター生成アイテム：アバター生成に使用します</p>
+            <p>
+              ※その他はコレクションアイテムです。武具を含めステータスなどに影響しません
+            </p>
+            <button className="mt-4 btn btn-primary" onClick={closeInstModal}>
+              閉じる
+            </button>
           </div>
         </div>
       )}
