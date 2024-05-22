@@ -3,6 +3,7 @@ import { useAuth } from "../providers/auth";
 import { Link } from "react-router-dom";
 import ActivityEntry from "../components/ActivityEntry";
 import ActivityShow from "../components/ActivityShow";
+import RadarChart from "../components/RadarChart";
 import { API_URL, FRONT_URL } from "../config/settings";
 
 export const MyPage = () => {
@@ -242,12 +243,18 @@ export const MyPage = () => {
             </h2>
             <p>Level: {currentUser.latest_status.level}</p>
             <p>{currentUser.latest_status.job.name}</p>
+
             <p>HP: {currentUser.latest_status.hp}</p>
+            <div className="text-center">
+              <RadarChart currentUser={currentUser} />
+            </div>
+            {/*
             <p>筋力: {currentUser.latest_status.strength}</p>
             <p>知力: {currentUser.latest_status.intelligence}</p>
             <p>精神: {currentUser.latest_status.wisdom}</p>
             <p>敏捷: {currentUser.latest_status.dexterity}</p>
-            <p>魅力: {currentUser.latest_status.charisma}</p>
+            <p>魅力: {currentUser.latest_status.charisma}</p> 
+            */}
             <p className="mt-4">3日達成数: {currentUser.achievement ?? 0}</p>
             <div className="mt-4 bg-base-300 p-2 rounded-lg">
               <div className="flex items-center mb-2">
