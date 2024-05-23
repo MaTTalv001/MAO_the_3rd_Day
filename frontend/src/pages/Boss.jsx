@@ -442,7 +442,7 @@ export const Boss = () => {
           >
             <div className="flex items-center mb-4">
               <img
-                src={currentUser.latest_avatar_url}
+                src={currentUser.current_avatar_url}
                 alt="Player"
                 className="w-16 h-16 rounded-xl mr-4"
               />

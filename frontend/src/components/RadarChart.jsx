@@ -21,7 +21,7 @@ const RadarChart = ({ currentUser }) => {
           ],
           backgroundColor: "rgba(34, 202, 236, 0.2)",
           borderColor: "rgba(34, 202, 236, 1)",
-          borderWidth: 2,
+          borderWidth: 1,
         },
       ],
     };
@@ -38,7 +38,7 @@ const RadarChart = ({ currentUser }) => {
           pointLabels: {
             color: "white",
             font: {
-              size: 14,
+              size: 18,
             },
           },
           suggestedMin: 0,

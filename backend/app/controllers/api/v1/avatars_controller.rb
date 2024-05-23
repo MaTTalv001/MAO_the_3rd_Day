@@ -8,15 +8,20 @@ module Api
         job_id = avatar_params[:job_id]
         image_url = ChatgptService.download_image(prompt)
         avatar = @user.avatars.create(avatar_url: image_url)
-
-        # userの直近のステータスのジョブを変更する
-        user_status = @user.user_statuses.last || @user.user_statuses.new
-        user_status.update(job_id: job_id)
-
-        if avatar.persisted?
-          render json: avatar, status: :created
+        @user.current_avatar_url = image_url
+        if @user.save
+          # userの直近のステータスのジョブを変更する
+          user_status = @user.user_statuses.last || @user.user_statuses.new
+          user_status.update(job_id: job_id)
+          
+          if avatar.persisted?
+            render json: avatar, status: :created
+          else
+            render json: avatar.errors, status: :unprocessable_entity
+          end
         else
-          render json: avatar.errors, status: :unprocessable_entity
+          logger.error @user.errors.full_messages.to_sentence
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -28,7 +33,7 @@ module Api
       end
 
       def avatar_params
-        params.permit(:prompt, :job_id)
+        params.permit(:prompt, :job_id, :user_id)
       end
     end
   end
