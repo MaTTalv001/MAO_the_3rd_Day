@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     else
       Rails.logger.info("まだアプリユーザー登録されていない")
       # 仮のユーザーを作成
-      user = User.create(nickname: "新規ユーザー", achievement: 0)
+      user = User.create(nickname: "新規ユーザー", achievement: 0, current_avatar_url: "/default/default_player.png")
       # UserStatusを作成し、ユーザーに関連付け
       status = user.user_statuses.create(user_id: user.id, job_id: 1, level: 1, hp: 100, strength: 1, intelligence: 1, wisdom: 1, dexterity: 1, charisma: 1)
       avatar = user.avatars.create(user_id: user.id, avatar_url: "/default/default_player.png")
@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
 
   def guest_login
     frontend_url = ENV['REACT_APP_API_URL']
-    guest_user = User.create(nickname: "ゲストユーザー", achievement: 0)
+    guest_user = User.create(nickname: "ゲストユーザー", achievement: 0, current_avatar_url: "/default/default_player.png")
     guest_user.user_statuses.create(user_id: guest_user.id, job_id: 1, level: 1, hp: 100, strength: 1, intelligence: 1, wisdom: 1, dexterity: 1, charisma: 1)
     guest_user.avatars.create(user_id: guest_user.id, avatar_url: "/default/default_player.png")
     guest_user.users_items.create(user_id: guest_user.id, item_id: 1, amount: 1)
