@@ -35,7 +35,7 @@ export const Users = () => {
           <div key={user.id} className="bg-base-200 p-4 rounded-lg">
             <div className="flex items-center mb-4">
               <img
-                src={user.latest_avatar_url}
+                src={user.current_avatar_url}
                 alt="User Avatar"
                 className="w-32 h-32 rounded-lg mr-4"
               />

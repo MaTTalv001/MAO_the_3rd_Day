@@ -127,6 +127,32 @@ export const MyPage = () => {
     }
   };
 
+  // アバター更新
+  const handleAvatarUpdate = async (avatarUrl) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ user: { current_avatar_url: avatarUrl } }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("アバターの更新に失敗しました");
+      }
+
+      const updatedUser = await response.json();
+      setCurrentUser(updatedUser);
+    } catch (error) {
+      console.error("アバターの更新に失敗しました:", error);
+    }
+  };
+
   const handleSpecialModeParticipation = async () => {
     try {
       const response = await fetch(
@@ -214,7 +240,7 @@ export const MyPage = () => {
             )}
           </div>
           <img
-            src={currentUser.latest_avatar_url}
+            src={currentUser.current_avatar_url}
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
@@ -361,16 +387,19 @@ export const MyPage = () => {
                       .sort((a, b) => b.id - a.id) // 降順ソート
                       .slice(0, showAllAvatars ? currentUser.avatars.length : 9)
                       .map((avatar) => (
-                        <img
-                          key={avatar.id}
-                          src={`${avatar.avatar_url}`}
-                          alt="User Avatar"
-                          className="w-full h-auto rounded cursor-pointer"
-                          onClick={() => {
-                            setSelectedAvatar(avatar);
-                            document.getElementById("avatarModal").showModal();
-                          }}
-                        />
+                        <div key={avatar.id} className="relative">
+                          <img
+                            src={`${avatar.avatar_url}`}
+                            alt="User Avatar"
+                            className="w-full h-auto rounded cursor-pointer"
+                            onClick={() => {
+                              setSelectedAvatar(avatar);
+                              document
+                                .getElementById("avatarModal")
+                                .showModal();
+                            }}
+                          />
+                        </div>
                       ))}
                   </div>
                   {currentUser.avatars.length > 9 && (
@@ -434,21 +463,29 @@ export const MyPage = () => {
                 alt="Selected Avatar"
                 className="w-full h-auto rounded mb-4"
               />
-              <button
-                onClick={handleTweet}
-                className="btn btn-primary flex items-center"
-              >
-                <svg
-                  viewBox="0 0 1200 1227"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  role="none"
-                  className="w-6 h-6 mr-2"
+              <div className="flex space-x-2">
+                <button
+                  onClick={handleTweet}
+                  className="btn btn-primary flex items-center"
                 >
-                  <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
-                </svg>
-                シェア
-              </button>
+                  <svg
+                    viewBox="0 0 1200 1227"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    role="none"
+                    className="w-6 h-6 mr-2"
+                  >
+                    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+                  </svg>
+                  シェア
+                </button>
+                <button
+                  className="btn btn-secondary flex items-center"
+                  onClick={() => handleAvatarUpdate(selectedAvatar.avatar_url)}
+                >
+                  メインアバターにする
+                </button>
+              </div>
             </>
           )}
         </div>

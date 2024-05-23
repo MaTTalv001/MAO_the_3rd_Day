@@ -115,7 +115,7 @@ end
   end
 
   def update_params
-    params.require(:user).permit(:nickname, :profile)
+    params.require(:user).permit(:nickname, :profile, :current_avatar_url)
   end
 
   

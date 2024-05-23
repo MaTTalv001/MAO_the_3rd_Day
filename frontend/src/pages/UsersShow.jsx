@@ -40,7 +40,7 @@ export const UsersShow = () => {
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-2xl font-bold mb-2">{user.nickname}</h2>
           <img
-            src={`${user.latest_avatar_url}`}
+            src={`${user.current_avatar_url}`}
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
