@@ -98,6 +98,12 @@ export const Shop = () => {
       <p className="text-xl mb-4">
         コイン：{currentUser.coin?.amount ?? "N/A"}
       </p>
+      <div role="alert" className="alert alert-success mb-4">
+        <span>
+          <p>アバター生成アイテム：アバター生成時に使用します</p>
+          <p>その他：現バージョンでは武具含め全てコレクターズアイテムです</p>
+        </span>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((item) => (
           <div key={item.id} className="bg-base-200 p-4 rounded-lg">
