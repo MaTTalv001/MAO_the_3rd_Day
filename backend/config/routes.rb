@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   
   mount ActionCable.server => '/ws'
   post '/registrations', to: 'registrations#create'
-  post 'guest_login', to: 'sessions#guest_login'
+  get 'guest_login', to: 'sessions#guest_login'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root to: proc { [200, {}, ["Hello, world!!! Auto Deploy!!!!"]] }
 
