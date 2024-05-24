@@ -11,7 +11,7 @@ export const CreateAvatar = () => {
   const [selectedSupplement, setSelectedSupplement] = useState("");
   const [selectedAge, setSelectedAge] = useState("");
   const [beforeAvatar, setBeforeAvatar] = useState(
-    currentUser?.latest_avatar_url
+    currentUser?.current_avatar_url
   );
   const [generatedAvatar, setGeneratedAvatar] = useState(null);
   const [loadingPage, setLoadingPage] = useState(true);

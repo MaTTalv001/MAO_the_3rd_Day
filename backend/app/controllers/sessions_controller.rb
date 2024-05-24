@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
     token = generate_token_with_user_id(guest_user.id, "guest")
 
     UserAuthentication.create(user_id: guest_user.id, uid: SecureRandom.uuid, provider: "guest")
-    render json: { token: token }
+    redirect_to "#{frontend_url}/MyPage?token=#{token}", allow_other_host: true
   end
 
   private

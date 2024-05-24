@@ -30,17 +30,7 @@ export const HomePage = () => {
 
   const handleGuestLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}/guest_login`, {
-        method: "POST",
-      });
-      const data = await response.json();
-      setToken(data.token);
-      localStorage.setItem("auth", data.token);
-      navigate("/MyPage");
-    } catch (error) {
-      console.error("Error logging in as guest:", error);
-    }
+    window.location.href = `${API_URL}/guest_login`;
   };
 
   return (
