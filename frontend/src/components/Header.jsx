@@ -59,17 +59,32 @@ export const Header = memo(() => {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to="/MyPage" className="btn btn-ghost normal-case text-xl">
+              <Link
+                to="/MyPage"
+                className={`btn btn-ghost normal-case text-xl ${
+                  !currentUser && "btn-disabled"
+                }`}
+              >
                 マイページ
               </Link>
             </li>
             <li>
-              <Link to="/users" className="btn btn-ghost normal-case text-xl">
+              <Link
+                to="/users"
+                className={`btn btn-ghost normal-case text-xl ${
+                  !currentUser && "btn-disabled"
+                }`}
+              >
                 酒場
               </Link>
             </li>
             <li>
-              <Link to="/shop" className="btn btn-ghost normal-case text-xl">
+              <Link
+                to="/shop"
+                className={`btn btn-ghost normal-case text-xl ${
+                  !currentUser && "btn-disabled"
+                }`}
+              >
                 ショップ
               </Link>
             </li>
@@ -78,20 +93,24 @@ export const Header = memo(() => {
                 to="/battle"
                 className={`btn btn-ghost normal-case text-xl ${
                   hasBattledToday ? "btn-disabled" : ""
-                }`}
-                onClick={(e) => hasBattledToday && e.preventDefault()}
+                } ${!currentUser && "btn-disabled"}`}
+                onClick={(e) =>
+                  (!currentUser || hasBattledToday) && e.preventDefault()
+                }
               >
                 討伐
               </Link>
             </li>
-            <li>
-              <a
-                onClick={handleClickLogout}
-                className="btn btn-ghost normal-case text-xl"
-              >
-                ログアウト
-              </a>
-            </li>
+            {currentUser && (
+              <li>
+                <a
+                  onClick={handleClickLogout}
+                  className="btn btn-ghost normal-case text-xl"
+                >
+                  ログアウト
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>
