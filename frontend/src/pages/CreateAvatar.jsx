@@ -47,9 +47,13 @@ export const CreateAvatar = () => {
     fetchJobs();
   }, [token]);
 
-  const availableJobs = jobs.filter((job) =>
-    currentUser.users_items.some((userItem) => userItem.item.id === job.item_id)
-  );
+  const availableJobs = currentUser
+    ? jobs.filter((job) =>
+        currentUser.users_items.some(
+          (userItem) => userItem.item.id === job.item_id
+        )
+      )
+    : [];
 
   useEffect(() => {
     const hasAvailableJobs = availableJobs.length > 0;
@@ -139,10 +143,11 @@ export const CreateAvatar = () => {
 
   if (!currentUser) {
     return (
-      <p>
-        Loading...
-        <span className="loading loading-spinner loading-lg"></span>
-      </p>
+      <div className="flex items-center justify-center h-screen">
+        <div>
+          <span className="loading loading-ring loading-lg"></span>
+        </div>
+      </div>
     );
   }
 
