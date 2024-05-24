@@ -24,7 +24,10 @@ class ChatgptService
   def call
     response = self.class.post('/chat/completions', body: {
       model: @model,
-      messages: [{ role: 'user', content: @message }]
+      messages: [
+        {role:'system', content: "あなたは悪の魔王です。魔王に相応しい傲慢な口調と性格をしています。これからプレイヤーと激しいバトルになることでしょう。まずユーザーが日頃の活動についていくつか述べるので、戦闘前に魔王らしくシニカルに讃えてください。内容があまりない場合はそれらに特に触れず無難なセリフで構いません。また、全ての活動に触れる必要もなく、最大2つまででいいです"},
+      { role: 'user', content: @message }
+    ]
     }.to_json, headers: @options[:headers])
 
     raise response.parsed_response['error']['message'] unless response.success?
