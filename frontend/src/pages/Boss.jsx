@@ -22,6 +22,8 @@ export const Boss = () => {
   const [totalDamage, setTotalDamage] = useState(0);
   const [battleChecked, setBattleChecked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [chatGptResponse, setChatGptResponse] = useState(null); //ChatGPT
+  const [gameStarted, setGameStarted] = useState(false); // ゲーム開始状態を管理するフラグ
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/bosses/1`, {
@@ -68,8 +70,33 @@ export const Boss = () => {
   useEffect(() => {
     if (currentUser) {
       setPlayerHP(currentUser.latest_status.hp);
+
+      // ChatGPTサービスを呼び出す
+      fetch(`${API_URL}/api/v1/chatgpt/call`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ user_id: currentUser.id }),
+      })
+        .then((response) => {
+          //console.log("Response status:", response.status);
+          return response.json();
+        })
+        .then((data) => {
+          //console.log("ChatGPT response data:", data);
+          setChatGptResponse(data.response);
+        })
+        .catch((error) => console.error("魔王は黙っている:", error));
     }
-  }, [currentUser]);
+  }, [currentUser, token]);
+
+  // useEffect(() => {
+  //   if (chatGptResponse !== null) {
+  //     restartGame();
+  //   }
+  // }, [chatGptResponse]);
 
   useEffect(() => {
     if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
@@ -363,12 +390,16 @@ export const Boss = () => {
     }
     setPlayerHP(currentUser.latest_status.hp);
     setBossHP(boss.hp); // リスタート時にボスHPをリセット
-    setGameLog(["魔王が現れた！"]);
+    const initialGameLog = `魔王が現れた！\n${
+      chatGptResponse ? chatGptResponse : ""
+    }`;
+    setGameLog([initialGameLog]);
     setShowRestart(false);
     setGameOver(false);
     setAttackTimeoutId(null);
     setTurnsLeft(5);
     setTotalDamage(0); // リスタート時に合計ダメージをリセット
+    setGameStarted(true); // ゲーム開始フラグをセット
   };
 
   const triggerShakeEffect = () => {
@@ -452,38 +483,50 @@ export const Boss = () => {
               </div>
             </div>
             <div className="flex space-x-2">
-              <button
-                className={`btn btn-primary btn-block ${
-                  isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                    ? "loading loading-ring loading-sm btn-disabled"
-                    : ""
-                }`}
-                onClick={() => attack("attack")}
-                disabled={
-                  isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                }
-              >
-                {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                  ? "たたかえない！"
-                  : "たたかう"}
-              </button>
-            </div>
-            <div className="flex space-x-2 pt-3">
-              <button
-                className={`btn btn-primary btn-block ${
-                  isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                    ? "loading loading-ring loading-sm btn-disabled"
-                    : ""
-                }`}
-                onClick={() => attack("magic")}
-                disabled={
-                  isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                }
-              >
-                {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                  ? "たたかえない！"
-                  : "まほう"}
-              </button>
+              {!gameStarted ? (
+                <button
+                  onClick={restartGame}
+                  className="btn btn-primary btn-block"
+                  disabled={!chatGptResponse}
+                >
+                  はなす
+                </button>
+              ) : (
+                <>
+                  <div className="flex flex-col space-y-2 w-full">
+                    <button
+                      className={`btn btn-primary w-full btn-block ${
+                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                          ? "loading loading-ring loading-sm btn-disabled"
+                          : ""
+                      }`}
+                      onClick={() => attack("attack")}
+                      disabled={
+                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                      }
+                    >
+                      {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                        ? "たたかえない！"
+                        : "たたかう"}
+                    </button>
+                    <button
+                      className={`btn btn-primary w-full btn-block ${
+                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                          ? "loading loading-ring loading-sm btn-disabled"
+                          : ""
+                      }`}
+                      onClick={() => attack("magic")}
+                      disabled={
+                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                      }
+                    >
+                      {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                        ? "たたかえない！"
+                        : "まほう"}
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

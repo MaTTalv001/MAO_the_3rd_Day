@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/ws'
   post '/registrations', to: 'registrations#create'
   get 'guest_login', to: 'sessions#guest_login'
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   root to: proc { [200, {}, ["Hello, world!!! Auto Deploy!!!!"]] }
 
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
         post 'purchase', on: :member
         post 'gain_coins', on: :member
       end
+      post 'chatgpt/call', to: 'chatgpt#call'
     end
   end
 
