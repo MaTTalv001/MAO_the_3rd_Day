@@ -18,7 +18,21 @@ class User < ApplicationRecord
   has_many :bosses, through: :boss_battle_logs
   scope :without_guest_users, -> { joins(:user_authentication).where.not(user_authentications: { provider: 'guest' }) }
 
+  #levelやhpなどのカラムはuser_statusesテーブルに存在するため、ソートのためのカスタムスコープを作成
+  scope :sorted_by, -> (column, direction) {
+    case column
+    when 'latest_status.level', 'latest_status.hp'
+      select("users.*, user_statuses.level AS level, user_statuses.hp AS hp")
+      .joins(:user_statuses)
+      .where("user_statuses.id = (SELECT us.id FROM user_statuses us WHERE us.user_id = users.id ORDER BY us.created_at DESC LIMIT 1)")
+      .order("#{column.split('.').last} #{direction}")
+    else
+      order("#{column} #{direction}")
+    end
+  }
+
   after_create :create_default_coin
+  paginates_per 10
 
   # indexとshowで分岐させて情報量を制御する
   def as_json(options = {})

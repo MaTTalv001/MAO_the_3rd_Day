@@ -1,9 +1,18 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
   # GET /api/v1/users
+  # ページネーションおよびソート機能
   def index
-    @users = User.without_guest_users
-    render json: @users.map { |user| user.as_json(index_view: true) } #as_json内分岐で情報量を絞る
+    sort_column = params[:sort_column] || 'created_at'
+    sort_direction = params[:sort_direction] || 'desc'
+    @users = User.without_guest_users.sorted_by(sort_column, sort_direction).page(params[:page]).per(params[:per_page] || 10)
+    #as_json内分岐で情報量を絞る
+    logger.debug "Users: #{@users.to_json}"
+    render json: {
+      users: @users.map { |user| user.as_json(index_view: true) },
+      total_pages: @users.total_pages,
+      current_page: @users.current_page
+    }
   end
 
   # GET /api/v1/users/:id

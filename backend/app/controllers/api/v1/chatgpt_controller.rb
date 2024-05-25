@@ -6,7 +6,7 @@ module Api
       def call
         user_id = params[:user_id]
         user = User.find(user_id)
-        actions = user.activities.order(created_at: :desc).limit(9).pluck(:action)
+        actions = user.activities.order(created_at: :desc).limit(3).pluck(:action)
         message = actions.join(", ")
         Rails.logger.info(message)
 
