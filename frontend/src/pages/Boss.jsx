@@ -46,10 +46,26 @@ export const Boss = () => {
             .then((response) => response.json())
             .then((logs) => {
               if (Array.isArray(logs)) {
-                const accumulatedDamage = logs.reduce(
-                  (acc, log) => acc + log.damage_dealt,
-                  0
-                );
+                let accumulatedDamage = 0;
+                let lastVictoryIndex = -1;
+
+                for (let i = 0; i < logs.length; i++) {
+                  if (logs[i].result === true) {
+                    lastVictoryIndex = i;
+                  }
+                }
+
+                if (lastVictoryIndex !== -1) {
+                  accumulatedDamage = logs
+                    .slice(lastVictoryIndex + 1)
+                    .reduce((acc, log) => acc + log.damage_dealt, 0);
+                } else {
+                  accumulatedDamage = logs.reduce(
+                    (acc, log) => acc + log.damage_dealt,
+                    0
+                  );
+                }
+
                 setBossHP(data.hp - accumulatedDamage);
               } else {
                 setBossHP(data.hp);
@@ -222,27 +238,39 @@ export const Boss = () => {
     setGameLog([]);
     setIsAttacking(true);
 
-    const playerAttack =
+    const playerAttack = Math.max(
+      1,
       Math.floor(
-        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
-      ) + 1;
-    const playerMagic =
-      Math.floor(
-        Math.random() * ((currentUser.latest_status.intelligence + 10) * 2)
-      ) + 1;
-    const playerDamage =
-      attackType === "attack"
-        ? playerAttack - Math.floor(boss.defence / 3)
-        : playerMagic - Math.floor(boss.defence / 2);
-    const finalPlayerDamage = playerDamage < 1 ? 1 : playerDamage;
-
-    const enemyAttack = Math.floor(Math.random() * (boss.attack * 2)) + 1;
-    const playerDefence = Math.floor(
-      currentUser.latest_status.strength * 0.3 +
-        currentUser.latest_status.wisdom * 0.5
+        (currentUser.latest_status.strength * 0.5 + 10 - boss.defence * 0.5) *
+          (Math.random() * (1.2 - 0.8) + 0.8)
+      ) * 3
     );
-    const enemyDamage = enemyAttack - playerDefence;
-    const finalEnemyDamage = enemyDamage < 1 ? 1 : enemyDamage;
+
+    const playerMagic = Math.max(
+      1,
+      Math.floor(
+        (currentUser.latest_status.intelligence * 0.4 +
+          10 -
+          boss.defence * 0.1) *
+          (Math.random() * (1.3 - 0.7) + 0.7)
+      ) * 3
+    );
+
+    const playerDamage = attackType === "attack" ? playerAttack : playerMagic;
+
+    const finalPlayerDamage = playerDamage;
+
+    const enemyAttack = Math.max(
+      1,
+      Math.floor(
+        (boss.attack * 0.6 -
+          (currentUser.latest_status.strength * 0.05 +
+            currentUser.latest_status.wisdom * 0.2)) *
+          (Math.random() * (1.3 - 0.7) + 0.7)
+      ) * 8
+    );
+
+    const finalEnemyDamage = enemyAttack;
 
     const playerGoesFirst = Math.random() < 0.5;
     const doubleAttackChance = currentUser.latest_status.dexterity / 100;
@@ -294,7 +322,7 @@ export const Boss = () => {
         triggerShakeEffect();
         if (playerHP - finalEnemyDamage <= 0) {
           setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
-          setGameLog(["全滅した"]);
+          setGameLog(["全滅した。与えたダメージは次回に引き継ぎます。"]);
           saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
           gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
           setShowRestart(true);
@@ -317,7 +345,7 @@ export const Boss = () => {
             triggerShakeEffect();
             if (playerHP - finalEnemyDamage <= 0) {
               setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
-              setGameLog(["全滅した"]);
+              setGameLog(["全滅した。与えたダメージは次回に引き継ぎます"]);
               saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
               gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
               setShowRestart(true);
@@ -389,7 +417,7 @@ export const Boss = () => {
       clearTimeout(attackTimeoutId);
     }
     setPlayerHP(currentUser.latest_status.hp);
-    setBossHP(boss.hp); // リスタート時にボスHPをリセット
+    //setBossHP(boss.hp); // リスタート時にボスHPをリセット
     const initialGameLog = `魔王が現れた！\n${
       chatGptResponse ? chatGptResponse : ""
     }`;

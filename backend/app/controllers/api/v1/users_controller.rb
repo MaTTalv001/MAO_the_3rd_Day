@@ -3,11 +3,15 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   # ページネーションおよびソート機能
   def index
-    sort_column = params[:sort_column] || 'created_at'
-    sort_direction = params[:sort_direction] || 'desc'
+    sort_column = params[:sort_column] || 'created_at' #カラム指定がない場合は登録日時
+    sort_direction = params[:sort_direction] || 'desc' #方向指定がない場合は降順
+    # ユーザーを取得するクエリを構築
+    # 1. ゲストユーザーを除外するスコープを適用
+    # 2. ソートを適用（デフォルトは作成日の降順）
+    # 3. ページネーションを適用（デフォルトは1ページに10件）
     @users = User.without_guest_users.sorted_by(sort_column, sort_direction).page(params[:page]).per(params[:per_page] || 10)
-    #as_json内分岐で情報量を絞る
     logger.debug "Users: #{@users.to_json}"
+    # ユーザー一覧。as_jsonメソッドのindex_viewオプションをtrueに設定して情報量を制限
     render json: {
       users: @users.map { |user| user.as_json(index_view: true) },
       total_pages: @users.total_pages,
@@ -24,7 +28,7 @@ class Api::V1::UsersController < ApplicationController
       render json: { error: "User not found" }, status: :not_found
     end
   rescue StandardError => e
-    Rails.logger.error("Error in UsersController#show: #{e.message}")
+    Rails.logger.error("Usersコントローラエラー: #{e.message}")
     render json: { error: "Internal Server Error" }, status: :internal_server_error
   end
 

@@ -14,16 +14,19 @@ export const Users = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  //
+
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const page = parseInt(params.get("page")) || 1;
-    const sortCol = params.get("sort_column") || "created_at";
-    const sortDir = params.get("sort_direction") || "desc";
+    const params = new URLSearchParams(location.search); // URLのクエリパラメータを取得するためのヘルパー関数を作成
+    const page = parseInt(params.get("page")) || 1; // 'page'クエリパラメータを取得し、整数に変換する。指定がない場合はデフォルトで1ページ目
+    const sortCol = params.get("sort_column") || "created_at"; // 'sort_column'クエリパラメータを取得する。指定がない場合はデフォルトで'created_at'
+    const sortDir = params.get("sort_direction") || "desc"; // 'sort_direction'クエリパラメータを取得する。指定がない場合はデフォルトで'desc'
 
     setCurrentPage(page);
     setSortColumn(sortCol);
     setSortDirection(sortDir);
 
+    // ユーザーデータをAPIから取得するためのリクエストを送信
     fetch(
       `${API_URL}/api/v1/users?page=${page}&sort_column=${sortCol}&sort_direction=${sortDir}`
     )
@@ -35,19 +38,24 @@ export const Users = () => {
       .catch((error) =>
         console.error("ユーザーデータの取得に失敗しました:", error)
       );
-  }, [location.search]);
+  }, [location.search]); // location.searchが変更されるたびにこのuseEffectが実行される
 
+  // ページ番号の変更時に呼び出される関数
+  // navigateを使って新しいURLを構築し、ページ番号、ソートカラム、ソート方向をクエリパラメータとして設定
   const handlePageChange = (page) => {
     navigate(
       `?page=${page}&sort_column=${sortColumn}&sort_direction=${sortDirection}`
     );
   };
 
+  // ソートカラムの変更時に呼び出される関数
   const handleSortChange = (column) => {
+    // 現在のソートカラムがクリックされたカラムと同じで、現在のソート方向が昇順（asc）の場合は降順（desc）に変更、それ以外の場合は昇順（asc）
     const newDirection =
       sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
     setSortColumn(column);
     setSortDirection(newDirection);
+    // 新しいURLを構築し、ページ番号を1にリセットしてソートカラムとソート方向をクエリパラメータとして設定
     navigate(`?page=1&sort_column=${column}&sort_direction=${newDirection}`);
   };
 
@@ -81,6 +89,7 @@ export const Users = () => {
           className="btn btn-ghost"
         >
           登録順{" "}
+          {/* 現在のソートカラムが"created_at"の場合、ソート方向に応じて▲（昇順）または▼（降順）のアイコンを表示 */}
           {sortColumn === "created_at"
             ? sortDirection === "asc"
               ? "▲"
@@ -153,9 +162,12 @@ export const Users = () => {
       {/*ページネーションボタン*/}
       <div className="flex justify-center mt-4">
         <div className="btn-group">
+          {/* totalPagesの数だけボタンを生成 */}
           {[...Array(totalPages)].map((_, index) => (
             <button
+              // ボタンのkey属性を設定。indexを使用して一意に識別
               key={index}
+              // 現在のページ番号に応じてbtn-activeクラスを追加し、現在のページを視覚的に強調
               className={`btn ${index + 1 === currentPage ? "btn-active" : ""}`}
               onClick={() => handlePageChange(index + 1)}
             >

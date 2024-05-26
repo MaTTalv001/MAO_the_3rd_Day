@@ -137,27 +137,39 @@ export const Battle = () => {
     setGameLog([]);
     setIsAttacking(true);
 
-    const playerAttack =
+    const playerAttack = Math.max(
+      1,
       Math.floor(
-        Math.random() * ((currentUser.latest_status.strength + 10) * 2)
-      ) + 1;
-    const playerMagic =
-      Math.floor(
-        Math.random() * ((currentUser.latest_status.intelligence + 10) * 2.2)
-      ) + 1;
-    const playerDamage =
-      attackType === "attack"
-        ? playerAttack - Math.floor(enemy.defence / 3)
-        : playerMagic - Math.floor(enemy.defence / 2);
-    const finalPlayerDamage = playerDamage < 1 ? 1 : playerDamage;
-
-    const enemyAttack = Math.floor(Math.random() * (enemy.attack * 2)) + 1;
-    const playerDefence = Math.floor(
-      currentUser.latest_status.strength * 0.3 +
-        currentUser.latest_status.wisdom * 0.5
+        (currentUser.latest_status.strength * 0.5 + 10 - enemy.defence * 0.5) *
+          (Math.random() * (1.2 - 0.8) + 0.8)
+      ) * 3
     );
-    const enemyDamage = enemyAttack - playerDefence;
-    const finalEnemyDamage = enemyDamage < 1 ? 1 : enemyDamage;
+
+    const playerMagic = Math.max(
+      1,
+      Math.floor(
+        (currentUser.latest_status.intelligence * 0.4 +
+          10 -
+          enemy.defence * 0.1) *
+          (Math.random() * (1.3 - 0.7) + 0.7)
+      ) * 3
+    );
+
+    const playerDamage = attackType === "attack" ? playerAttack : playerMagic;
+
+    const finalPlayerDamage = playerDamage;
+
+    const enemyAttack = Math.max(
+      1,
+      Math.floor(
+        (enemy.attack * 0.6 -
+          (currentUser.latest_status.strength * 0.05 +
+            currentUser.latest_status.wisdom * 0.2)) *
+          (Math.random() * (1.3 - 0.7) + 0.7)
+      ) * 8
+    );
+
+    const finalEnemyDamage = enemyAttack;
 
     const playerGoesFirst = Math.random() < 0.5;
     const doubleAttackChance = currentUser.latest_status.dexterity / 100;

@@ -94,10 +94,17 @@ end
 
 # 敵データを挿入
 enemies_data = [
-  { name: 'ゴブリン', hp: 50, attack: 10, defence: 5, enemy_url: '/imgs/enemies/monster001.png' },
-  { name: 'ファントム', hp: 40, attack: 15, defence: 5, enemy_url: '/imgs/enemies/monster002.png' },
-  { name: 'ヘドロン', hp: 20, attack: 5, defence: 15, enemy_url: '/imgs/enemies/monster003.png' },
-  { name: 'ワイバーンキッズ', hp: 60, attack: 15, defence: 15, enemy_url: '/imgs/enemies/monster004.png' },
+  { id: 1, name: 'ゴブリン', hp: 50, attack: 10, defence: 6, enemy_url: '/imgs/enemies/monster001.png' },
+  { id: 2, name: 'ファントム', hp: 40, attack: 11, defence: 7, enemy_url: '/imgs/enemies/monster002.png' },
+  { id: 3, name: 'ヘドロン', hp: 30, attack: 7, defence: 20, enemy_url: '/imgs/enemies/monster003.png' },
+  { id: 4, name: 'ワイバーンキッズ', hp: 60, attack: 13, defence: 14, enemy_url: '/imgs/enemies/monster004.png' },
+  { id: 5, name: 'タイガーキャット', hp: 60, attack: 11, defence: 12, enemy_url: '/imgs/enemies/monster005.png' },
+  { id: 6, name: 'ウルフドッグ', hp: 60, attack: 13, defence: 14, enemy_url: '/imgs/enemies/monster006.png' },
+  { id: 7, name: 'リキッドメタル', hp: 5, attack: 12, defence: 100, enemy_url: '/imgs/enemies/monster007.png' },
+  { id: 8, name: 'オオカマキリ', hp: 70, attack: 12, defence: 12, enemy_url: '/imgs/enemies/monster008.png' },
+  { id: 9, name: '魔王ファントム', hp: 80, attack: 12, defence: 12, enemy_url: '/imgs/enemies/monster009.png' },
+  { id: 10, name: 'いたずらラクーン', hp: 50, attack: 11, defence: 9, enemy_url: '/imgs/enemies/monster010.png' },
+  
 ]
 
 enemies_data.each do |enemy|
@@ -112,7 +119,7 @@ end
 
 # ボスデータを挿入
 bosses_data = [
-  { name: '魔王', hp: 333, attack: 33, defence: 15, boss_url: '/imgs/boss/boss001.png' },
+  { name: '魔王', hp: 333, attack: 16, defence: 13, boss_url: '/imgs/boss/boss001.png' },
 ]
 
 bosses_data.each do |boss|
