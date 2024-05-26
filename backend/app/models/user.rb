@@ -16,12 +16,17 @@ class User < ApplicationRecord
   has_many :boss_battle_logs, dependent: :destroy
   has_many :enemies, through: :battle_logs
   has_many :bosses, through: :boss_battle_logs
+  # ゲストログインを省くスコープ prividerがguestのユーザー以外を返す
   scope :without_guest_users, -> { joins(:user_authentication).where.not(user_authentications: { provider: 'guest' }) }
 
-  #levelやhpなどのカラムはuser_statusesテーブルに存在するため、ソートのためのカスタムスコープを作成
+  # levelやhpなどのカラムはuser_statusesテーブルに存在するため、ソートのためのカスタムスコープを作成。
+  # カラムと昇降順方向（asc, desc）を引数としてuser.sorted_byという使い方ができる
+  # ソートするカラムがlatest_status.levelまたはlatest_status.hpの場合
+  # usersテーブルとuser_statusesテーブルを結合し、最新のstatusを取得する
+  # サブクエリを使用して、各ユーザーの最新のuser_statusを取得しlevelまたはhpでソートする
   scope :sorted_by, -> (column, direction) {
     case column
-    when 'latest_status.level', 'latest_status.hp'
+    when 'latest_status.level', 'latest_status.hp'    
       select("users.*, user_statuses.level AS level, user_statuses.hp AS hp")
       .joins(:user_statuses)
       .where("user_statuses.id = (SELECT us.id FROM user_statuses us WHERE us.user_id = users.id ORDER BY us.created_at DESC LIMIT 1)")
@@ -32,6 +37,7 @@ class User < ApplicationRecord
   }
 
   after_create :create_default_coin
+  # kaminariを使ったページネーションでデフォルトのアイテム数
   paginates_per 10
 
   # indexとshowで分岐させて情報量を制御する
