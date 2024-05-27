@@ -38,7 +38,7 @@ class User < ApplicationRecord
 
   after_create :create_default_coin
   # kaminariを使ったページネーションでデフォルトのアイテム数
-  paginates_per 10
+  paginates_per 12
 
   # indexとshowで分岐させて情報量を制御する
   def as_json(options = {})

@@ -9,7 +9,7 @@ class Api::V1::UsersController < ApplicationController
     # 1. ゲストユーザーを除外するスコープを適用
     # 2. ソートを適用（デフォルトは作成日の降順）
     # 3. ページネーションを適用（デフォルトは1ページに10件）
-    @users = User.without_guest_users.sorted_by(sort_column, sort_direction).page(params[:page]).per(params[:per_page] || 10)
+    @users = User.without_guest_users.sorted_by(sort_column, sort_direction).page(params[:page]).per(params[:per_page] || 12)
     logger.debug "Users: #{@users.to_json}"
     # ユーザー一覧。as_jsonメソッドのindex_viewオプションをtrueに設定して情報量を制限
     render json: {
