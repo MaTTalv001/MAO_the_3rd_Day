@@ -32,10 +32,13 @@ export const gainCoins = async (
         ...prevLog,
         `${data.gained_coins}枚の金貨を得た！`,
       ]);
+      return data.gained_coins;
     } else {
       console.error("金貨の獲得に失敗しました");
+      return null;
     }
   } catch (error) {
     console.error("金貨の獲得に失敗しました:", error);
+    return null;
   }
 };

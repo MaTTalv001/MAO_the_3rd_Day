@@ -29,7 +29,7 @@ class Api::V1::UsersController < ApplicationController
     end
   rescue StandardError => e
     Rails.logger.error("Usersコントローラエラー: #{e.message}")
-    render json: { error: "Internal Server Error" }, status: :internal_server_error
+    render json: { error: "サーバーエラー" }, status: :internal_server_error
   end
 
 
@@ -56,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
     if @current_user
       render json: { user: @current_user }
     else
-      render json: { error: 'Not Authorized' }, status: :unauthorized
+      render json: { error: '認証情報を取得できません' }, status: :unauthorized
     end
   end
 
@@ -77,7 +77,7 @@ class Api::V1::UsersController < ApplicationController
 
       render json: @current_user.as_json(include: [coin: { only: [:amount] }, items: { only: [:id, :name, :cost, :item_url, :category] }]), status: :ok
     else
-      render json: { error: "Insufficient coins" }, status: :unprocessable_entity
+      render json: { error: "コインが不足しています" }, status: :unprocessable_entity
     end
   end
 
@@ -95,7 +95,7 @@ class Api::V1::UsersController < ApplicationController
     end
     render json: user.as_json(include: [coin: { only: [:amount] }, items: { only: [:id, :name, :cost, :item_url, :category] }]), status: :ok
   else
-    render json: { error: "Item not found or insufficient amount" }, status: :unprocessable_entity
+    render json: { error: "アイテムまたはコインが不足しています" }, status: :unprocessable_entity
   end
 end
 

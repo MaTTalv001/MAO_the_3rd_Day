@@ -4,7 +4,8 @@ import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
-//import { gainCoins } from "../services/CoinService";
+import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
+import { calculateDamage } from "../services/DamageCalculator"; //ダメージ計算メソッド
 
 export const Boss = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -25,6 +26,11 @@ export const Boss = () => {
   const [chatGptResponse, setChatGptResponse] = useState(null); //ChatGPT
   const [gameStarted, setGameStarted] = useState(false); // ゲーム開始状態を管理するフラグ
 
+  //バトルログを抽出し、累積ダメージ分を減算させる
+  //logs配列をループして、最後に勝利した戦闘ログのインデックス（lastVictoryIndex）を特定
+  //lastVictoryIndexより後の戦闘ログのダメージを累積し、累積ダメージ（accumulatedDamage）を計算
+  //lastVictoryIndexが存在しない場合は、すべての戦闘ログのダメージを累積
+  //最終的に、ボスのHPから累積ダメージを引いた値をsetBossHP関数で設定
   useEffect(() => {
     fetch(`${API_URL}/api/v1/bosses/1`, {
       headers: {
@@ -198,82 +204,21 @@ export const Boss = () => {
     }
   };
 
-  const gainCoins = async (amount) => {
-    console.log("gainCoins called with amount:", amount);
-    if (!currentUser) return;
-    try {
-      const response = await fetch(
-        `${API_URL}/api/v1/users/${currentUser.id}/gain_coins`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            base_amount: amount,
-          }),
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        console.log("API response:", data);
-        setCurrentUser(data.user);
-        setGainedCoins(data.gained_coins);
-        setGameLog((prevLog) => [
-          ...prevLog,
-          `${data.gained_coins}枚の金貨を得た！`,
-        ]);
-      } else {
-        console.error("金貨獲得に失敗しました");
-      }
-    } catch (error) {
-      console.error("金貨獲得に失敗しました:", error);
-    }
-  };
-
   const attack = (attackType) => {
     if (gameOver) return;
 
     setGameLog([]);
     setIsAttacking(true);
 
-    const playerAttack = Math.max(
-      1,
-      Math.floor(
-        (currentUser.latest_status.strength * 0.5 + 10 - boss.defence * 0.5) *
-          (Math.random() * (1.2 - 0.8) + 0.8)
-      ) * 3
+    //ダメージ計算式を呼び出す
+    const { finalPlayerDamage, finalEnemyDamage } = calculateDamage(
+      attackType,
+      currentUser.latest_status,
+      boss
     );
 
-    const playerMagic = Math.max(
-      1,
-      Math.floor(
-        (currentUser.latest_status.intelligence * 0.4 +
-          10 -
-          boss.defence * 0.1) *
-          (Math.random() * (1.3 - 0.7) + 0.7)
-      ) * 3
-    );
-
-    const playerDamage = attackType === "attack" ? playerAttack : playerMagic;
-
-    const finalPlayerDamage = playerDamage;
-
-    const enemyAttack = Math.max(
-      1,
-      Math.floor(
-        (boss.attack * 0.6 -
-          (currentUser.latest_status.strength * 0.05 +
-            currentUser.latest_status.wisdom * 0.2)) *
-          (Math.random() * (1.3 - 0.7) + 0.7)
-      ) * 8
-    );
-
-    const finalEnemyDamage = enemyAttack;
-
-    const playerGoesFirst = Math.random() < 0.5;
-    const doubleAttackChance = currentUser.latest_status.dexterity / 100;
+    const playerGoesFirst = Math.random() < 0.5; // 先行後攻
+    const doubleAttackChance = currentUser.latest_status.dexterity / 100; // ダブルアタック
 
     setTimeout(() => {
       if (gameOver) return;
@@ -307,7 +252,14 @@ export const Boss = () => {
         if (bossHP - turnDamage <= 0) {
           setGameLog([`${boss.name}をたおした`]);
           saveBattleLog(true, totalDamage + turnDamage); // 勝利を保存
-          gainCoins(300); // 勝利の報酬を獲得
+          gainCoins(
+            currentUser,
+            token,
+            3000,
+            setCurrentUser,
+            setGainedCoins,
+            setGameLog
+          ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -324,7 +276,16 @@ export const Boss = () => {
           setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
           setGameLog(["全滅した。与えたダメージは次回に引き継ぎます。"]);
           saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-          gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
+          const amounts = [100, 200, 300];
+          const amount = amounts[Math.floor(Math.random() * amounts.length)];
+          gainCoins(
+            currentUser,
+            token,
+            amount,
+            setCurrentUser,
+            setGainedCoins,
+            setGameLog
+          ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -347,7 +308,17 @@ export const Boss = () => {
               setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
               setGameLog(["全滅した。与えたダメージは次回に引き継ぎます"]);
               saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-              gainCoins([100, 200, 300][Math.floor(Math.random() * 3)]); // 敗北の報酬を獲得
+              const amounts = [100, 200, 300];
+              const amount =
+                amounts[Math.floor(Math.random() * amounts.length)];
+              gainCoins(
+                currentUser,
+                token,
+                amount,
+                setCurrentUser,
+                setGainedCoins,
+                setGameLog
+              ); // 金貨を獲得
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -381,7 +352,14 @@ export const Boss = () => {
           if (bossHP - turnDamage <= 0) {
             setGameLog([`${boss.name}をたおした`]);
             saveBattleLog(true, totalDamage + turnDamage); // 勝利を保存
-            gainCoins(3000); // 勝利の報酬を獲得
+            gainCoins(
+              currentUser,
+              token,
+              3000,
+              setCurrentUser,
+              setGainedCoins,
+              setGameLog
+            ); // 金貨を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -398,7 +376,14 @@ export const Boss = () => {
           // 敗北の報酬を獲得
           const amounts = [100, 200, 300];
           const amount = amounts[Math.floor(Math.random() * amounts.length)];
-          gainCoins(amount);
+          gainCoins(
+            currentUser,
+            token,
+            amount,
+            setCurrentUser,
+            setGainedCoins,
+            setGameLog
+          ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
