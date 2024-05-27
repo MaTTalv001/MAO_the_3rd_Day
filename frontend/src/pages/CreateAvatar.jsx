@@ -33,12 +33,12 @@ export const CreateAvatar = () => {
           },
         });
         if (!response.ok) {
-          throw new Error("Request failed");
+          throw new Error("アバターのリクエストに失敗しました");
         }
         const data = await response.json();
         setJobs(data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error("ジョブ情報の取得に失敗しました:", error);
       } finally {
         setLoadingPage(false);
       }
@@ -100,10 +100,10 @@ export const CreateAvatar = () => {
         const updatedUser = await deleteItemResponse.json();
         setCurrentUser(updatedUser);
       } else {
-        console.error("Error deleting item:", deleteItemResponse.statusText);
+        console.error("アイテム消費処理に失敗しました:", deleteItemResponse.statusText);
       }
     } catch (error) {
-      console.error("Error generating avatar:", error);
+      console.error("アバター生成に失敗しました:", error);
     } finally {
       setLoadingAvatar(false);
     }

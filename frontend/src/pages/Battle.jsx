@@ -4,7 +4,8 @@ import { API_URL } from "../config/settings";
 import { BackGround } from "../config/background";
 import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
-//import { gainCoins } from "../services/CoinService";
+import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
+import { calculateDamage } from "../services/DamageCalculator"; //ダメージ計算メソッド
 
 //Battleコンポーネント
 export const Battle = () => {
@@ -97,39 +98,6 @@ export const Battle = () => {
     }
   };
 
-  //コインを獲得;
-  const gainCoins = async (amount) => {
-    if (!currentUser) return;
-    try {
-      const response = await fetch(
-        `${API_URL}/api/v1/users/${currentUser.id}/gain_coins`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            base_amount: amount,
-          }),
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setCurrentUser(data.user);
-        setGainedCoins(data.gained_coins);
-        setGameLog((prevLog) => [
-          ...prevLog,
-          `${data.gained_coins}枚の金貨を得た！`,
-        ]);
-      } else {
-        console.error("金貨の獲得に失敗しました");
-      }
-    } catch (error) {
-      console.error("金貨の獲得に失敗しました:", error);
-    }
-  };
-
   // 攻撃処理
   const attack = (attackType) => {
     if (gameOver) return;
@@ -137,39 +105,12 @@ export const Battle = () => {
     setGameLog([]);
     setIsAttacking(true);
 
-    const playerAttack = Math.max(
-      1,
-      Math.floor(
-        (currentUser.latest_status.strength * 0.5 + 10 - enemy.defence * 0.5) *
-          (Math.random() * (1.2 - 0.8) + 0.8)
-      ) * 3
+    //ダメージ計算式を呼び出す
+    const { finalPlayerDamage, finalEnemyDamage } = calculateDamage(
+      attackType,
+      currentUser.latest_status,
+      enemy
     );
-
-    const playerMagic = Math.max(
-      1,
-      Math.floor(
-        (currentUser.latest_status.intelligence * 0.4 +
-          10 -
-          enemy.defence * 0.1) *
-          (Math.random() * (1.3 - 0.7) + 0.7)
-      ) * 3
-    );
-
-    const playerDamage = attackType === "attack" ? playerAttack : playerMagic;
-
-    const finalPlayerDamage = playerDamage;
-
-    const enemyAttack = Math.max(
-      1,
-      Math.floor(
-        (enemy.attack * 0.6 -
-          (currentUser.latest_status.strength * 0.05 +
-            currentUser.latest_status.wisdom * 0.2)) *
-          (Math.random() * (1.3 - 0.7) + 0.7)
-      ) * 8
-    );
-
-    const finalEnemyDamage = enemyAttack;
 
     const playerGoesFirst = Math.random() < 0.5;
     const doubleAttackChance = currentUser.latest_status.dexterity / 100;
@@ -182,7 +123,15 @@ export const Battle = () => {
         setGameLog((prevLog) => [
           ...prevLog,
           `${currentUser.nickname}の${
-            attackType === "attack" ? "攻撃" : "まほう"
+            attackType === "attack"
+              ? "攻撃"
+              : attackType === "magic1"
+              ? "まほう（炎）"
+              : attackType === "magic2"
+              ? "まほう(氷)"
+              : attackType === "power"
+              ? "渾身"
+              : "リミット技"
           }、${finalPlayerDamage}のダメージ`,
         ]);
 
@@ -205,7 +154,14 @@ export const Battle = () => {
           saveBattleLog(true); // 勝利を保存
           const amounts = [10, 20, 30];
           const amount = amounts[Math.floor(Math.random() * amounts.length)];
-          gainCoins(amount); // 金貨を獲得
+          gainCoins(
+            currentUser,
+            token,
+            amount,
+            setCurrentUser,
+            setGainedCoins,
+            setGameLog
+          ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -253,7 +209,15 @@ export const Battle = () => {
           setGameLog((prevLog) => [
             ...prevLog,
             `${currentUser.nickname}の${
-              attackType === "attack" ? "攻撃" : "まほう"
+              attackType === "attack"
+                ? "攻撃"
+                : attackType === "magic1"
+                ? "まほう（炎）"
+                : attackType === "magic2"
+                ? "まほう(氷)"
+                : attackType === "power"
+                ? "渾身"
+                : "リミット技"
             }、${finalPlayerDamage}のダメージ`,
           ]);
 
@@ -276,7 +240,14 @@ export const Battle = () => {
             saveBattleLog(true); // 勝利を保存
             const amounts = [10, 20, 30];
             const amount = amounts[Math.floor(Math.random() * amounts.length)];
-            gainCoins(amount); // 金貨を獲得
+            gainCoins(
+              currentUser,
+              token,
+              amount,
+              setCurrentUser,
+              setGainedCoins,
+              setGameLog
+            ); // 金貨を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -382,7 +353,7 @@ export const Battle = () => {
             </div>
             <div className="flex space-x-2">
               <button
-                className={`btn btn-primary btn-block ${
+                className={`btn btn-primary w-1/2 ${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
@@ -394,23 +365,69 @@ export const Battle = () => {
                   ? "たたかえない！"
                   : "たたかう"}
               </button>
-            </div>
 
-            <div className="flex space-x-2 pt-3">
               <button
-                className={`btn btn-primary btn-block ${
+                className={`btn btn-primary w-1/2 ${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
-                onClick={() => attack("magic")}
+                onClick={() => attack("power")}
                 disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
               >
                 {isAttacking || playerHP <= 0 || enemyHP <= 0
                   ? "たたかえない！"
-                  : "まほう"}
+                  : "渾身"}
               </button>
             </div>
+
+            <div className="flex space-x-2 pt-3">
+              <button
+                className={`btn btn-primary w-1/2 ${
+                  isAttacking || playerHP <= 0 || enemyHP <= 0
+                    ? "loading loading-ring loading-sm btn-disabled"
+                    : ""
+                }`}
+                onClick={() => attack("magic1")}
+                disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
+              >
+                {isAttacking || playerHP <= 0 || enemyHP <= 0
+                  ? "たたかえない！"
+                  : "まほう（炎）"}
+              </button>
+
+              <button
+                className={`btn btn-primary w-1/2 ${
+                  isAttacking || playerHP <= 0 || enemyHP <= 0
+                    ? "loading loading-ring loading-sm btn-disabled"
+                    : ""
+                }`}
+                onClick={() => attack("magic2")}
+                disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
+              >
+                {isAttacking || playerHP <= 0 || enemyHP <= 0
+                  ? "たたかえない！"
+                  : "まほう（氷）"}
+              </button>
+            </div>
+
+            {playerHP <= 33 && (
+              <div className="flex space-x-2 pt-3">
+                <button
+                  className={`btn btn-warning w-full ${
+                    isAttacking || playerHP <= 0 || enemyHP <= 0
+                      ? "loading loading-ring loading-sm btn-disabled"
+                      : ""
+                  }`}
+                  onClick={() => attack("limit")}
+                  disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
+                >
+                  {isAttacking || playerHP <= 0 || enemyHP <= 0
+                    ? "たたかえない！"
+                    : "リミット"}
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">

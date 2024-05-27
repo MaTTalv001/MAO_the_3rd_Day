@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { API_URL } from "../config/settings";
 import { useAuth } from "../providers/auth";
+import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
 
 const categories = [
   {
@@ -56,36 +57,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
   const handleCategoryChange = (category) => {
     setActivity({ ...activity, category_id: category.id });
   };
+  const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
+  const [gameLog, setGameLog] = useState([""]); // ゲームログの状態管理
 
-  const gainCoins = async (amount) => {
-    if (!currentUser) return;
-    try {
-      const response = await fetch(
-        `${API_URL}/api/v1/users/${currentUser.id}/gain_coins`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            base_amount: amount,
-          }),
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setCurrentUser(data.user);
-        return data.gained_coins;
-      } else {
-        console.error("Failed to gain coins");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error gaining coins:", error);
-      return null;
-    }
-  };
 
   const handleSubmit = async () => {
     try {
@@ -148,9 +122,17 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
       if (!userStatusResponse.ok) {
         throw new Error("ステータスのアップデートに失敗しました");
       }
+      
+      const amounts = [10, 20, 30];
+      const amount = amounts[Math.floor(Math.random() * amounts.length)];
       const gainedCoins = await gainCoins(
-        [10, 20, 30][Math.floor(Math.random() * 3)]
-      );
+        currentUser,
+        token,
+        amount,
+        setCurrentUser,
+        setGainedCoins,
+        setGameLog
+      ); // 金貨を獲得
 
       setActivity({ action: "", duration: 0, category_id: "" });
 

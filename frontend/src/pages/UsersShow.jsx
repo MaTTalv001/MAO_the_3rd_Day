@@ -16,7 +16,7 @@ export const UsersShow = () => {
     fetch(`${API_URL}/api/v1/users/${id}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
-      .catch((error) => console.error("Error fetching user details:", error));
+      .catch((error) => console.error("ユーザー詳細を取得できませんでした:", error));
   }, [id]);
 
   if (!user) {

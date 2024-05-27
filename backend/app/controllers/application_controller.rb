@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
         raise ActiveRecord::RecordNotFound, 'User not found'
       end
     rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
-      Rails.logger.error "Authentication error: #{e.message}"
+      Rails.logger.error "認証エラー: #{e.message}"
       render json: { errors: e.message }, status: :unauthorized
     end
   end
