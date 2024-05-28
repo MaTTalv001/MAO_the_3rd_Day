@@ -6,6 +6,9 @@ import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
 import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
 import { calculateDamage } from "../services/DamageCalculator"; //ダメージ計算メソッド
+import SlashEffect from "../effects/SlashEffect"; // エフェクト
+import FireMagicEffect from "../effects/FireMagicEffect"; // エフェクト
+import IceMagicEffect from "../effects/IceMagicEffect"; // エフェクト
 
 //Battleコンポーネント
 export const Battle = () => {
@@ -21,6 +24,9 @@ export const Battle = () => {
   const [background, setBackground] = useState(null); // 背景の状態管理
   const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
   const [hasBattledToday, setHasBattledToday] = useState(false); // 本日のバトル実施状況の管理
+  const [showSlashEffect, setShowSlashEffect] = useState(false);
+  const [showFireMagicEffect, setShowFireMagicEffect] = useState(false);
+  const [showIceMagicEffect, setShowIceMagicEffect] = useState(false);
 
   // 初回レンダリング時に敵データを取得
   useEffect(() => {
@@ -104,6 +110,18 @@ export const Battle = () => {
 
     setGameLog([]);
     setIsAttacking(true);
+    //攻撃タイプによってエフェクトを切り替える
+    if (attackType === "attack" || attackType === "power") {
+      setShowSlashEffect(true);
+    } else if (attackType === "magic1") {
+      setShowFireMagicEffect(true);
+    } else if (attackType === "magic2") {
+      setShowIceMagicEffect(true);
+    } else {
+      setShowSlashEffect(true);
+      setShowFireMagicEffect(true);
+      setShowIceMagicEffect(true);
+    }
 
     //ダメージ計算式を呼び出す
     const { finalPlayerDamage, finalEnemyDamage } = calculateDamage(
@@ -278,6 +296,7 @@ export const Battle = () => {
   const triggerShakeEffect = () => {
     const body = document.body;
     body.classList.add("shake-animation");
+    console.log("triggerShakeEffect");
 
     setTimeout(() => {
       body.classList.remove("shake-animation");
@@ -322,8 +341,52 @@ export const Battle = () => {
           </div>
           <div
             className="aspect-w-1 aspect-h-1 mx-auto"
-            style={{ maxWidth: "300px" }}
+            style={{ maxWidth: "300px", position: "relative" }}
           >
+            {showSlashEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {" "}
+                <SlashEffect onComplete={() => setShowSlashEffect(false)} />
+              </div>
+            )}
+            {showFireMagicEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <FireMagicEffect
+                  onComplete={() => setShowFireMagicEffect(false)}
+                />
+              </div>
+            )}
+            {showIceMagicEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <IceMagicEffect
+                  onComplete={() => setShowIceMagicEffect(false)}
+                />
+              </div>
+            )}
             <img
               src={enemy.enemy_url}
               alt="Monster"
