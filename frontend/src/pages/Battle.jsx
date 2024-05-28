@@ -351,14 +351,16 @@ export const Battle = () => {
                 <p className="text-lg">HP: {playerHP}</p>
               </div>
             </div>
+            {/* コマンドボタン */}
             <div className="flex space-x-2">
               <button
-                className={`btn btn-primary w-1/2 ${
+                className={`btn btn-primary w-1/2 tooltip ${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("attack")}
+                data-tip="筋力依存の物理攻撃"
                 disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
               >
                 {isAttacking || playerHP <= 0 || enemyHP <= 0
@@ -367,12 +369,13 @@ export const Battle = () => {
               </button>
 
               <button
-                className={`btn btn-primary w-1/2 ${
+                className={`btn btn-primary w-1/2 tooltip${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("power")}
+                data-tip="筋力依存の物理攻撃。ブレ幅が大きい一振り"
                 disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
               >
                 {isAttacking || playerHP <= 0 || enemyHP <= 0
@@ -383,12 +386,13 @@ export const Battle = () => {
 
             <div className="flex space-x-2 pt-3">
               <button
-                className={`btn btn-primary w-1/2 ${
+                className={`btn btn-primary w-1/2 tooltip${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("magic1")}
+                data-tip="知力依存の魔法攻撃。エネミーの防御による減衰を受けにくい"
                 disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
               >
                 {isAttacking || playerHP <= 0 || enemyHP <= 0
@@ -397,12 +401,13 @@ export const Battle = () => {
               </button>
 
               <button
-                className={`btn btn-primary w-1/2 ${
+                className={`btn btn-primary w-1/2 tooltip${
                   isAttacking || playerHP <= 0 || enemyHP <= 0
                     ? "loading loading-ring loading-sm btn-disabled"
                     : ""
                 }`}
                 onClick={() => attack("magic2")}
+                data-tip="知力依存の魔法攻撃。減衰を受けにくく、かつブレ幅が大きい"
                 disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
               >
                 {isAttacking || playerHP <= 0 || enemyHP <= 0
@@ -414,12 +419,13 @@ export const Battle = () => {
             {playerHP <= 33 && (
               <div className="flex space-x-2 pt-3">
                 <button
-                  className={`btn btn-warning w-full ${
+                  className={`btn btn-warning w-full tooltip${
                     isAttacking || playerHP <= 0 || enemyHP <= 0
                       ? "loading loading-ring loading-sm btn-disabled"
                       : ""
                   }`}
                   onClick={() => attack("limit")}
+                  data-tip="瀕死の一撃。筋力と知力を解き放つ"
                   disabled={isAttacking || playerHP <= 0 || enemyHP <= 0}
                 >
                   {isAttacking || playerHP <= 0 || enemyHP <= 0

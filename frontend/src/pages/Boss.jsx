@@ -495,8 +495,9 @@ export const Boss = () => {
                 <p className="text-lg">HP: {playerHP}</p>
               </div>
             </div>
-            <div className="flex space-x-2">
-              {!gameStarted ? (
+
+            {!gameStarted ? (
+              <div className="flex space-x-2">
                 <button
                   onClick={restartGame}
                   className="btn btn-primary btn-block"
@@ -504,43 +505,94 @@ export const Boss = () => {
                 >
                   はなす
                 </button>
-              ) : (
-                <>
-                  <div className="flex flex-col space-y-2 w-full">
+              </div>
+            ) : (
+              <>
+                {/* コマンドボタン */}
+                <div className="flex space-x-2">
+                  <button
+                    className={`btn btn-primary w-1/2 tooltip ${
+                      isAttacking || playerHP <= 0 || bossHP <= 0
+                        ? "loading loading-ring loading-sm btn-disabled"
+                        : ""
+                    }`}
+                    onClick={() => attack("attack")}
+                    data-tip="筋力依存の物理攻撃"
+                    disabled={isAttacking || playerHP <= 0 || bossHP <= 0}
+                  >
+                    {isAttacking || playerHP <= 0 || bossHP <= 0
+                      ? "たたかえない！"
+                      : "たたかう"}
+                  </button>
+
+                  <button
+                    className={`btn btn-primary w-1/2 tooltip${
+                      isAttacking || playerHP <= 0 || bossHP <= 0
+                        ? "loading loading-ring loading-sm btn-disabled"
+                        : ""
+                    }`}
+                    onClick={() => attack("power")}
+                    data-tip="筋力依存の物理攻撃。ブレ幅が大きい一振り"
+                    disabled={isAttacking || playerHP <= 0 || bossHP <= 0}
+                  >
+                    {isAttacking || playerHP <= 0 || bossHP <= 0
+                      ? "たたかえない！"
+                      : "渾身"}
+                  </button>
+                </div>
+
+                <div className="flex space-x-2 pt-3">
+                  <button
+                    className={`btn btn-primary w-1/2 tooltip${
+                      isAttacking || playerHP <= 0 || bossHP <= 0
+                        ? "loading loading-ring loading-sm btn-disabled"
+                        : ""
+                    }`}
+                    onClick={() => attack("magic1")}
+                    data-tip="知力依存の魔法攻撃。エネミーの防御による減衰を受けにくい"
+                    disabled={isAttacking || playerHP <= 0 || bossHP <= 0}
+                  >
+                    {isAttacking || playerHP <= 0 || bossHP <= 0
+                      ? "たたかえない！"
+                      : "まほう（炎）"}
+                  </button>
+
+                  <button
+                    className={`btn btn-primary w-1/2 tooltip${
+                      isAttacking || playerHP <= 0 || bossHP <= 0
+                        ? "loading loading-ring loading-sm btn-disabled"
+                        : ""
+                    }`}
+                    onClick={() => attack("magic2")}
+                    data-tip="知力依存の魔法攻撃。減衰を受けにくく、かつブレ幅が大きい"
+                    disabled={isAttacking || playerHP <= 0 || bossHP <= 0}
+                  >
+                    {isAttacking || playerHP <= 0 || bossHP <= 0
+                      ? "たたかえない！"
+                      : "まほう（氷）"}
+                  </button>
+                </div>
+
+                {playerHP <= 33 && (
+                  <div className="flex space-x-2 pt-3">
                     <button
-                      className={`btn btn-primary w-full btn-block ${
-                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                      className={`btn btn-warning w-full tooltip${
+                        isAttacking || playerHP <= 0 || bossHP <= 0
                           ? "loading loading-ring loading-sm btn-disabled"
                           : ""
                       }`}
-                      onClick={() => attack("attack")}
-                      disabled={
-                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                      }
+                      onClick={() => attack("limit")}
+                      data-tip="瀕死の一撃。筋力と知力を解き放つ"
+                      disabled={isAttacking || playerHP <= 0 || bossHP <= 0}
                     >
-                      {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
+                      {isAttacking || playerHP <= 0 || bossHP <= 0
                         ? "たたかえない！"
-                        : "たたかう"}
-                    </button>
-                    <button
-                      className={`btn btn-primary w-full btn-block ${
-                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                          ? "loading loading-ring loading-sm btn-disabled"
-                          : ""
-                      }`}
-                      onClick={() => attack("magic")}
-                      disabled={
-                        isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                      }
-                    >
-                      {isAttacking || playerHP <= 0 || bossHP <= 0 || gameOver
-                        ? "たたかえない！"
-                        : "まほう"}
+                        : "リミット"}
                     </button>
                   </div>
-                </>
-              )}
-            </div>
+                )}
+              </>
+            )}
           </div>
 
           <div className="bg-base-200 p-4 rounded-box md:col-span-2">
