@@ -4,15 +4,22 @@
 
 このアプリは、日々の習慣を楽しく継続させるためのサポートを目的としています。往年のレトロ RPG の世界観をベースにしたデザインで、毎日の活動を記録し、成長を実感することができます。ゲーミフィケーション設計や、緩やかな SNS 機能によりモチベーションを高く保つことができ、心理的な壁となる"3 日連続継続"のサイクルを積み重ねていきます。
 
-##　デプロイ URL
+## デプロイ URL
 https://mao-the-3rd-day-front-e8eb3156d3f2.herokuapp.com/
 
-#### アプリ名の由来
+## スクリーンショット
+![スクリーンショット 2024-05-29 20 05 21](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/afdebdef-fff0-4bca-b206-0ed6736dd336)
+![スクリーンショット 2024-05-29 20 10 06](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/2bdf64c7-f8cc-4131-9ade-05aca3615920)
+![スクリーンショット 2024-05-29 20 11 46](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/3f5f9d78-528a-4d95-9adf-c2ec5356b85a)
+![スクリーンショット 2024-05-29 20 19 35](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/06874deb-86cd-4330-82ad-402794c7b0cf)
+
+
+## アプリ名の由来
 
 - 3 日坊主に打ち克つことがまずは大切だと考え、そこをボス(魔王)に見立てています。
 - 英名である MAO は Motivation(モチベーション), Achievement(達成), Overcome(克服)のダブルミーニングです。
 
-#### 主な特徴
+## 主な特徴
 
 - 習慣づけ支援: 毎日の活動を記録して、目標達成への道を楽しくサポートします。活動は運動でも、勉強でも家族サービスでも構いません。3 日坊主の壁を越えて習慣化していきましょう。
 - RPG の世界観: ゲーム感覚で習慣づけを続けられます。キャラクターが成長する喜びを体験できます。
@@ -108,6 +115,10 @@ https://app.diagrams.net/#HMaTTalv001%2FMAO_the_3rd_Day%2FER_diagram%2FMAO_ER.dr
 - Omniauth および Google ログイン
 - S3(ActiveStorage)
 - heroku
+
+## 構成図
+
+<img width="3004" alt="MAO_Architect (2)" src="https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/a4245ab7-d1f9-4118-a41e-e0c7a5f2d7ed">
 
 ## アップデート
 
