@@ -25,9 +25,12 @@ https://mao-the-3rd-day-front-e8eb3156d3f2.herokuapp.com/
 
 ## スクリーンショット
 
-![スクリーンショット 2024-05-29 20 10 06](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/2bdf64c7-f8cc-4131-9ade-05aca3615920)
-![スクリーンショット 2024-05-29 20 11 46](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/3f5f9d78-528a-4d95-9adf-c2ec5356b85a)
-![スクリーンショット 2024-05-29 20 19 35](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/06874deb-86cd-4330-82ad-402794c7b0cf)
+
+<p align="center">
+  <img src="https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/02ca247a-41f0-42b8-8760-f67da411d66d" alt="スクリーンショット 2024-05-29 22 39 47" width="300">
+  <img src="https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/7f36dc25-64dc-4ca7-a188-1e2e23f4e2ef" alt="スクリーンショット 2024-05-29 22 40 29" width="300">
+  <img src="https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/cc087347-6566-4f36-87d2-eb0196a1a5b0" alt="スクリーンショット 2024-05-29 22 40 42" width="300">
+</p>
 
 
 ## アプリ名の由来
