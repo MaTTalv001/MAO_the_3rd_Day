@@ -1,4 +1,20 @@
 # 三日目に魔王がいる (MAO_the_3rd_Day)
+<p align="left">
+  <img src="https://img.shields.io/badge/Rails-D30001?logo=rubyonrails&style=flat">
+  <img src="https://img.shields.io/badge/React-555?logo=react&style=popout">
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?logo=tailwind-css&style=flat">
+  <img src="https://img.shields.io/badge/DaisyUI-5A0EF8?logo=daisyui&style=flat">
+  <img src="https://img.shields.io/badge/Amazon%20S3-569A31?logo=amazon-aws&style=flat">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&style=flat">
+  <img src="https://img.shields.io/badge/Heroku-430098?logo=heroku&style=flat">
+  <img src="https://img.shields.io/badge/Docker-555?logo=docker&style=popout">
+  <img src="https://img.shields.io/badge/GitHub-181717?logo=github&style=popout">
+  <img src="https://img.shields.io/badge/OpenAI-412991?logo=openai&style=flat">
+  <img src="https://img.shields.io/badge/Google%20Cloud%20Platform-4285F4?logo=google-cloud&style=flat">
+</p>
+
+![スクリーンショット 2024-05-29 20 05 21](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/afdebdef-fff0-4bca-b206-0ed6736dd336)
+
 
 ## サービス概要
 
@@ -8,7 +24,7 @@
 https://mao-the-3rd-day-front-e8eb3156d3f2.herokuapp.com/
 
 ## スクリーンショット
-![スクリーンショット 2024-05-29 20 05 21](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/afdebdef-fff0-4bca-b206-0ed6736dd336)
+
 ![スクリーンショット 2024-05-29 20 10 06](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/2bdf64c7-f8cc-4131-9ade-05aca3615920)
 ![スクリーンショット 2024-05-29 20 11 46](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/3f5f9d78-528a-4d95-9adf-c2ec5356b85a)
 ![スクリーンショット 2024-05-29 20 19 35](https://github.com/MaTTalv001/MAO_the_3rd_Day/assets/148398286/06874deb-86cd-4330-82ad-402794c7b0cf)
