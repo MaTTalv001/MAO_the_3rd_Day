@@ -72,20 +72,7 @@ export const CreateAvatar = () => {
     const job_id = jobs.find((job) => job.name === selectedJob).id;
     const item_id = jobs.find((job) => job.id === job_id).item_id;
     try {
-      const response = await fetch(
-        `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ prompt, job_id }),
-        }
-      );
-      const avatar = await response.json();
-      setGeneratedAvatar(avatar.avatar_url);
-
+      //アイテム消費
       const deleteItemResponse = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/items/${item_id}/consume`,
         {
@@ -100,8 +87,24 @@ export const CreateAvatar = () => {
         const updatedUser = await deleteItemResponse.json();
         setCurrentUser(updatedUser);
       } else {
-        console.error("アイテム消費処理に失敗しました:", deleteItemResponse.statusText);
+        console.error(
+          "アイテム消費処理に失敗しました:",
+          deleteItemResponse.statusText
+        );
       }
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt, job_id }),
+        }
+      );
+      const avatar = await response.json();
+      setGeneratedAvatar(avatar.avatar_url);
     } catch (error) {
       console.error("アバター生成に失敗しました:", error);
     } finally {
@@ -311,7 +314,7 @@ export const CreateAvatar = () => {
               <span className="loading loading-dots loading-xs"></span>{" "}
             </h3>
             <p className="py-4">
-              アバターを生成しています。少々お待ちください。
+              アバターを生成しています。このままお待ちください。
             </p>
             <img
               src="/imgs/npc/god.png"
