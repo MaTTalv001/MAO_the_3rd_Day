@@ -42,6 +42,7 @@ class User < ApplicationRecord
 
   # indexとshowで分岐させて情報量を制御する
   def as_json(options = {})
+  Rails.logger.debug "as_json called with options: #{options.inspect}"
   if options[:index_view]
     super(options.merge(
       methods: [:latest_avatar_url, :latest_status_as_json, :latest_job],
@@ -74,6 +75,7 @@ class User < ApplicationRecord
       }
     )).tap do |hash|
       hash[:latest_status] = latest_status_as_json
+      Rails.logger.debug "as_json result: #{hash.inspect}"
     end
   end
 end

@@ -155,6 +155,11 @@ export const Boss = () => {
 
   // バトル後に魔王戦条件をロック
   const lockSpecialMode = async () => {
+    if (!currentUser.special_mode_unlocked) {
+      console.log("魔王戦はすでにロックされています");
+      return;
+    }
+
     try {
       const response = await fetch(
         `${API_URL}/api/v1/special_modes/participate`,
@@ -166,10 +171,12 @@ export const Boss = () => {
           },
         }
       );
+
       if (response.ok) {
         setCurrentUser({ ...currentUser, special_mode_unlocked: false });
       } else {
-        console.error("魔王戦条件のロックに失敗しました");
+        const errorData = await response.json();
+        console.error("魔王戦条件のロックに失敗しました:", errorData.error);
       }
     } catch (error) {
       console.error("魔王戦条件のロックに失敗しました:", error);
