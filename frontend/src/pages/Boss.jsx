@@ -6,6 +6,9 @@ import GameLog from "../components/GameLog";
 import { Link } from "react-router-dom";
 import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
 import { calculateDamage } from "../services/DamageCalculator"; //ダメージ計算メソッド
+import SlashEffect from "../effects/SlashEffect"; // エフェクト
+import FireMagicEffect from "../effects/FireMagicEffect"; // エフェクト
+import IceMagicEffect from "../effects/IceMagicEffect"; // エフェクト
 
 export const Boss = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -25,6 +28,9 @@ export const Boss = () => {
   const [showModal, setShowModal] = useState(false);
   const [chatGptResponse, setChatGptResponse] = useState(null); //ChatGPT
   const [gameStarted, setGameStarted] = useState(false); // ゲーム開始状態を管理するフラグ
+  const [showSlashEffect, setShowSlashEffect] = useState(false);
+  const [showFireMagicEffect, setShowFireMagicEffect] = useState(false);
+  const [showIceMagicEffect, setShowIceMagicEffect] = useState(false);
 
   //バトルログを抽出し、累積ダメージ分を減算させる
   //logs配列をループして、最後に勝利した戦闘ログのインデックス（lastVictoryIndex）を特定
@@ -216,6 +222,18 @@ export const Boss = () => {
 
     setGameLog([]);
     setIsAttacking(true);
+    //攻撃タイプによってエフェクトを切り替える
+    if (attackType === "attack" || attackType === "power") {
+      setShowSlashEffect(true);
+    } else if (attackType === "magic1") {
+      setShowFireMagicEffect(true);
+    } else if (attackType === "magic2") {
+      setShowIceMagicEffect(true);
+    } else {
+      setShowSlashEffect(true);
+      setShowFireMagicEffect(true);
+      setShowIceMagicEffect(true);
+    }
 
     //ダメージ計算式を呼び出す
     const { finalPlayerDamage, finalEnemyDamage } = calculateDamage(
@@ -238,7 +256,15 @@ export const Boss = () => {
         setGameLog((prevLog) => [
           ...prevLog,
           `${currentUser.nickname}の${
-            attackType === "attack" ? "攻撃" : "まほう"
+            attackType === "attack"
+              ? "攻撃"
+              : attackType === "magic1"
+              ? "まほう（炎）"
+              : attackType === "magic2"
+              ? "まほう(氷)"
+              : attackType === "power"
+              ? "渾身"
+              : "リミット技"
           }、${finalPlayerDamage}のダメージ`,
         ]);
 
@@ -338,7 +364,15 @@ export const Boss = () => {
           setGameLog((prevLog) => [
             ...prevLog,
             `${currentUser.nickname}の${
-              attackType === "attack" ? "攻撃" : "まほう"
+              attackType === "attack"
+                ? "攻撃"
+                : attackType === "magic1"
+                ? "まほう（炎）"
+                : attackType === "magic2"
+                ? "まほう(氷)"
+                : attackType === "power"
+                ? "渾身"
+                : "リミット技"
             }、${finalPlayerDamage}のダメージ`,
           ]);
 
@@ -471,10 +505,57 @@ export const Boss = () => {
             <p className="text-lg">HP: {bossHP}</p>
             <p className="text-lg">残りターン: {turnsLeft}</p>
           </div>
+          {/*エフェクト*/}
           <div
             className="aspect-w-1 aspect-h-1 mx-auto"
-            style={{ maxWidth: "300px" }}
+            style={{ maxWidth: "300px", position: "relative" }}
           >
+            {showSlashEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {" "}
+                <SlashEffect onComplete={() => setShowSlashEffect(false)} />
+              </div>
+            )}
+            {showFireMagicEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <FireMagicEffect
+                  onComplete={() => setShowFireMagicEffect(false)}
+                />
+              </div>
+            )}
+            {showIceMagicEffect && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <IceMagicEffect
+                  onComplete={() => setShowIceMagicEffect(false)}
+                />
+              </div>
+            )}
+            {/*エフェクトここまで */}
+
             <img
               src={boss.boss_url}
               alt="Boss"
