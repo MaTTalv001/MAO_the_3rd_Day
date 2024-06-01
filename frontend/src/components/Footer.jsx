@@ -18,6 +18,14 @@ export const Footer = () => {
           >
             プライバシーポリシー
           </Link>
+          <a
+            href="https://forms.gle/oZfVDPbu9zDS9GbSA"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-lg font-semibold hover:underline"
+          >
+            お問い合わせ
+          </a>
         </div>
         <div className="flex space-x-4">
           <a
