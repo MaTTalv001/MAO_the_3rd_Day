@@ -5,6 +5,8 @@ import ActivityEntry from "../components/ActivityEntry";
 import ActivityShow from "../components/ActivityShow";
 import RadarChart from "../components/RadarChart";
 import { API_URL, FRONT_URL } from "../config/settings";
+import { useHasBattledToday } from "../services/HasBattledToday";
+import { handleTweet } from "../services/HandleTweet";
 
 export const MyPage = () => {
   const { currentUser: authUser, token } = useAuth();
@@ -19,7 +21,6 @@ export const MyPage = () => {
   const [showAllAvatars, setShowAllAvatars] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hasBattledToday, setHasBattledToday] = useState(false);
   const [hasBossBattledToday, setHasBossBattledToday] = useState(false);
 
   useEffect(() => {
@@ -27,21 +28,8 @@ export const MyPage = () => {
     setEditedNickname(authUser?.nickname || "");
     setEditedProfile(authUser?.profile || "");
   }, [authUser]);
-  // 今日の討伐が完了しているか
-  useEffect(() => {
-    if (currentUser && currentUser.battle_logs) {
-      const today = new Date();
-      const todayBattles = currentUser.battle_logs.filter((log) => {
-        const logDate = new Date(log.created_at);
-        return (
-          logDate.getFullYear() === today.getFullYear() &&
-          logDate.getMonth() === today.getMonth() &&
-          logDate.getDate() === today.getDate()
-        );
-      });
-      setHasBattledToday(todayBattles.length > 0);
-    }
-  }, [currentUser]);
+  // ログインユーザーのバトルログをチェックして本日バトルしたかどうかを設定
+  const hasBattledToday = useHasBattledToday(currentUser);
 
   // 今日のボス討伐が完了しているか
   useEffect(() => {
@@ -177,16 +165,16 @@ export const MyPage = () => {
     }
   };
 
-  const handleTweet = () => {
-    const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
-    const imagePath = selectedAvatar.avatar_url.replace(baseUrl, "");
-    const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
-    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-      `${FRONT_URL}/public_avatar?image=${imagePath}`
-    )}&text=${encodeURIComponent(tweetText)}`;
+  // const handleTweet = () => {
+  //   const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
+  //   const imagePath = selectedAvatar.avatar_url.replace(baseUrl, "");
+  //   const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
+  //   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+  //     `${FRONT_URL}/public_avatar?image=${imagePath}`
+  //   )}&text=${encodeURIComponent(tweetText)}`;
 
-    window.open(twitterUrl, "_blank");
-  };
+  //   window.open(twitterUrl, "_blank");
+  // };
 
   if (!currentUser) {
     return (
@@ -465,7 +453,9 @@ export const MyPage = () => {
               />
               <div className="flex space-x-2">
                 <button
-                  onClick={handleTweet}
+                  onClick={() =>
+                    handleTweet(selectedAvatar.avatar_url, FRONT_URL)
+                  }
                   className="btn btn-primary flex items-center"
                 >
                   <svg

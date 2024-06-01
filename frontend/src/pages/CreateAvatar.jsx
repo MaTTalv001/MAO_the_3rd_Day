@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/auth";
 import { API_URL, FRONT_URL } from "../config/settings";
 import { Link } from "react-router-dom";
+import { handleTweet } from "../services/HandleTweet";
 
 export const CreateAvatar = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -182,16 +183,17 @@ export const CreateAvatar = () => {
     );
   }
 
-  const handleTweet = () => {
-    const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
-    const imagePath = generatedAvatar.replace(baseUrl, "");
-    const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
-    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-      `${FRONT_URL}/public_avatar?image=${imagePath}`
-    )}&text=${encodeURIComponent(tweetText)}`;
+  //Xシェア機能は外にコード切り出し
+  // const handleTweet = () => {
+  //   const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
+  //   const imagePath = generatedAvatar.replace(baseUrl, "");
+  //   const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
+  //   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+  //     `${FRONT_URL}/public_avatar?image=${imagePath}`
+  //   )}&text=${encodeURIComponent(tweetText)}`;
 
-    window.open(twitterUrl, "_blank");
-  };
+  //   window.open(twitterUrl, "_blank");
+  // };
 
   return (
     <div className="container mx-auto p-4 max-w-5xl min-h-screen">
@@ -407,7 +409,7 @@ export const CreateAvatar = () => {
                   className="w-full h-96 object-cover object-position-top rounded mb-2"
                 />
                 <button
-                  onClick={handleTweet}
+                  onClick={() => handleTweet(generatedAvatar, FRONT_URL)}
                   className="btn btn-primary flex items-center"
                 >
                   <svg
