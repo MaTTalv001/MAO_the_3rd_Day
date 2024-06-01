@@ -5,6 +5,7 @@ import { API_URL } from "../config/settings";
 import { Link } from "react-router-dom";
 import { FRONT_URL } from "../config/settings";
 import { ActivityCard } from "../components/ActivityCard";
+import RadarChart from "../components/RadarChart";
 
 export const UsersShow = () => {
   const { currentUser } = useAuth();
@@ -16,7 +17,9 @@ export const UsersShow = () => {
     fetch(`${API_URL}/api/v1/users/${id}`)
       .then((response) => response.json())
       .then((data) => setUser(data))
-      .catch((error) => console.error("ユーザー詳細を取得できませんでした:", error));
+      .catch((error) =>
+        console.error("ユーザー詳細を取得できませんでした:", error)
+      );
   }, [id]);
 
   if (!user) {
@@ -52,11 +55,12 @@ export const UsersShow = () => {
             <p>Level: {user.latest_status.level}</p>
             <p>{user.latest_status.job.name}</p>
             <p>HP: {user.latest_status.hp}</p>
-            <p>体力: {user.latest_status.strength}</p>
+            <RadarChart currentUser={user} />
+            {/* <p>体力: {user.latest_status.strength}</p>
             <p>知力: {user.latest_status.intelligence}</p>
             <p>精神: {user.latest_status.wisdom}</p>
             <p>素速さ: {user.latest_status.dexterity}</p>
-            <p>カリスマ: {user.latest_status.charisma}</p>
+            <p>カリスマ: {user.latest_status.charisma}</p> */}
             <p className="mt-4">3日達成数: {user.achievement ?? 0}</p>
             <div className="mt-4 bg-base-300 p-2 rounded-lg">
               <h3 className="text-lg font-bold mb-2">プロフィール</h3>

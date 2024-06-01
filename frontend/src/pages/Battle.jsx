@@ -9,6 +9,8 @@ import { calculateDamage } from "../services/DamageCalculator"; //ダメージ�
 import SlashEffect from "../effects/SlashEffect"; // エフェクト
 import FireMagicEffect from "../effects/FireMagicEffect"; // エフェクト
 import IceMagicEffect from "../effects/IceMagicEffect"; // エフェクト
+import { saveBattleLog } from "../services/BattleLogService"; //バトルログの保存
+import { useHasBattledToday } from "../services/HasBattledToday";
 
 //Battleコンポーネント
 export const Battle = () => {
@@ -23,7 +25,7 @@ export const Battle = () => {
   const [attackTimeoutId, setAttackTimeoutId] = useState(null); // 攻撃タイムアウトIDの管理
   const [background, setBackground] = useState(null); // 背景の状態管理
   const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
-  const [hasBattledToday, setHasBattledToday] = useState(false); // 本日のバトル実施状況の管理
+  //const [hasBattledToday, setHasBattledToday] = useState(false); // 本日のバトル実施状況の管理
   const [showSlashEffect, setShowSlashEffect] = useState(false);
   const [showFireMagicEffect, setShowFireMagicEffect] = useState(false);
   const [showIceMagicEffect, setShowIceMagicEffect] = useState(false);
@@ -42,23 +44,7 @@ export const Battle = () => {
   }, []);
 
   // ログインユーザーのバトルログをチェックして本日バトルしたかどうかを設定
-  useEffect(() => {
-    if (currentUser && currentUser.battle_logs) {
-      const today = new Date();
-      // currentUserのバトルログから、本日行われたバトルをフィルタリング
-      const todayBattles = currentUser.battle_logs.filter((log) => {
-        const logDate = new Date(log.created_at); // 各バトルログの日付を取得
-        return (
-          // バトルログの日付が今日の日付と同じかどうかをチェック
-          logDate.getFullYear() === today.getFullYear() &&
-          logDate.getMonth() === today.getMonth() &&
-          logDate.getDate() === today.getDate()
-        );
-      });
-      // 今日行われたバトルが一つ以上あれば、hasBattledTodayをtrueに設定
-      setHasBattledToday(todayBattles.length > 0);
-    }
-  }, [currentUser]);
+  const hasBattledToday = useHasBattledToday(currentUser);
 
   // 背景をランダムに設定
   useEffect(() => {
@@ -75,26 +61,10 @@ export const Battle = () => {
     }
   }, [currentUser]);
 
-  // バトルログを保存
-  const saveBattleLog = async (result) => {
-    if (!currentUser || !enemy) return;
+  // saveBattleLogサービスにバトル結果を渡してログ保存
+  const handleBattleLogSave = async (result) => {
     try {
-      const response = await fetch(`${API_URL}/api/v1/battle_logs`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          user_id: currentUser.id,
-          enemy_id: enemy.id,
-          result: result,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("バトルログの保存に失敗しました");
-      }
-      const newLog = await response.json();
+      const newLog = await saveBattleLog(currentUser, enemy, token, result);
       setCurrentUser((prevUser) => ({
         ...prevUser,
         battle_logs: [...prevUser.battle_logs, newLog],
@@ -102,6 +72,25 @@ export const Battle = () => {
     } catch (error) {
       console.error("バトルログの保存に失敗しました:", error);
     }
+  };
+
+  //バトルエフェクトの画面表示
+  const BattleEffect = ({ show, children }) => {
+    if (!show) return null;
+
+    return (
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        {children}
+      </div>
+    );
   };
 
   // 攻撃処理
@@ -169,7 +158,7 @@ export const Battle = () => {
 
         if (enemyHP - totalDamage <= 0) {
           setGameLog([`${enemy.name}をたおした`]);
-          saveBattleLog(true); // 勝利を保存
+          handleBattleLogSave(true);
           const amounts = [10, 20, 30];
           const amount = amounts[Math.floor(Math.random() * amounts.length)];
           gainCoins(
@@ -191,10 +180,10 @@ export const Battle = () => {
           ...prevLog,
           `${enemy.name}の攻撃、${finalEnemyDamage}のダメージ`,
         ]);
-        triggerShakeEffect();
+
         if (playerHP - finalEnemyDamage <= 0) {
           setGameLog(["全滅した"]);
-          saveBattleLog(false); // 敗北を保存
+          handleBattleLogSave(false);
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -212,10 +201,10 @@ export const Battle = () => {
               ...prevLog,
               `${enemy.name}の攻撃、${finalEnemyDamage}のダメージ`,
             ]);
-            triggerShakeEffect();
+
             if (playerHP - finalEnemyDamage <= 0) {
               setGameLog(["全滅した"]);
-              saveBattleLog(false); // 敗北を保存
+              handleBattleLogSave(false);
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -255,7 +244,7 @@ export const Battle = () => {
 
           if (enemyHP - totalDamage <= 0) {
             setGameLog([`${enemy.name}をたおした`]);
-            saveBattleLog(true); // 勝利を保存
+            handleBattleLogSave(true);
             const amounts = [10, 20, 30];
             const amount = amounts[Math.floor(Math.random() * amounts.length)];
             gainCoins(
@@ -290,17 +279,6 @@ export const Battle = () => {
     setShowRestart(false);
     setGameOver(false);
     setAttackTimeoutId(null);
-  };
-
-  // 攻撃エフェクトのトリガー
-  const triggerShakeEffect = () => {
-    const body = document.body;
-    body.classList.add("shake-animation");
-    console.log("triggerShakeEffect");
-
-    setTimeout(() => {
-      body.classList.remove("shake-animation");
-    }, 500);
   };
 
   // 初期状態が揃っていない場合のロード画面表示
@@ -339,54 +317,22 @@ export const Battle = () => {
             <h2 className="text-2xl font-bold">{enemy.name}</h2>
             <p className="text-lg">HP: {enemyHP}</p>
           </div>
+          {/*バトルエフェクト */}
           <div
             className="aspect-w-1 aspect-h-1 mx-auto"
             style={{ maxWidth: "300px", position: "relative" }}
           >
-            {showSlashEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                {" "}
-                <SlashEffect onComplete={() => setShowSlashEffect(false)} />
-              </div>
-            )}
-            {showFireMagicEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <FireMagicEffect
-                  onComplete={() => setShowFireMagicEffect(false)}
-                />
-              </div>
-            )}
-            {showIceMagicEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <IceMagicEffect
-                  onComplete={() => setShowIceMagicEffect(false)}
-                />
-              </div>
-            )}
+            <BattleEffect show={showSlashEffect}>
+              <SlashEffect onComplete={() => setShowSlashEffect(false)} />
+            </BattleEffect>
+            <BattleEffect show={showFireMagicEffect}>
+              <FireMagicEffect
+                onComplete={() => setShowFireMagicEffect(false)}
+              />
+            </BattleEffect>
+            <BattleEffect show={showIceMagicEffect}>
+              <IceMagicEffect onComplete={() => setShowIceMagicEffect(false)} />
+            </BattleEffect>
             <img
               src={enemy.enemy_url}
               alt="Monster"
@@ -395,6 +341,7 @@ export const Battle = () => {
           </div>
         </div>
       </div>
+      {/*ここまでバトルエフェクト */}
 
       <div className="container mx-auto py-8 max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-4">
