@@ -240,7 +240,7 @@ export const CreateAvatar = () => {
             <div
               tabIndex={0}
               role="button"
-              className="btn mb-2 btn-lg btn-accent w-fit text-xl"
+              className="btn mb-2 btn-lg btn-accent w-fit "
               style={{ minWidth: "200px" }}
             >
               {selectedGender ? selectedGender : "未選択"}
