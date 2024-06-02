@@ -9,6 +9,7 @@ import { calculateDamage } from "../services/DamageCalculator"; //ダメージ�
 import SlashEffect from "../effects/SlashEffect"; // エフェクト
 import FireMagicEffect from "../effects/FireMagicEffect"; // エフェクト
 import IceMagicEffect from "../effects/IceMagicEffect"; // エフェクト
+import { useHasBossedToday } from "../services/HasBossBattledToday";
 
 export const Boss = () => {
   const { currentUser, token, setCurrentUser } = useAuth();
@@ -31,6 +32,7 @@ export const Boss = () => {
   const [showSlashEffect, setShowSlashEffect] = useState(false);
   const [showFireMagicEffect, setShowFireMagicEffect] = useState(false);
   const [showIceMagicEffect, setShowIceMagicEffect] = useState(false);
+  const hasBossedToday = useHasBossedToday(currentUser);
 
   //バトルログを抽出し、累積ダメージ分を減算させる
   //logs配列をループして、最後に勝利した戦闘ログのインデックス（lastVictoryIndex）を特定
@@ -126,31 +128,25 @@ export const Boss = () => {
   //   }
   // }, [chatGptResponse]);
 
+  //今日の戦歴があるかどうかの判定
   useEffect(() => {
-    if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
-      const today = new Date().toISOString().slice(0, 10);
-      const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
-        return log.created_at.slice(0, 10) === today;
-      });
-      if (hasTodaysBattleLog) {
-        setGameOver(true);
-      }
-      setBattleChecked(true);
+    if (hasBossedToday) {
+      setGameOver(true);
     }
-  }, [currentUser, battleChecked]);
-
-  useEffect(() => {
-    if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
-      const today = new Date().toISOString().slice(0, 10);
-      const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
-        return log.created_at.slice(0, 10) === today;
-      });
-      if (hasTodaysBattleLog) {
-        setGameOver(true);
-      }
-      setBattleChecked(true);
-    }
-  }, [currentUser, battleChecked]);
+  }, [hasBossedToday]);
+  //リファクタリングでHasBossBattledToday.jsx　に切り出し
+  // useEffect(() => {
+  //   if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
+  //     const today = new Date().toISOString().slice(0, 10);
+  //     const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
+  //       return log.created_at.slice(0, 10) === today;
+  //     });
+  //     if (hasTodaysBattleLog) {
+  //       setGameOver(true);
+  //     }
+  //     setBattleChecked(true);
+  //   }
+  // }, [currentUser, battleChecked]);
 
   // 魔王戦説明モーダル
   useEffect(() => {
@@ -217,6 +213,26 @@ export const Boss = () => {
     }
   };
 
+  //バトルエフェクトの画面表示
+  const BattleEffect = ({ show, children }) => {
+    if (!show) return null;
+
+    return (
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        {children}
+      </div>
+    );
+  };
+
+  // 攻撃処理
   const attack = (attackType) => {
     if (gameOver) return;
 
@@ -510,50 +526,17 @@ export const Boss = () => {
             className="aspect-w-1 aspect-h-1 mx-auto"
             style={{ maxWidth: "300px", position: "relative" }}
           >
-            {showSlashEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                {" "}
-                <SlashEffect onComplete={() => setShowSlashEffect(false)} />
-              </div>
-            )}
-            {showFireMagicEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <FireMagicEffect
-                  onComplete={() => setShowFireMagicEffect(false)}
-                />
-              </div>
-            )}
-            {showIceMagicEffect && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <IceMagicEffect
-                  onComplete={() => setShowIceMagicEffect(false)}
-                />
-              </div>
-            )}
+            <BattleEffect show={showSlashEffect}>
+              <SlashEffect onComplete={() => setShowSlashEffect(false)} />
+            </BattleEffect>
+            <BattleEffect show={showFireMagicEffect}>
+              <FireMagicEffect
+                onComplete={() => setShowFireMagicEffect(false)}
+              />
+            </BattleEffect>
+            <BattleEffect show={showIceMagicEffect}>
+              <IceMagicEffect onComplete={() => setShowIceMagicEffect(false)} />
+            </BattleEffect>
             {/*エフェクトここまで */}
 
             <img

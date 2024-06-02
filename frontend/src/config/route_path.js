@@ -47,4 +47,8 @@ export const RoutePath = {
     path: "/public_avatar",
     name: "アバター投稿",
   },
+  EnemyDirectory: {
+    path: "/enemy_list",
+    name: "討伐図鑑",
+  },
 };

@@ -197,6 +197,9 @@ export const MyPage = () => {
           <Link to={`/shop`} className="btn btn-ghost btn-xl">
             ショップ
           </Link>
+          <Link to={`/enemy_list`} className="btn btn-ghost btn-xl">
+            討伐図鑑
+          </Link>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

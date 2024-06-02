@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       post '/special_modes/participate', to: 'special_modes#participate'
       post '/users/:user_id/items/:item_id/consume', to: 'users#consume_item'
       get '/enemies/random', to: 'enemies#random'
+      get '/enemies', to: 'enemies#index'
       resources :battle_logs, only: [:create]
       resources :bosses, only: [:show]
       resources :boss_battle_logs, only: [:create, :index]
