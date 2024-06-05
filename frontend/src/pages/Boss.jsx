@@ -207,7 +207,10 @@ export const Boss = () => {
       if (result) {
         setTotalDamage(0);
       }
-      await lockSpecialMode(); // 特別モードをロックする
+      // lockSpecialModeの結果を待ってエラーハンドリングを追加
+      await lockSpecialMode().catch((error) => {
+        console.error("特別モードのロックに失敗しました:", error);
+      });
     } catch (error) {
       console.error("バトルログ記録に失敗しました:", error);
     }
