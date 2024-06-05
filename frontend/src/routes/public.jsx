@@ -15,6 +15,7 @@ import { PrivacyPolicy } from "../pages/PrivacyPolicy";
 import { TermsOfService } from "../pages/TermsOfService";
 import { PublicAvatar } from "../pages/PublicAvatar";
 import { EnemyDirectory } from "../components/EnemyDirectory";
+import { ItemDirectory } from "../components/ItemDirectory";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.TermsOfService.path, element: <TermsOfService /> },
       { path: RoutePath.PublicAvatar.path, element: <PublicAvatar /> },
       { path: RoutePath.EnemyDirectory.path, element: <EnemyDirectory /> },
+      { path: RoutePath.ItemDirectory.path, element: <ItemDirectory /> },
     ],
   },
 ];
