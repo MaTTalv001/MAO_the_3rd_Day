@@ -10,6 +10,9 @@ export const AvatarDirectory = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //To DO AvatarCreatreでアバター生成時にこのコンポーネントの画像を更新できていない
+  useEffect(() => {}, [currentUser.avatars]);
+
   // アバター更新
   const handleAvatarUpdate = async (avatarUrl) => {
     try {

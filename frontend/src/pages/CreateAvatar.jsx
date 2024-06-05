@@ -137,6 +137,7 @@ export const CreateAvatar = () => {
       // 新しいアバターURLをユーザー情報に反映
       setCurrentUser((prevUser) => ({
         ...prevUser,
+        avatars: [...prevUser.avatars, avatar],
         current_avatar_url: avatar.avatar_url,
       }));
 
@@ -179,8 +180,6 @@ export const CreateAvatar = () => {
       </div>
     );
   }
-
- 
 
   if (!currentUser) {
     return (

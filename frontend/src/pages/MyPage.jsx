@@ -354,7 +354,7 @@ export const MyPage = () => {
               className={`tab ${itemsTab === "items" ? "tab-active" : ""}`}
               onClick={() => setItemsTab("items")}
             >
-              所持品
+              コレクション
             </a>
             <a
               role="tab"
@@ -365,68 +365,43 @@ export const MyPage = () => {
             </a>
           </div>
           {itemsTab === "items" ? (
-            <>
-              <h2
-                className="text-xl font-bold mb-4 cursor-pointer"
-                onClick={openItemDirectoryModal}
-              >
-                所持品
-              </h2>
-              <h2
-                className="text-xl font-bold mb-4 cursor-pointer"
-                onClick={openEnemyDirectoryModal}
-              >
-                エネミー図鑑
-              </h2>
-              <h2
-                className="text-xl font-bold mb-4 cursor-pointer"
-                onClick={openAvatarDirectoryModal}
-              >
-                アバターリスト
-              </h2>
-              {currentUser.users_items.length > 0 ? (
-                <>
-                  <div className="flex flex-col divide-y divide-base-300">
-                    {currentUser.users_items
-                      .slice(
-                        0,
-                        showAllItems ? currentUser.users_items.length : 3
-                      )
-                      .map((userItem, index) => (
-                        <div key={index} className="py-4 relative">
-                          <div className="badge badge-primary absolute right-2 top-2">
-                            {userItem.amount}
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <img
-                              src={userItem.item.item_url}
-                              alt={userItem.item.name}
-                              className="w-16 h-16 object-contain"
-                            />
-                            <div>
-                              <h3 className="text-lg font-medium">
-                                {userItem.item.name}
-                              </h3>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                  {currentUser.users_items.length > 3 && (
-                    <button
-                      className="mt-4 text-primary underline"
-                      onClick={() => setShowAllItems(!showAllItems)}
-                    >
-                      {showAllItems ? "一部を表示" : "すべて表示"}
-                    </button>
-                  )}
-                </>
-              ) : (
-                <div className="h-40 flex items-center justify-center">
-                  <p className="text-lg">データがありません</p>
-                </div>
-              )}
-            </>
+            <div className="flex flex-col justify-center items-center ">
+              <>
+                <button
+                  className="btn btn-lg btn-block btn-neutral flex items-center my-4"
+                  onClick={openItemDirectoryModal}
+                >
+                  <img
+                    src="/imgs/items/item_008.png"
+                    alt="アイテム袋"
+                    className="w-12 h-auto mr-2"
+                  />
+                  アイテム袋
+                </button>
+                <button
+                  className="btn btn-lg btn-block btn-neutral flex items-center my-4"
+                  onClick={openAvatarDirectoryModal}
+                >
+                  <img
+                    src="/imgs/npc/god.png"
+                    alt="Myアバター"
+                    className="w-12 h-auto mr-2"
+                  />
+                  アバター録
+                </button>
+                <button
+                  className="btn btn-lg btn-block btn-neutral flex items-center my-4"
+                  onClick={openEnemyDirectoryModal}
+                >
+                  <img
+                    src="/imgs/enemies/monster001.png"
+                    alt="討伐図鑑"
+                    className="w-12 h-auto mr-2"
+                  />
+                  討伐図鑑
+                </button>
+              </>
+            </div>
           ) : (
             <>
               <h2 className="text-xl font-bold mb-4 cursor-pointer">
