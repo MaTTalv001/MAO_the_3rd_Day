@@ -51,4 +51,8 @@ export const RoutePath = {
     path: "/enemy_list",
     name: "討伐図鑑",
   },
+  ItemDirectory: {
+    path: "/item_list",
+    name: "アイテム図鑑",
+  },
 };

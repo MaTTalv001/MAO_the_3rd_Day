@@ -44,12 +44,6 @@ export const EnemyDirectory = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-4xl font-bold mb-4">討伐リスト</h1>
-        <Link to={`/MyPage`} className="btn btn-ghost btn-xl">
-          マイページ
-        </Link>
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {enemies.map((enemy) => (
           <div className="card bg-base-100 shadow-xl" key={enemy.id}>

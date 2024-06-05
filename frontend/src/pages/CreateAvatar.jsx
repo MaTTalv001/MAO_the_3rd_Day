@@ -133,6 +133,14 @@ export const CreateAvatar = () => {
       );
       const avatar = await response.json();
       setGeneratedAvatar(avatar.avatar_url);
+
+      // 新しいアバターURLをユーザー情報に反映
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        avatars: [...prevUser.avatars, avatar],
+        current_avatar_url: avatar.avatar_url,
+      }));
+
       setSelectedJob("未選択");
     } catch (error) {
       console.error("アバター生成に失敗しました:", error);
