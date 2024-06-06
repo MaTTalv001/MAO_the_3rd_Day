@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ActivityEntry from "../components/ActivityEntry";
 import ActivityShow from "../components/ActivityShow";
 import RadarChart from "../components/RadarChart";
+import LineChart from "../components/LineChart";
 import { API_URL, FRONT_URL } from "../config/settings";
 import { useHasBattledToday } from "../services/HasBattledToday";
 import { handleTweet } from "../services/HandleTweet";
@@ -185,17 +186,6 @@ export const MyPage = () => {
     }
   };
 
-  // const handleTweet = () => {
-  //   const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
-  //   const imagePath = selectedAvatar.avatar_url.replace(baseUrl, "");
-  //   const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
-  //   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-  //     `${FRONT_URL}/public_avatar?image=${imagePath}`
-  //   )}&text=${encodeURIComponent(tweetText)}`;
-
-  //   window.open(twitterUrl, "_blank");
-  // };
-
   if (!currentUser) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -240,9 +230,6 @@ export const MyPage = () => {
           </Link>
           <Link to={`/shop`} className="btn btn-ghost btn-xl">
             ショップ
-          </Link>
-          <Link to={`/enemy_list`} className="btn btn-ghost btn-xl">
-            討伐図鑑
           </Link>
         </div>
       </div>
@@ -309,13 +296,7 @@ export const MyPage = () => {
             <div className="text-center">
               <RadarChart currentUser={currentUser} />
             </div>
-            {/*
-            <p>筋力: {currentUser.latest_status.strength}</p>
-            <p>知力: {currentUser.latest_status.intelligence}</p>
-            <p>精神: {currentUser.latest_status.wisdom}</p>
-            <p>敏捷: {currentUser.latest_status.dexterity}</p>
-            <p>魅力: {currentUser.latest_status.charisma}</p> 
-            */}
+
             <p className="mt-4">3日達成数: {currentUser.achievement ?? 0}</p>
             <div className="mt-4 bg-base-300 p-2 rounded-lg">
               <div className="flex items-center mb-2">
@@ -463,15 +444,24 @@ export const MyPage = () => {
           >
             これまでの活動履歴
           </a>
+          <a
+            role="tab"
+            className={`tab ${activitiesTab === "chart" ? "tab-active" : ""}`}
+            onClick={() => setActivitiesTab("chart")}
+          >
+            活動推移グラフ
+          </a>
         </div>
-        {activitiesTab === "entry" ? (
+        {activitiesTab === "entry" && (
           <ActivityEntry
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
           />
-        ) : (
+        )}
+        {activitiesTab === "show" && (
           <ActivityShow activities={currentUser.activities} />
         )}
+        {activitiesTab === "chart" && <LineChart currentUser={currentUser} />}
       </div>
 
       {/* アバターモーダル */}
