@@ -303,7 +303,7 @@ export const Battle = () => {
   }
 
   return (
-    <div className="min-h-screen bg-base-100 py-10">
+    <div className="min-h-screen  py-10">
       {/* 上部: グラフィックコンテナ */}
       <div
         className="bg-center mx-auto py-8 max-w-4xl"
