@@ -235,7 +235,7 @@ export const MyPage = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* プロフィール */}
-        <div className="bg-base-200 p-4 rounded-lg">
+        <div className="bg-base-200 bg-opacity-60  p-4 rounded-lg">
           <div className="mb-2">
             {isNicknameEditing ? (
               <>
@@ -267,7 +267,7 @@ export const MyPage = () => {
             className="w-full h-auto mb-4 rounded-lg"
           />
           <Link to={`/create_avatar`} className="btn btn-accent w-full mb-1">
-            アバター変更
+            アバター生成
           </Link>
           {!hasBattledToday && (
             <Link to={`/battle`} className="btn btn-secondary w-full mb-1">
@@ -282,7 +282,7 @@ export const MyPage = () => {
         </div>
         {/* ステータス */}
         {currentUser.latest_status && (
-          <div className="bg-base-200 p-4 rounded-lg relative">
+          <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg relative">
             <h2 className="text-xl font-bold mb-2 flex items-center">
               ステータス
               <button onClick={openModal} className="ml-2 text-blue-500">
@@ -328,7 +328,7 @@ export const MyPage = () => {
           </div>
         )}
         {/* 所持品とアバター */}
-        <div className="bg-base-200 p-4 rounded-lg">
+        <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg">
           <div role="tablist" className="tabs tabs-lifted mb-4">
             <a
               role="tab"
@@ -428,7 +428,7 @@ export const MyPage = () => {
         {/* ここまで所持品とアバター */}
       </div>
       {/* 活動報告 */}
-      <div className="bg-base-200 mt-4 p-4 rounded-lg">
+      <div className="bg-base-200 bg-opacity-60 mt-4 p-4 rounded-lg">
         <div role="tablist" className="tabs tabs-lifted mb-4">
           <a
             role="tab"

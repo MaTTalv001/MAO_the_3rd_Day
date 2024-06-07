@@ -3,7 +3,7 @@ import React from "react";
 export const TitleComponent = () => {
   return (
     <div className="container mx-auto px-4 mt-5">
-      <div className="bg-base-100 p-4 rounded-lg mb-10">
+      <div className="bg-base-100 bg-opacity-60 p-4 rounded-lg mb-10">
         <div
           className="hero min-h-screen rounded-lg"
           style={{
