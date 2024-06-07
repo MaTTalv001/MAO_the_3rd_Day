@@ -34,7 +34,7 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center">
+    <div className="min-h-screen  flex flex-col items-center justify-center">
       <div className="container mx-auto px-4 mb-10 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex justify-center">
