@@ -132,7 +132,10 @@ export const Users = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {users.map((user) => (
-          <div key={user.id} className="bg-base-200 p-4 rounded-lg">
+          <div
+            key={user.id}
+            className="bg-base-200 bg-opacity-60 p-4 rounded-lg"
+          >
             <div className="flex items-center mb-4">
               <img
                 src={user.current_avatar_url}

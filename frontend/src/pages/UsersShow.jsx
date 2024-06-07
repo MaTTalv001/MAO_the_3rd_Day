@@ -40,7 +40,7 @@ export const UsersShow = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* プロフィール */}
-        <div className="bg-base-200 p-4 rounded-lg">
+        <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg">
           <h2 className="text-2xl font-bold mb-2">{user.nickname}</h2>
           <img
             src={`${user.current_avatar_url}`}
@@ -50,7 +50,7 @@ export const UsersShow = () => {
         </div>
         {/* ステータス */}
         {user.latest_status && (
-          <div className="bg-base-200 p-4 rounded-lg">
+          <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg">
             <h2 className="text-xl font-bold mb-2">ステータス</h2>
             <p>Level: {user.latest_status.level}</p>
             <p>{user.latest_status.job.name}</p>
@@ -69,7 +69,7 @@ export const UsersShow = () => {
           </div>
         )}
         {/* 歴代アバター */}
-        <div className="bg-base-200 p-4 rounded-lg">
+        <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg">
           <h2 className="text-xl font-bold mb-2">過去のアバター</h2>
           <div className="grid grid-cols-3 gap-2">
             {user.avatars
@@ -91,7 +91,7 @@ export const UsersShow = () => {
         </div>
       </div>
       {/* 活動一覧 */}
-      <div className="bg-base-200 mt-4 p-4 rounded-lg">
+      <div className="bg-base-200 bg-opacity-60 mt-4 p-4 rounded-lg">
         <h2 className="text-xl font-bold mb-2">活動一覧</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {user.activities
