@@ -266,16 +266,30 @@ export const MyPage = () => {
             alt="User Avatar"
             className="w-full h-auto mb-4 rounded-lg"
           />
-          <Link to={`/create_avatar`} className="btn btn-accent w-full mb-1">
+          <Link
+            to={`/create_avatar`}
+            className="btn btn-accent shadow-xl w-full mb-1"
+          >
+            <img
+              src="/imgs/items/item_001.png"
+              alt="アバター生成"
+              className="w-10 h-auto mr-2"
+            />
             アバター生成
           </Link>
           {!hasBattledToday && (
             <Link to={`/battle`} className="btn btn-secondary w-full mb-1">
-              討伐
+              <img
+                src="/mao_favicon.png"
+                alt="討伐"
+                className="w-10 h-auto mr-2"
+              />
+              日替わり討伐
             </Link>
           )}
           {currentUser.special_mode_unlocked && !hasBossBattledToday && (
             <Link to={`/boss`} className="btn btn-error w-full mb-1">
+              <img src="/mao.png" alt="魔王戦" className="w-10 h-auto mr-2" />
               魔王戦に挑む
             </Link>
           )}
@@ -289,10 +303,15 @@ export const MyPage = () => {
                 <i className="fas fa-question-circle"></i>
               </button>
             </h2>
-            <p>Level: {currentUser.latest_status.level}</p>
-            <p>{currentUser.latest_status.job.name}</p>
+            <p className="text-xl font-bold">
+              Level: {currentUser.latest_status.level}
+              {"  "}
+              {currentUser.latest_status.job.name}
+            </p>
 
-            <p>HP: {currentUser.latest_status.hp}</p>
+            <p className="text-xl font-bold">
+              HP: {currentUser.latest_status.hp}
+            </p>
             <div className="text-center">
               <RadarChart currentUser={currentUser} />
             </div>
@@ -342,7 +361,7 @@ export const MyPage = () => {
               className={`tab ${itemsTab === "avatars" ? "tab-active" : ""}`}
               onClick={() => setItemsTab("avatars")}
             >
-              アバター
+              実績
             </a>
           </div>
           {itemsTab === "items" ? (
@@ -384,45 +403,60 @@ export const MyPage = () => {
               </>
             </div>
           ) : (
-            <>
-              <h2 className="text-xl font-bold mb-4 cursor-pointer">
-                アバター
-              </h2>
-              {currentUser.avatars.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-3 gap-2">
-                    {currentUser.avatars
-                      .sort((a, b) => b.id - a.id) // 降順ソート
-                      .slice(0, showAllAvatars ? currentUser.avatars.length : 9)
-                      .map((avatar) => (
-                        <div key={avatar.id} className="relative">
-                          <img
-                            src={`${avatar.avatar_url}`}
-                            alt="User Avatar"
-                            className="w-full h-auto rounded cursor-pointer"
-                            onClick={() => {
-                              setSelectedAvatar(avatar);
-                              document
-                                .getElementById("avatarModal")
-                                .showModal();
-                            }}
-                          />
-                        </div>
-                      ))}
+            <div className="overflow-y-auto max-h-180">
+              <div className="stats shadow flex flex-col">
+                <div className="stat">
+                  <div className="stat-title">3日達成</div>
+                  <div className="stat-value">
+                    {currentUser.achievement ?? 0}回
                   </div>
-                  {currentUser.avatars.length > 9 && (
-                    <button
-                      className="mt-4 text-primary underline"
-                      onClick={() => setShowAllAvatars(!showAllAvatars)}
-                    >
-                      {showAllAvatars ? "一部を表示" : "すべて表示"}
-                    </button>
-                  )}
-                </>
-              ) : (
-                <p>アバターがありません</p>
-              )}
-            </>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">アクティビティ累計</div>
+                  <div className="stat-value">
+                    {currentUser.activities.length}件
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">エネミー討伐数</div>
+                  <div className="stat-value">
+                    {
+                      currentUser.battle_logs.filter(
+                        (log) => log.result === true
+                      ).length
+                    }
+                    件
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">勝率</div>
+                  <div className="stat-value">
+                    {currentUser.battle_logs.length === 0
+                      ? "-"
+                      : (
+                          (currentUser.battle_logs.filter(
+                            (log) => log.result === true
+                          ).length /
+                            currentUser.battle_logs.length) *
+                          100
+                        ).toFixed(2)}
+                    %
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">魔王戦</div>
+                  <div className="stat-value">
+                    {currentUser.boss_battle_logs.length}回
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">アバター生成</div>
+                  <div className="stat-value">
+                    {currentUser.avatars.length - 1}回
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
         {/* ここまで所持品とアバター */}
