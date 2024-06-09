@@ -104,6 +104,12 @@ enemies_data = [
   { id: 8, name: 'オオカマキリ', hp: 70, attack: 12, defence: 12, enemy_url: '/imgs/enemies/monster008.png' },
   { id: 9, name: '魔王ファントム', hp: 80, attack: 12, defence: 12, enemy_url: '/imgs/enemies/monster009.png' },
   { id: 10, name: 'いたずらラクーン', hp: 50, attack: 11, defence: 9, enemy_url: '/imgs/enemies/monster010.png' },
+  { id: 11, name: 'サンドラゴン', hp: 90, attack: 12, defence: 15, enemy_url: '/imgs/enemies/monster011.png' },
+  { id: 12, name: 'イービルベジタブル', hp: 70, attack: 12, defence: 11, enemy_url: '/imgs/enemies/monster012.png' },
+  { id: 13, name: '東国の鉄', hp: 120, attack: 14, defence: 6, enemy_url: '/imgs/enemies/monster013.png' },
+  { id: 14, name: 'ブラックマジシャン', hp: 60, attack: 12, defence: 8, enemy_url: '/imgs/enemies/monster014.png' },
+  { id: 15, name: 'いのししおとこ', hp: 90, attack: 12, defence: 12, enemy_url: '/imgs/enemies/monster015.png' },
+  { id: 16, name: '金龍', hp: 300, attack: 18, defence: 18, enemy_url: '/imgs/enemies/monster016.png' },
   
 ]
 
