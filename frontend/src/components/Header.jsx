@@ -106,12 +106,7 @@ export const Header = memo(() => {
                 <li>
                   <Link
                     to="/config"
-                    className={`btn btn-ghost normal-case text-xl ${
-                      hasBattledToday ? "btn-disabled" : ""
-                    } ${!currentUser && "btn-disabled"}`}
-                    onClick={(e) =>
-                      (!currentUser || hasBattledToday) && e.preventDefault()
-                    }
+                    className="btn btn-ghost normal-case text-xl"
                   >
                     コンフィグ
                   </Link>
