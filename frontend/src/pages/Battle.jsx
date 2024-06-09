@@ -286,6 +286,7 @@ export const Battle = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <span className="loading loading-ring loading-lg"></span>
+        <p>長時間画面が変わらない場合は、再度ログインしてください</p>
       </div>
     );
   }
