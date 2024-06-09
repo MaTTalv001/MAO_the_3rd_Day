@@ -55,4 +55,8 @@ export const RoutePath = {
     path: "/item_list",
     name: "アイテム図鑑",
   },
+  Config: {
+    path: "/config",
+    name: "コンフィグ",
+  },
 };
