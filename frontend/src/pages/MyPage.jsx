@@ -192,6 +192,7 @@ export const MyPage = () => {
         <div>
           <span className="loading loading-ring loading-lg"></span>
         </div>
+        <p>長時間画面が変わらない場合は、再度ログインしてください</p>
       </div>
     );
   }
