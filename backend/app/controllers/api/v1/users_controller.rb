@@ -46,8 +46,12 @@ class Api::V1::UsersController < ApplicationController
   # DELETE /api/v1/users/:id
   def destroy
     @user = User.find(params[:id])
-    @user.destroy
-    head :no_content
+    if @user == @current_user
+      @user.destroy
+      head :no_content
+    else
+      render json: { error: "自分以外のユーザーを削除することはできません" }, status: :forbidden
+    end
   end
 
   # /api/v1/users/current

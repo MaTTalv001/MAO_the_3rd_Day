@@ -16,6 +16,7 @@ import { TermsOfService } from "../pages/TermsOfService";
 import { PublicAvatar } from "../pages/PublicAvatar";
 import { EnemyDirectory } from "../components/EnemyDirectory";
 import { ItemDirectory } from "../components/ItemDirectory";
+import { Config } from "../pages/Config";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.PublicAvatar.path, element: <PublicAvatar /> },
       { path: RoutePath.EnemyDirectory.path, element: <EnemyDirectory /> },
       { path: RoutePath.ItemDirectory.path, element: <ItemDirectory /> },
+      { path: RoutePath.Config.path, element: <Config /> },
     ],
   },
 ];
