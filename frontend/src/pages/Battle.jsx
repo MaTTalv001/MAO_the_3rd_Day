@@ -62,13 +62,27 @@ export const Battle = () => {
   }, [currentUser]);
 
   // saveBattleLogサービスにバトル結果を渡してログ保存
-  const handleBattleLogSave = async (result) => {
+  const handleBattleLogSave = async (result, baseAmount) => {
     try {
-      const newLog = await saveBattleLog(currentUser, enemy, token, result);
+      const data = await saveBattleLog(
+        currentUser,
+        enemy,
+        token,
+        result,
+        baseAmount
+      );
       setCurrentUser((prevUser) => ({
         ...prevUser,
-        battle_logs: [...prevUser.battle_logs, newLog],
+        battle_logs: [...prevUser.battle_logs, data.battle_log],
+        coin: data.user.coin,
       }));
+      setGainedCoins(data.gained_coins);
+      if (baseAmount > 0) {
+        setGameLog((prevLog) => [
+          ...prevLog,
+          `${data.gained_coins}枚の金貨を得た！`,
+        ]);
+      }
     } catch (error) {
       console.error("バトルログの保存に失敗しました:", error);
     }
@@ -158,17 +172,10 @@ export const Battle = () => {
 
         if (enemyHP - totalDamage <= 0) {
           setGameLog([`${enemy.name}をたおした`]);
-          handleBattleLogSave(true);
           const amounts = [10, 20, 30];
-          const amount = amounts[Math.floor(Math.random() * amounts.length)];
-          gainCoins(
-            currentUser,
-            token,
-            amount,
-            setCurrentUser,
-            setGainedCoins,
-            setGameLog
-          ); // 金貨を獲得
+          const baseAmount =
+            amounts[Math.floor(Math.random() * amounts.length)];
+          handleBattleLogSave(true, baseAmount);
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -183,7 +190,10 @@ export const Battle = () => {
 
         if (playerHP - finalEnemyDamage <= 0) {
           setGameLog(["全滅した"]);
-          handleBattleLogSave(false);
+          const amounts = [10];
+          const baseAmount =
+            amounts[Math.floor(Math.random() * amounts.length)];
+          handleBattleLogSave(false, baseAmount);
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -204,7 +214,10 @@ export const Battle = () => {
 
             if (playerHP - finalEnemyDamage <= 0) {
               setGameLog(["全滅した"]);
-              handleBattleLogSave(false);
+              const amounts = [10];
+              const baseAmount =
+                amounts[Math.floor(Math.random() * amounts.length)];
+              handleBattleLogSave(false, baseAmount);
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -244,17 +257,10 @@ export const Battle = () => {
 
           if (enemyHP - totalDamage <= 0) {
             setGameLog([`${enemy.name}をたおした`]);
-            handleBattleLogSave(true);
             const amounts = [10, 20, 30];
-            const amount = amounts[Math.floor(Math.random() * amounts.length)];
-            gainCoins(
-              currentUser,
-              token,
-              amount,
-              setCurrentUser,
-              setGainedCoins,
-              setGameLog
-            ); // 金貨を獲得
+            const baseAmount =
+              amounts[Math.floor(Math.random() * amounts.length)];
+            handleBattleLogSave(true, baseAmount);
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
