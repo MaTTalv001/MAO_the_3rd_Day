@@ -96,6 +96,24 @@ def likes?(activity)
   activity_likes.exists?(activity: activity)
 end
 
+#コイン獲得のクラスメソッド
+def gain_coins(base_amount)
+    charisma_bonus = latest_status.charisma * 0.01
+    total_amount = (base_amount * (1 + charisma_bonus)).floor
+
+    logger.info "Base amount: #{base_amount}"
+    logger.info "Charisma bonus: #{charisma_bonus}"
+    logger.info "Total amount: #{total_amount}"
+
+    coin.amount += total_amount
+
+    if coin.save
+      total_amount
+    else
+      raise ActiveRecord::RecordInvalid, coin.errors.full_messages.join(', ')
+    end
+  end
+
 
 
 # 最新のJob名を取得するためのメソッドをUserモデルに追加

@@ -91,6 +91,65 @@ export const CreateAvatar = () => {
     }
   }, [availableJobs]);
 
+  // const generateAvatar = async () => {
+  //   setLoadingAvatar(true);
+  //   closeConfirmationModal();
+  //   const basePrompt =
+  //     "A pixel art image resembling a 32-bit era video game, depicting a fantasy RPG character. The character is designed with a highly detailed and vibrant pixel art style typical of the 32-bit era, featuring a complex color palette and intricate details, surpassing the 16-bit graphics. The character is in a dynamic pose, equipped with gear appropriate to their job, reflecting their role and abilities in the game. This showcases the advanced graphical capabilities and the spirit of epic adventures in more modern classic video games.";
+  //   const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}, Race: ${selectedRace}, Accessory: ${selectedAccessory}`;
+  //   const job_id = jobs.find((job) => job.name === selectedJob).id;
+  //   const item_id = jobs.find((job) => job.id === job_id).item_id;
+  //   try {
+  //     //アイテム消費
+  //     const deleteItemResponse = await fetch(
+  //       `${API_URL}/api/v1/users/${currentUser.id}/items/${item_id}/consume`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (deleteItemResponse.ok) {
+  //       const updatedUser = await deleteItemResponse.json();
+  //       setCurrentUser(updatedUser);
+  //     } else {
+  //       console.error(
+  //         "アイテム消費処理に失敗しました:",
+  //         deleteItemResponse.statusText
+  //       );
+  //     }
+  //     const response = await fetch(
+  //       `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         body: JSON.stringify({ prompt, job_id }),
+  //       }
+  //     );
+  //     const avatar = await response.json();
+  //     setGeneratedAvatar(avatar.avatar_url);
+
+  //     // 新しいアバターURLをユーザー情報に反映
+  //     setCurrentUser((prevUser) => ({
+  //       ...prevUser,
+  //       avatars: [...prevUser.avatars, avatar],
+  //       current_avatar_url: avatar.avatar_url,
+  //     }));
+
+  //     setSelectedJob("未選択");
+  //   } catch (error) {
+  //     console.error("アバター生成に失敗しました:", error);
+  //   } finally {
+  //     setLoadingAvatar(false);
+  //   }
+  // };
+
+  // transaction処理に変更
   const generateAvatar = async () => {
     setLoadingAvatar(true);
     closeConfirmationModal();
@@ -99,27 +158,8 @@ export const CreateAvatar = () => {
     const prompt = `${basePrompt} Job: ${selectedJob}, Gender: ${selectedGender}, Age: ${selectedAge}, Personality: ${selectedSupplement}, Race: ${selectedRace}, Accessory: ${selectedAccessory}`;
     const job_id = jobs.find((job) => job.name === selectedJob).id;
     const item_id = jobs.find((job) => job.id === job_id).item_id;
-    try {
-      //アイテム消費
-      const deleteItemResponse = await fetch(
-        `${API_URL}/api/v1/users/${currentUser.id}/items/${item_id}/consume`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      if (deleteItemResponse.ok) {
-        const updatedUser = await deleteItemResponse.json();
-        setCurrentUser(updatedUser);
-      } else {
-        console.error(
-          "アイテム消費処理に失敗しました:",
-          deleteItemResponse.statusText
-        );
-      }
+    try {
       const response = await fetch(
         `${API_URL}/api/v1/users/${currentUser.id}/avatars`,
         {
@@ -128,22 +168,22 @@ export const CreateAvatar = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ prompt, job_id }),
+          body: JSON.stringify({ prompt, job_id, item_id }),
         }
       );
-      const avatar = await response.json();
-      setGeneratedAvatar(avatar.avatar_url);
 
-      // 新しいアバターURLをユーザー情報に反映
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        avatars: [...prevUser.avatars, avatar],
-        current_avatar_url: avatar.avatar_url,
-      }));
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setCurrentUser(updatedUser);
+        setGeneratedAvatar(updatedUser.current_avatar_url);
+      } else {
+        const errorData = await response.json();
+        console.error("アバター生成処理に失敗しました:", errorData.error);
+      }
 
       setSelectedJob("未選択");
     } catch (error) {
-      console.error("アバター生成に失敗しました:", error);
+      console.error("アバター生成処理に失敗しました:", error);
     } finally {
       setLoadingAvatar(false);
     }
@@ -192,17 +232,6 @@ export const CreateAvatar = () => {
     );
   }
 
-  //Xシェア機能は外にコード切り出し
-  // const handleTweet = () => {
-  //   const baseUrl = "https://mao-the-3rd-day.s3.ap-northeast-1.amazonaws.com/";
-  //   const imagePath = generatedAvatar.replace(baseUrl, "");
-  //   const tweetText = `魔王を討伐するためにアバターを作りました！ #みかまお`;
-  //   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-  //     `${FRONT_URL}/public_avatar?image=${imagePath}`
-  //   )}&text=${encodeURIComponent(tweetText)}`;
-
-  //   window.open(twitterUrl, "_blank");
-  // };
 
   return (
     <div className="container mx-auto p-4 max-w-5xl min-h-screen">
