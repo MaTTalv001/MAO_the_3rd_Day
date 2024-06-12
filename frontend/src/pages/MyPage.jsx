@@ -470,21 +470,21 @@ export const MyPage = () => {
             className={`tab ${activitiesTab === "entry" ? "tab-active" : ""}`}
             onClick={() => setActivitiesTab("entry")}
           >
-            今日の活動登録
+            今日の活動
           </a>
           <a
             role="tab"
             className={`tab ${activitiesTab === "show" ? "tab-active" : ""}`}
             onClick={() => setActivitiesTab("show")}
           >
-            これまでの活動履歴
+            活動履歴
           </a>
           <a
             role="tab"
             className={`tab ${activitiesTab === "chart" ? "tab-active" : ""}`}
             onClick={() => setActivitiesTab("chart")}
           >
-            活動推移グラフ
+            活動グラフ
           </a>
         </div>
         {activitiesTab === "entry" && (

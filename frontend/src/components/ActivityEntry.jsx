@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { API_URL } from "../config/settings";
 import { useAuth } from "../providers/auth";
-import { gainCoins } from "../services/GainCoins"; //コイン獲得メソッド
 
 const categories = [
   {
@@ -60,9 +59,113 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
   const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
   const [gameLog, setGameLog] = useState([""]); // ゲームログの状態管理
 
+  // const handleSubmit = async () => {
+  //   try {
+  //     const response = await fetch(`${API_URL}/api/v1/activities`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         activity: {
+  //           action: activity.action,
+  //           minute: activity.duration,
+  //           category_id: activity.category_id,
+  //           user_id: currentUser.id,
+  //         },
+  //       }),
+  //     });
 
+  //     if (!response.ok) {
+  //       throw new Error("活動の登録に失敗しました");
+  //     }
+
+  //     const createdActivity = await response.json();
+
+  //     const userStatusResponse = await fetch(
+  //       `${API_URL}/api/v1/user_statuses`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         body: JSON.stringify({
+  //           user_status: {
+  //             user_id: currentUser.id,
+  //             job_id: currentUser.latest_status.job_id,
+  //             level: currentUser.latest_status.level + 1,
+  //             hp: currentUser.latest_status.hp + 5,
+  //             strength:
+  //               currentUser.latest_status.strength +
+  //               (createdActivity.category_id === 1 ? 1 : 0),
+  //             intelligence:
+  //               currentUser.latest_status.intelligence +
+  //               (createdActivity.category_id === 2 ? 1 : 0),
+  //             wisdom:
+  //               currentUser.latest_status.wisdom +
+  //               (createdActivity.category_id === 3 ? 1 : 0),
+  //             dexterity:
+  //               currentUser.latest_status.dexterity +
+  //               (createdActivity.category_id === 4 ? 1 : 0),
+  //             charisma:
+  //               currentUser.latest_status.charisma +
+  //               (createdActivity.category_id === 5 ? 1 : 0),
+  //           },
+  //         }),
+  //       }
+  //     );
+
+  //     if (!userStatusResponse.ok) {
+  //       throw new Error("ステータスのアップデートに失敗しました");
+  //     }
+
+  //     const amounts = [10, 20, 30];
+  //     const amount = amounts[Math.floor(Math.random() * amounts.length)];
+  //     const gainedCoins = await gainCoins(
+  //       currentUser,
+  //       token,
+  //       amount,
+  //       setCurrentUser,
+  //       setGainedCoins,
+  //       setGameLog
+  //     ); // 金貨を獲得
+
+  //     setActivity({ action: "", duration: 0, category_id: "" });
+
+  //     const userResponse = await fetch(
+  //       `${API_URL}/api/v1/users/${currentUser.id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     const updatedUser = await userResponse.json();
+  //     setCurrentUser(updatedUser);
+
+  //     let message = "ステータスが向上しました！";
+  //     if (gainedCoins) {
+  //       message += ` ${gainedCoins}枚の金貨を獲得しました！`;
+  //     }
+  //     if (updatedUser.special_mode_unlocked) {
+  //       message += " 魔王が現れた！";
+  //     }
+
+  //     setModalMessage(message);
+  //     setShowModal(true);
+  //   } catch (error) {
+  //     console.error("ユーザーステータスの更新に失敗しました:", error);
+  //   }
+  // };
+  //
+  // transaction処理に変更
   const handleSubmit = async () => {
     try {
+      const amounts = [10, 20, 30];
+      const base_amount = amounts[Math.floor(Math.random() * amounts.length)];
+
       const response = await fetch(`${API_URL}/api/v1/activities`, {
         method: "POST",
         headers: {
@@ -74,8 +177,28 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
             action: activity.action,
             minute: activity.duration,
             category_id: activity.category_id,
-            user_id: currentUser.id,
           },
+          user_status: {
+            job_id: currentUser.latest_status.job_id,
+            level: currentUser.latest_status.level + 1,
+            hp: currentUser.latest_status.hp + 5,
+            strength:
+              currentUser.latest_status.strength +
+              (activity.category_id === 1 ? 1 : 0),
+            intelligence:
+              currentUser.latest_status.intelligence +
+              (activity.category_id === 2 ? 1 : 0),
+            wisdom:
+              currentUser.latest_status.wisdom +
+              (activity.category_id === 3 ? 1 : 0),
+            dexterity:
+              currentUser.latest_status.dexterity +
+              (activity.category_id === 4 ? 1 : 0),
+            charisma:
+              currentUser.latest_status.charisma +
+              (activity.category_id === 5 ? 1 : 0),
+          },
+          base_amount: base_amount,
         }),
       });
 
@@ -83,56 +206,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
         throw new Error("活動の登録に失敗しました");
       }
 
-      const createdActivity = await response.json();
-
-      const userStatusResponse = await fetch(
-        `${API_URL}/api/v1/user_statuses`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            user_status: {
-              user_id: currentUser.id,
-              job_id: currentUser.latest_status.job_id,
-              level: currentUser.latest_status.level + 1,
-              hp: currentUser.latest_status.hp + 5,
-              strength:
-                currentUser.latest_status.strength +
-                (createdActivity.category_id === 1 ? 1 : 0),
-              intelligence:
-                currentUser.latest_status.intelligence +
-                (createdActivity.category_id === 2 ? 1 : 0),
-              wisdom:
-                currentUser.latest_status.wisdom +
-                (createdActivity.category_id === 3 ? 1 : 0),
-              dexterity:
-                currentUser.latest_status.dexterity +
-                (createdActivity.category_id === 4 ? 1 : 0),
-              charisma:
-                currentUser.latest_status.charisma +
-                (createdActivity.category_id === 5 ? 1 : 0),
-            },
-          }),
-        }
-      );
-
-      if (!userStatusResponse.ok) {
-        throw new Error("ステータスのアップデートに失敗しました");
-      }
-      
-      const amounts = [10, 20, 30];
-      const amount = amounts[Math.floor(Math.random() * amounts.length)];
-      const gainedCoins = await gainCoins(
-        currentUser,
-        token,
-        amount,
-        setCurrentUser,
-        setGainedCoins,
-        setGameLog
-      ); // 金貨を獲得
+      const data = await response.json();
+      const createdActivity = data.activity;
+      const gainedCoins = data.gained_coins;
 
       setActivity({ action: "", duration: 0, category_id: "" });
 
@@ -162,10 +238,12 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
     }
   };
 
-  const todayActivities = currentUser.activities.filter(
-    (activity) =>
-      new Date(activity.created_at).toDateString() === today.toDateString()
-  );
+  const todayActivities = currentUser.activities
+    ? currentUser.activities.filter(
+        (activity) =>
+          new Date(activity.created_at).toDateString() === today.toDateString()
+      )
+    : [];
 
   const isActivityLimitReached = todayActivities.length >= 3;
 
@@ -173,30 +251,6 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
     (category) =>
       !todayActivities.some((activity) => activity.category.id === category.id)
   );
-
-  const handleSpecialModeParticipation = async () => {
-    try {
-      const response = await fetch(
-        `${API_URL}/api/v1/special_modes/participate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        setCurrentUser({ ...currentUser, special_mode_unlocked: false });
-        window.location.href = "/boss";
-      } else {
-        console.error("魔王戦の参加に失敗しました");
-      }
-    } catch (error) {
-      console.error("エラーが発生しました:", error);
-    }
-  };
 
   return (
     <div

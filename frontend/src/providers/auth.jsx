@@ -45,6 +45,8 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  
+
   const logout = () => {
     setCurrentUser(null); // ユーザー情報をクリア
     setToken(""); // トークンをクリア

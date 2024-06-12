@@ -3,20 +3,50 @@ module Api
     class ActivitiesController < ApplicationController
       before_action :authenticate_request
 
-      def create
-        activity = @current_user.activities.build(activity_params)
+      # def create
+      #   activity = @current_user.activities.build(activity_params)
 
         
-        if activity.save
-          # ユーザーの連続記録日数、特別モードのアンロック、達成回数を更新
-          update_user_status(activity.created_at.to_date)
-          render json: activity, status: :created
-        else
-          render json: activity.errors, status: :unprocessable_entity
-        end
-      end
+      #   if activity.save
+      #     # ユーザーの連続記録日数、特別モードのアンロック、達成回数を更新
+      #     update_user_status(activity.created_at.to_date)
+      #     render json: activity, status: :created
+      #   else
+      #     render json: activity.errors, status: :unprocessable_entity
+      #   end
+      # end
+      #
+      # 一連の処理をトランザクション化
+      def create
+  ActiveRecord::Base.transaction do
+    activity = @current_user.activities.build(activity_params)
+
+    if activity.save
+      # ユーザーの連続記録日数、特別モードのアンロック、達成回数を更新
+      update_user_status(activity.created_at.to_date)
+
+      # ユーザーステータスを更新
+      user_status = @current_user.user_statuses.build(user_status_params)
+      user_status.save!
+
+      # コインを獲得
+      gained_coins = @current_user.gain_coins(params[:base_amount].to_i)
+
+      render json: { activity: activity, user_status: user_status, gained_coins: gained_coins }, status: :created
+    else
+      render json: activity.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  end
+rescue ActiveRecord::RecordInvalid => e
+  render json: { error: e.message }, status: :unprocessable_entity
+end
 
       private
+
+      def user_status_params
+        params.require(:user_status).permit(:job_id, :level, :hp, :strength, :intelligence, :wisdom, :dexterity, :charisma)
+      end
 
       def activity_params
         params.require(:activity).permit(:action, :category_id, :minute)
