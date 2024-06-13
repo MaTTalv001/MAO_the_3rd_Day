@@ -32,16 +32,32 @@ export const MyPage = () => {
     useState(false);
   const [isAvatarDirectoryModalOpen, setIsAvatarDirectoryModalOpen] =
     useState(false);
+  const [todayActivities, setTodayActivities] = useState([]);
 
   useEffect(() => {
-    setCurrentUser(authUser);
-    setEditedNickname(authUser?.nickname || "");
-    setEditedProfile(authUser?.profile || "");
-  }, [authUser]);
-  // ログインユーザーのバトルログをチェックして本日バトルしたかどうかを設定
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v1/users/${authUser.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userData = await response.json();
+        setCurrentUser(userData);
+        setEditedNickname(userData?.nickname || "");
+        setEditedProfile(userData?.profile || "");
+      } catch (error) {
+        console.error("ユーザー情報の取得に失敗しました:", error);
+      }
+    };
+
+    if (authUser) {
+      fetchCurrentUser();
+    }
+  }, [authUser, token]);
+
   const hasBattledToday = useHasBattledToday(currentUser);
 
-  // 今日のボス討伐が完了しているか
   useEffect(() => {
     if (currentUser && currentUser.boss_battle_logs) {
       const today = new Date();
@@ -67,6 +83,17 @@ export const MyPage = () => {
       document.body.style.overflow = "auto";
     };
   }, [isItemDirectoryModalOpen]);
+
+  useEffect(() => {
+    if (currentUser && currentUser.activities) {
+      const today = new Date();
+      const filteredActivities = currentUser.activities.filter(
+        (activity) =>
+          new Date(activity.created_at).toDateString() === today.toDateString()
+      );
+      setTodayActivities(filteredActivities);
+    }
+  }, [currentUser]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -136,7 +163,6 @@ export const MyPage = () => {
     }
   };
 
-  // アバター更新
   const handleAvatarUpdate = async (avatarUrl) => {
     try {
       const response = await fetch(
@@ -235,7 +261,6 @@ export const MyPage = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* プロフィール */}
         <div className="bg-base-200 bg-opacity-60  p-4 rounded-lg">
           <div className="mb-2">
             {isNicknameEditing ? (
@@ -295,7 +320,6 @@ export const MyPage = () => {
             </Link>
           )}
         </div>
-        {/* ステータス */}
         {currentUser.latest_status && (
           <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg relative">
             <h2 className="text-xl font-bold mb-2 flex items-center">
@@ -347,7 +371,6 @@ export const MyPage = () => {
             </div>
           </div>
         )}
-        {/* 所持品とアバター */}
         <div className="bg-base-200 bg-opacity-60 p-4 rounded-lg">
           <div role="tablist" className="tabs tabs-lifted mb-4">
             <a
@@ -460,9 +483,7 @@ export const MyPage = () => {
             </div>
           )}
         </div>
-        {/* ここまで所持品とアバター */}
       </div>
-      {/* 活動報告 */}
       <div className="bg-base-200 bg-opacity-60 mt-4 p-4 rounded-lg">
         <div role="tablist" className="tabs tabs-lifted mb-4">
           <a
@@ -491,6 +512,7 @@ export const MyPage = () => {
           <ActivityEntry
             currentUser={currentUser}
             setCurrentUser={setCurrentUser}
+            todayActivities={todayActivities}
           />
         )}
         {activitiesTab === "show" && (
@@ -499,7 +521,6 @@ export const MyPage = () => {
         {activitiesTab === "chart" && <LineChart currentUser={currentUser} />}
       </div>
 
-      {/* アバターモーダル */}
       <dialog id="avatarModal" className="modal">
         <div className="modal-box relative">
           <button
@@ -544,9 +565,7 @@ export const MyPage = () => {
           )}
         </div>
       </dialog>
-      {/* ここまでアバターモーダル */}
 
-      {/* ステータスモーダル */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
           <div className="bg-base-100 p-4 rounded-lg max-w-md w-full">
@@ -563,8 +582,6 @@ export const MyPage = () => {
           </div>
         </div>
       )}
-      {/*　ここまでステータスモーダル */}
-      {/* アイテムモーダル */}
       {isItemDirectoryModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
           <div className="bg-base-100 p-4 rounded-lg max-w-4xl w-full h-3/4 overflow-y-auto">
@@ -581,8 +598,6 @@ export const MyPage = () => {
           </div>
         </div>
       )}
-      {/*　ここまでアイテムモーダル */}
-      {/* エネミーモーダル */}
       {isEnemyDirectoryModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
           <div className="bg-base-100 p-4 rounded-lg max-w-4xl w-full h-3/4 overflow-y-auto">
@@ -599,8 +614,6 @@ export const MyPage = () => {
           </div>
         </div>
       )}
-      {/*　ここまでエネミーモーダル */}
-      {/* アバターモーダル */}
       {isAvatarDirectoryModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-base-100 bg-opacity-60 z-50">
           <div className="bg-base-100 p-4 rounded-lg max-w-4xl w-full h-3/4 overflow-y-auto">
@@ -617,7 +630,6 @@ export const MyPage = () => {
           </div>
         </div>
       )}
-      {/*　ここまでアバターーモーダル */}
     </div>
   );
 };
