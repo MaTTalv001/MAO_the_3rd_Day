@@ -468,7 +468,7 @@ export const Boss = () => {
           const baseAmounts = [100, 200, 300];
           const baseAmount =
             baseAmounts[Math.floor(Math.random() * baseAmounts.length)];
-          saveBattleLog(false, totalDamage + turnDamage, baseAmount); // 敗北を保存、ダメージを送信
+          saveBattleLog(false, totalDamage, baseAmount); // 敗北を保存、ダメージを送信
           // // 敗北の報酬を獲得
           // gainCoins(
           //   currentUser,
