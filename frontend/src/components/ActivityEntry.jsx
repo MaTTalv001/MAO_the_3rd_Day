@@ -30,7 +30,7 @@ const categories = [
   },
 ];
 
-const ActivityEntry = ({ currentUser, setCurrentUser }) => {
+const ActivityEntry = ({ currentUser, setCurrentUser, todayActivities }) => {
   const { token } = useAuth();
   const today = new Date();
   const dateString = `${today.getFullYear()}年${
@@ -56,111 +56,10 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
   const handleCategoryChange = (category) => {
     setActivity({ ...activity, category_id: category.id });
   };
+
   const [gainedCoins, setGainedCoins] = useState(null); // 獲得したコインの状態管理
   const [gameLog, setGameLog] = useState([""]); // ゲームログの状態管理
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const response = await fetch(`${API_URL}/api/v1/activities`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       body: JSON.stringify({
-  //         activity: {
-  //           action: activity.action,
-  //           minute: activity.duration,
-  //           category_id: activity.category_id,
-  //           user_id: currentUser.id,
-  //         },
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("活動の登録に失敗しました");
-  //     }
-
-  //     const createdActivity = await response.json();
-
-  //     const userStatusResponse = await fetch(
-  //       `${API_URL}/api/v1/user_statuses`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         body: JSON.stringify({
-  //           user_status: {
-  //             user_id: currentUser.id,
-  //             job_id: currentUser.latest_status.job_id,
-  //             level: currentUser.latest_status.level + 1,
-  //             hp: currentUser.latest_status.hp + 5,
-  //             strength:
-  //               currentUser.latest_status.strength +
-  //               (createdActivity.category_id === 1 ? 1 : 0),
-  //             intelligence:
-  //               currentUser.latest_status.intelligence +
-  //               (createdActivity.category_id === 2 ? 1 : 0),
-  //             wisdom:
-  //               currentUser.latest_status.wisdom +
-  //               (createdActivity.category_id === 3 ? 1 : 0),
-  //             dexterity:
-  //               currentUser.latest_status.dexterity +
-  //               (createdActivity.category_id === 4 ? 1 : 0),
-  //             charisma:
-  //               currentUser.latest_status.charisma +
-  //               (createdActivity.category_id === 5 ? 1 : 0),
-  //           },
-  //         }),
-  //       }
-  //     );
-
-  //     if (!userStatusResponse.ok) {
-  //       throw new Error("ステータスのアップデートに失敗しました");
-  //     }
-
-  //     const amounts = [10, 20, 30];
-  //     const amount = amounts[Math.floor(Math.random() * amounts.length)];
-  //     const gainedCoins = await gainCoins(
-  //       currentUser,
-  //       token,
-  //       amount,
-  //       setCurrentUser,
-  //       setGainedCoins,
-  //       setGameLog
-  //     ); // 金貨を獲得
-
-  //     setActivity({ action: "", duration: 0, category_id: "" });
-
-  //     const userResponse = await fetch(
-  //       `${API_URL}/api/v1/users/${currentUser.id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     const updatedUser = await userResponse.json();
-  //     setCurrentUser(updatedUser);
-
-  //     let message = "ステータスが向上しました！";
-  //     if (gainedCoins) {
-  //       message += ` ${gainedCoins}枚の金貨を獲得しました！`;
-  //     }
-  //     if (updatedUser.special_mode_unlocked) {
-  //       message += " 魔王が現れた！";
-  //     }
-
-  //     setModalMessage(message);
-  //     setShowModal(true);
-  //   } catch (error) {
-  //     console.error("ユーザーステータスの更新に失敗しました:", error);
-  //   }
-  // };
-  //
-  // transaction処理に変更
   const handleSubmit = async () => {
     try {
       const amounts = [10, 20, 30];
@@ -238,13 +137,6 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
     }
   };
 
-  const todayActivities = currentUser.activities
-    ? currentUser.activities.filter(
-        (activity) =>
-          new Date(activity.created_at).toDateString() === today.toDateString()
-      )
-    : [];
-
   const isActivityLimitReached = todayActivities.length >= 3;
 
   const availableCategories = categories.filter(
@@ -289,10 +181,9 @@ const ActivityEntry = ({ currentUser, setCurrentUser }) => {
               type="range"
               min="0"
               max="600"
-              step="10" // 10分刻みに設定
+              step="10"
               value={activity.duration}
               onChange={(event) => {
-                // スライダーの値を10の倍数に丸める
                 const roundedValue = Math.round(event.target.value / 10) * 10;
                 setActivity({ ...activity, duration: roundedValue });
               }}
