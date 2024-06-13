@@ -134,19 +134,6 @@ export const Boss = () => {
       setGameOver(true);
     }
   }, [hasBossedToday]);
-  //リファクタリングでHasBossBattledToday.jsx　に切り出し
-  // useEffect(() => {
-  //   if (currentUser && currentUser.boss_battle_logs && !battleChecked) {
-  //     const today = new Date().toISOString().slice(0, 10);
-  //     const hasTodaysBattleLog = currentUser.boss_battle_logs.some((log) => {
-  //       return log.created_at.slice(0, 10) === today;
-  //     });
-  //     if (hasTodaysBattleLog) {
-  //       setGameOver(true);
-  //     }
-  //     setBattleChecked(true);
-  //   }
-  // }, [currentUser, battleChecked]);
 
   // 魔王戦説明モーダル
   useEffect(() => {
@@ -156,36 +143,68 @@ export const Boss = () => {
   }, [gameOver]);
 
   // バトル後に魔王戦条件をロック
-  const lockSpecialMode = async () => {
-    if (!currentUser.special_mode_unlocked) {
-      console.log("魔王戦はすでにロックされています");
-      return;
-    }
+  // const lockSpecialMode = async () => {
+  //   if (!currentUser.special_mode_unlocked) {
+  //     console.log("魔王戦はすでにロックされています");
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(
-        `${API_URL}/api/v1/special_modes/participate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `${API_URL}/api/v1/special_modes/participate`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
 
-      if (response.ok) {
-        setCurrentUser({ ...currentUser, special_mode_unlocked: false });
-      } else {
-        const errorData = await response.json();
-        console.error("魔王戦条件のロックに失敗しました:", errorData.error);
-      }
-    } catch (error) {
-      console.error("魔王戦条件のロックに失敗しました:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       setCurrentUser({ ...currentUser, special_mode_unlocked: false });
+  //     } else {
+  //       const errorData = await response.json();
+  //       console.error("魔王戦条件のロックに失敗しました:", errorData.error);
+  //     }
+  //   } catch (error) {
+  //     console.error("魔王戦条件のロックに失敗しました:", error);
+  //   }
+  // };
 
-  const saveBattleLog = async (result, damage) => {
+  // const saveBattleLog = async (result, damage) => {
+  //   if (!currentUser || !boss) return;
+  //   try {
+  //     const response = await fetch(`${API_URL}/api/v1/boss_battle_logs`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         user_id: currentUser.id,
+  //         boss_id: boss.id,
+  //         damage_dealt: damage,
+  //         result: result,
+  //       }),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("バトルログ記録に失敗しました");
+  //     }
+  //     if (result) {
+  //       setTotalDamage(0);
+  //     }
+  //     // lockSpecialModeの結果を待ってエラーハンドリングを追加
+  //     await lockSpecialMode().catch((error) => {
+  //       console.error("特別モードのロックに失敗しました:", error);
+  //     });
+  //   } catch (error) {
+  //     console.error("バトルログ記録に失敗しました:", error);
+  //   }
+  // };
+
+  // バトルログとコインとスペシャルモードフラグはバック側でtransaction処理
+  const saveBattleLog = async (result, damage, baseAmount) => {
     if (!currentUser || !boss) return;
     try {
       const response = await fetch(`${API_URL}/api/v1/boss_battle_logs`, {
@@ -199,18 +218,28 @@ export const Boss = () => {
           boss_id: boss.id,
           damage_dealt: damage,
           result: result,
+          base_amount: baseAmount,
         }),
       });
       if (!response.ok) {
         throw new Error("バトルログ記録に失敗しました");
       }
+      const data = await response.json();
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        coin: data.user.coin,
+        special_mode_unlocked: data.user.special_mode_unlocked,
+      }));
+      setGainedCoins(data.gained_coins);
+      if (data.gained_coins > 0) {
+        setGameLog((prevLog) => [
+          ...prevLog,
+          `${data.gained_coins}枚の金貨を得た！`,
+        ]);
+      }
       if (result) {
         setTotalDamage(0);
       }
-      // lockSpecialModeの結果を待ってエラーハンドリングを追加
-      await lockSpecialMode().catch((error) => {
-        console.error("特別モードのロックに失敗しました:", error);
-      });
     } catch (error) {
       console.error("バトルログ記録に失敗しました:", error);
     }
@@ -303,15 +332,16 @@ export const Boss = () => {
 
         if (bossHP - turnDamage <= 0) {
           setGameLog([`${boss.name}をたおした`]);
-          saveBattleLog(true, totalDamage + turnDamage); // 勝利を保存
-          gainCoins(
-            currentUser,
-            token,
-            3000,
-            setCurrentUser,
-            setGainedCoins,
-            setGameLog
-          ); // 金貨を獲得
+          const baseAmount = 3000;
+          saveBattleLog(true, totalDamage + turnDamage, baseAmount); // 勝利を保存
+          // gainCoins(
+          //   currentUser,
+          //   token,
+          //   3000,
+          //   setCurrentUser,
+          //   setGainedCoins,
+          //   setGameLog
+          // ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -327,17 +357,19 @@ export const Boss = () => {
         if (playerHP - finalEnemyDamage <= 0) {
           setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
           setGameLog(["全滅した。与えたダメージは次回に引き継ぎます。"]);
-          saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-          const amounts = [100, 200, 300];
-          const amount = amounts[Math.floor(Math.random() * amounts.length)];
-          gainCoins(
-            currentUser,
-            token,
-            amount,
-            setCurrentUser,
-            setGainedCoins,
-            setGameLog
-          ); // 金貨を獲得
+          const baseAmounts = [100, 200, 300];
+          const baseAmount =
+            baseAmounts[Math.floor(Math.random() * baseAmounts.length)];
+          saveBattleLog(false, totalDamage, baseAmount); // 敗北を保存、ダメージを送信
+
+          // gainCoins(
+          //   currentUser,
+          //   token,
+          //   amount,
+          //   setCurrentUser,
+          //   setGainedCoins,
+          //   setGameLog
+          // ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
@@ -359,18 +391,18 @@ export const Boss = () => {
             if (playerHP - finalEnemyDamage <= 0) {
               setTotalDamage((prevDamage) => prevDamage + finalEnemyDamage);
               setGameLog(["全滅した。与えたダメージは次回に引き継ぎます"]);
-              saveBattleLog(false, totalDamage + finalEnemyDamage); // 敗北を保存、ダメージを送信
-              const amounts = [100, 200, 300];
-              const amount =
-                amounts[Math.floor(Math.random() * amounts.length)];
-              gainCoins(
-                currentUser,
-                token,
-                amount,
-                setCurrentUser,
-                setGainedCoins,
-                setGameLog
-              ); // 金貨を獲得
+              const baseAmounts = [100, 200, 300];
+              const baseAmount =
+                baseAmounts[Math.floor(Math.random() * baseAmounts.length)];
+              saveBattleLog(false, totalDamage, baseAmount); // 敗北を保存、ダメージを送信
+              // gainCoins(
+              //   currentUser,
+              //   token,
+              //   amount,
+              //   setCurrentUser,
+              //   setGainedCoins,
+              //   setGameLog
+              // ); // 金貨を獲得
               setShowRestart(true);
               setGameOver(true);
               setIsAttacking(false);
@@ -411,15 +443,16 @@ export const Boss = () => {
 
           if (bossHP - turnDamage <= 0) {
             setGameLog([`${boss.name}をたおした`]);
-            saveBattleLog(true, totalDamage + turnDamage); // 勝利を保存
-            gainCoins(
-              currentUser,
-              token,
-              3000,
-              setCurrentUser,
-              setGainedCoins,
-              setGameLog
-            ); // 金貨を獲得
+            const baseAmount = 3000;
+            saveBattleLog(true, totalDamage + turnDamage, baseAmount); // 勝利を保存
+            // gainCoins(
+            //   currentUser,
+            //   token,
+            //   3000,
+            //   setCurrentUser,
+            //   setGainedCoins,
+            //   setGameLog
+            // ); // 金貨を獲得
             setShowRestart(true);
             setGameOver(true);
             setIsAttacking(false);
@@ -432,18 +465,19 @@ export const Boss = () => {
         if (turnsLeft - 1 <= 0) {
           setTotalDamage((prevDamage) => prevDamage + turnDamage); // 最後のダメージを加算
           setGameLog(["魔王は去りました。与えたダメージは次回に引き継ぎます"]);
-          saveBattleLog(false, totalDamage + turnDamage); // 敗北を保存、ダメージを送信
-          // 敗北の報酬を獲得
-          const amounts = [100, 200, 300];
-          const amount = amounts[Math.floor(Math.random() * amounts.length)];
-          gainCoins(
-            currentUser,
-            token,
-            amount,
-            setCurrentUser,
-            setGainedCoins,
-            setGameLog
-          ); // 金貨を獲得
+          const baseAmounts = [100, 200, 300];
+          const baseAmount =
+            baseAmounts[Math.floor(Math.random() * baseAmounts.length)];
+          saveBattleLog(false, totalDamage + turnDamage, baseAmount); // 敗北を保存、ダメージを送信
+          // // 敗北の報酬を獲得
+          // gainCoins(
+          //   currentUser,
+          //   token,
+          //   amount,
+          //   setCurrentUser,
+          //   setGainedCoins,
+          //   setGameLog
+          // ); // 金貨を獲得
           setShowRestart(true);
           setGameOver(true);
           setIsAttacking(false);
